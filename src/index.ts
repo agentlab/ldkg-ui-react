@@ -7,10 +7,4 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  ********************************************************************************/
-import React, { createContext, PropsWithChildren } from 'react';
-
-export const MstContext = createContext<any>({});
-
-export const MstContextProvider = ({ rootStore, children }: PropsWithChildren<any>): JSX.Element => {
-  return <MstContext.Provider value={{ rootStore }}>{children}</MstContext.Provider>;
-};
+export * from './MstContext';
