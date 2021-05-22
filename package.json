@@ -16,27 +16,24 @@
   "scripts": {
     "clean": "rimraf dist es lib",
     "start": "rollup -w",
-    "build": "rollup -c",
+    "build": "yarn clean && rollup -c",
     "test": "jest",
     "lint": "eslint \"{src,stories,test}**/*.{js,jsx,ts,tsx}\"",
     "prepare": "husky install && yarn build",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "format": "./node_modules/.bin/prettier --write \"{src,stories,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "lint-staged": "lint-staged"
   },
   "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react": ">=17.0.2",
+    "react-dom": ">=17.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
     "@rollup/plugin-commonjs": "^19.0.0",
     "@rollup/plugin-node-resolve": "^13.0.0",
     "@rollup/plugin-typescript": "^8.2.1",
-    "@size-limit/preset-small-lib": "^4.10.2",
     "@storybook/addon-essentials": "^6.2.9",
     "@storybook/addon-info": "^5.3.21",
     "@storybook/addon-links": "^6.2.9",
@@ -46,9 +43,6 @@
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^13.1.9",
     "@types/jest": "^26.0.23",
-    "@types/json-pointer": "^1.0.30",
-    "@types/jsonpath": "^0.2.0",
-    "@types/lodash": "^4.14.169",
     "@types/react": "^17.0.6",
     "@types/react-dom": "^17.0.5",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
@@ -76,7 +70,6 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "size-limit": "^4.10.2",
     "ts-jest": "^26.5.6",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"

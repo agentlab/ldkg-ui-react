@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import autoprefixer from 'autoprefixer';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 import resolve from '@rollup/plugin-node-resolve';
