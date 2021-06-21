@@ -8,9 +8,20 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { createContext, PropsWithChildren } from 'react';
+import { FormsCell, FormsRenderer } from './Form';
 
-export const MstContext = createContext<any>({});
+export interface MstContextProps {
+  store: any;
+  renderers: FormsRenderer[];
+  cells: FormsCell[];
+}
 
-export const MstContextProvider = ({ rootStore, children }: PropsWithChildren<any>): JSX.Element => {
-  return <MstContext.Provider value={{ rootStore }}>{children}</MstContext.Provider>;
+export const MstContext = createContext<MstContextProps>({
+  store: {},
+  renderers: [],
+  cells: [],
+});
+
+export const MstContextProvider = ({ store, renderers, cells = [], children }: PropsWithChildren<any>): JSX.Element => {
+  return <MstContext.Provider value={{ store, renderers, cells }}>{children}</MstContext.Provider>;
 };

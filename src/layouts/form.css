@@ -1,0 +1,29 @@
+/********************************************************************************
+ * Copyright (c) 2020 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
+.form-wrap {
+  position: relative;
+  display: block;
+}
+
+.form-wrap:hover::before {
+  content: 'Редактировать';
+  position: absolute;
+  display: table-cell;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+  height: 100%;
+  font-size: 1.2em;
+  z-index: 3000;
+  color: rgb(255, 255, 255);
+  background-color: rgba(145, 145, 145, 0.616);
+}

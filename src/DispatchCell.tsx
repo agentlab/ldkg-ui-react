@@ -1,0 +1,71 @@
+/********************************************************************************
+ * Copyright (c) 2020 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
+import { isEqual, maxBy } from 'lodash-es';
+import React from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+
+import { UnknownRenderer } from './UnknownRenderer';
+import { ErrorFallback, DispatchCellProps, FormsCell, RenderCellProps } from './Form';
+
+/**
+ * Dispatch renderer component for cells.
+ */
+export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
+  ({
+    data,
+    uischema,
+    onMeasureChange,
+    uri,
+    schema,
+    viewElement,
+    view,
+    enabled,
+    renderers,
+    cells,
+    id,
+    parent,
+    CKey,
+    rowData,
+    ...rest
+  }) => {
+    const renderer = maxBy(cells, (r) => r.tester(viewElement, schema));
+    if (renderer === undefined || renderer.tester(viewElement, schema) === -1) {
+      return (
+        <td>
+          <UnknownRenderer type={'renderer'} />
+        </td>
+      );
+    } else {
+      const Render: React.FC<RenderCellProps> = (renderer as FormsCell).cell;
+      return (
+        <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
+          <Render
+            CKey={CKey}
+            data={data}
+            rowData={rowData}
+            onMeasureChange={onMeasureChange}
+            uischema={uischema}
+            schema={schema}
+            viewElement={viewElement}
+            uri={uri}
+            enabled={enabled}
+            view={view}
+            renderers={renderers}
+            cells={cells}
+            id={id}
+            parent={parent}
+            {...rest}
+          />
+        </ErrorBoundary>
+      );
+    }
+  },
+  (prevProps: any, nextProps: any) => isEqual(prevProps, nextProps),
+);
