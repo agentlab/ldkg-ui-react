@@ -1,8 +1,8 @@
 {
   "name": "@agentlab/ldkg-ui-react",
+  "version": "0.1.6",
+  "license": "GPL-3.0",
   "author": "Alexey Ivanov <amivanoff@gmail.com>",
-  "version": "0.1.5",
-  "license": "EPL-2.0",
   "main": "es/index.js",
   "module": "es/index.js",
   "typings": "es/index.d.ts",
