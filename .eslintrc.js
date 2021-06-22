@@ -41,12 +41,6 @@ module.exports = {
     'react/prop-types': 'off',
     'import/no-anonymous-default-export': 'off',
     'import/prefer-default-export': 'off',
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: ['stories/**/*', 'test/**/*'],
-      },
-    ],
     '@typescript-eslint/naming-convention': [
       'error',
       {
@@ -55,4 +49,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.stories.*'],
+      rules: {
+        'import/no-anonymous-default-export': 'off',
+      },
+    },
+  ],
 };

@@ -37,8 +37,8 @@ import { artifactSchema } from '../test/schema/TestSchemas';
 const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
 export default {
-  title: 'Form/RemoteData',
-  component: Button,
+  title: 'Form/ArtifactForm',
+  component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
@@ -178,44 +178,5 @@ const Template: Story<any> = (args: any) => {
   );
 };
 
-export const Artifact = Template.bind({});
-Artifact.args = {};
-
-/*<Form
-          viewIri={viewDescrs[0]['@id']}
-          viewsResultsScope={viewDescrCollConstr['@id']}
-          renderers={antdRenderers}
-          cells={antdCells}
-        />*/
-
-/*<AntdFormLayoutWithStore
-          schema={{}}
-          view={{} as any}
-          id={'test'}
-          uischema={{}}
-          viewElement={{} as any}
-          renderers={antdRenderers}
-          cells={antdCells}
-          enabled={true}
-        />*/
-
-/*const provider = {
-  getSchemaByUri: async (uri: string) => artifactSchema,
-  selectObjectsByQuery: async (query: any) => [
-    {
-      '@id': 'reqs:collect1',
-      '@type': 'rm:Artifact',
-      artifactFormat: 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Collection',
-      assetFolder: 'folders:samples_collection',
-      created: '2017-02-22T15:58:30.675Z',
-      creator: 'users:amivanoff',
-      description: 'Набор требований',
-      identifier: 20000,
-      modified: '2019-01-16T13:21:08.720Z',
-      modifiedBy: 'users:amivanoff',
-      processArea: 'projects:gishbbProject',
-      title: 'Набор требований',
-      _id: 0,
-    },
-  ],
-};*/
+export const RemoteData = Template.bind({});
+RemoteData.args = {};

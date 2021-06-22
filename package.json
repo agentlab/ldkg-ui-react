@@ -22,12 +22,14 @@
     "clean": "rimraf dist es lib",
     "start": "rollup -w",
     "build": "yarn clean && rollup -c",
-    "test": "jest",
+    "build-tsc": "yarn tsc --project ./tsconfig-build.json",
+    "test": "cross-env NODE_ENV=--experimental-vm-modules jest",
+    "test:ci": "cross-env NODE_ENV=--experimental-vm-modules jest --ci --coverage --maxWorkers=2",
     "lint": "eslint \"{src,stories,test}**/*.{js,jsx,ts,tsx}\"",
     "prepare": "husky install && yarn build",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "format": "./node_modules/.bin/prettier --write \"{src,stories,test}/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "format": "./node_modules/.bin/prettier --write \"{src,stories,test}/**/*.{js,jsx,ts,tsx,json,css,less,scss,md}\"",
     "lint-staged": "lint-staged"
   },
   "peerDependencies": {
@@ -83,11 +85,13 @@
     "@types/tinymce": "^4.6.2",
     "antd": "^4.16.3",
     "babel-loader": "^8.2.2",
+    "cross-env": "^7.0.3",
     "eslint": "^7.29.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^6.0.0",
     "eslint-plugin-flowtype": "^5.7.2",
     "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "^7.24.0",
@@ -136,9 +140,9 @@
   },
   "lint-staged": {
     "{src,stories,test}/**/*.{js,jsx,ts,tsx,json}": [
-      "eslint --fix"
+      "eslint"
     ],
-    "{src,stories,test}/**/*.{css,less,scss,md}": [
+    "{src,stories,test}/**/*.{js,jsx,ts,tsx,json,css,less,scss,md}": [
       "prettier --write"
     ]
   }
