@@ -1,8 +1,13 @@
 {
   "name": "@agentlab/ldkg-ui-react",
-  "version": "0.1.7",
+  "version": "0.1.6",
+  "description": "LDKG Forms UI Components",
   "license": "GPL-3.0",
   "author": "Alexey Ivanov <amivanoff@gmail.com>",
+  "contributors": [
+    "Alexey Ivanov <amivanoff@gmail.com>",
+    "Artkrygin"
+  ],
   "main": "es/index.js",
   "module": "es/index.js",
   "typings": "es/index.d.ts",
