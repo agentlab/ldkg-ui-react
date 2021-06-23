@@ -6,7 +6,7 @@
   "compilerOptions": {
     "module": "es2020",
     "target": "es2019",
-    "lib": ["dom", "esnext"]
+    "lib": ["dom", "dom.iterable", "esnext"]
     //"types": []
   }
 }
