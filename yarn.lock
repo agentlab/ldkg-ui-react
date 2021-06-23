@@ -2,12 +2,16 @@
 # yarn lockfile v1
 
 
-"@agentlab/sparql-jsld-client@^5.0.0-rc.7":
-  version "5.0.0-rc.7"
-  resolved "https://registry.yarnpkg.com/@agentlab/sparql-jsld-client/-/sparql-jsld-client-5.0.0-rc.7.tgz#5da35bc90a2033b53fe98f8c8c32c37bcbf41c68"
-  integrity sha512-qNpGujY8QIYuXURjFJi0QV95sirUSEi53FmKsSKaOHoFn2rcJzWGnbckMhmh4u6TCFfA7bDXuyRKl9S41dfcgg==
+"@agentlab/sparql-jsld-client@^5.0.0-rc.8":
+  version "5.0.0-rc.8"
+  resolved "https://registry.yarnpkg.com/@agentlab/sparql-jsld-client/-/sparql-jsld-client-5.0.0-rc.8.tgz#f0902bd1c298a4f20f1a15f04fde30e74037e6d4"
+  integrity sha512-SjAfHLOn5K0Cbw2QFlSmsWm04vyrzJMOZbPc75hmVToaCUgH+lxaNEGOztjWWiCcac8Sg7McbmSVvEwQI5dJrA==
   dependencies:
     "@rdfjs/data-model" "^1.2.0"
+    "@types/json-schema" "^7.0.7"
+    "@types/lodash-es" "^4.17.4"
+    "@types/rdf-js" "^4.0.2"
+    "@types/sparqljs" "^3.1.2"
     axios "^0.21.1"
     is-url "^1.2.4"
     jsonld "^5.2.0"
@@ -3117,7 +3121,7 @@
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.6.tgz#df9c3c8b31a247ec315e6996566be3171df4b3b1"
   integrity sha512-0/HnwIfW4ki2D8L8c9GVcG5I72s9jP5GSLVF0VIXDW00kmIpA6O33G7a8n59Tmh7Nz0WUC3rSb7PTY/sdW2JzA==
 
-"@types/rdf-js@*", "@types/rdf-js@^4.0.0":
+"@types/rdf-js@*", "@types/rdf-js@^4.0.0", "@types/rdf-js@^4.0.2":
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/@types/rdf-js/-/rdf-js-4.0.2.tgz#a7eb0ff009915db2c980df97533d3ba7acad0c4b"
   integrity sha512-soR/+RMogGiDU1lrpuQl5ZL55/L1eq/JlR2dWx052Uh/RYs9okh3XZHFlIJXHZqjqyjEn4WdbOMfBj7vvc2WVQ==
@@ -3227,6 +3231,13 @@
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
   integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
+
+"@types/sparqljs@^3.1.2":
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/@types/sparqljs/-/sparqljs-3.1.2.tgz#b6fdd046d82fbfb4035cadbde84cac6505836f83"
+  integrity sha512-tLfrnBuK37P2Bn8Fo7Qik95sBXYHw5D+gq3MMq1HVyoTpCWivwPnP0Mmd7Apamdc9eH3mLJwIZIETHCQ6HxMUw==
+  dependencies:
+    rdf-js "^4.0.2"
 
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
@@ -12051,7 +12062,7 @@ rdf-data-factory@^1.0.1, rdf-data-factory@^1.0.4:
   dependencies:
     "@types/rdf-js" "^4.0.0"
 
-rdf-js@*:
+rdf-js@*, rdf-js@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/rdf-js/-/rdf-js-4.0.2.tgz#f01510528bbfc6e004012b71a8a533896c4c4c10"
   integrity sha512-ApvlFa/WsQh8LpPK/6hctQwG06Z9ztQQGWVtrcrf9L6+sejHNXLPOqL+w7q3hF+iL0C4sv3AX1PUtGkLNzyZ0Q==
