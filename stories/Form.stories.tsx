@@ -11,13 +11,11 @@ import moment from 'moment';
 import { variable } from '@rdfjs/data-model';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Button } from 'antd';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import {
   SparqlClientImpl,
-  Repository,
   rootModelInitialState,
   createModelFromState,
   JSONSchema6forRdf,
@@ -32,17 +30,8 @@ import {
   antdControlRenderers,
   antdLayoutRenderers,
 } from '../src';
-import { artifactSchema } from '../test/schema/TestSchemas';
 
 const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
-
-export default {
-  title: 'Form/ArtifactForm',
-  component: Form,
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
-} as Meta;
 
 const viewDescrs = [
   {
@@ -156,14 +145,18 @@ const additionalColls: CollState[] = [
 ];
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-//@ts-ignore
-//const rootStore = Repository.create(rootModelInitialState, { client });
 const rootStore = createModelFromState('reqs2', client, rootModelInitialState, additionalColls);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 connectReduxDevtools(require('remotedev'), rootStore);
 
-console.log('const inited', { client, rootStore, store });
+export default {
+  title: 'Form/ArtifactForm',
+  component: Form,
+  argTypes: {
+    backgroundColor: { control: 'color' },
+  },
+} as Meta;
 
 const Template: Story<any> = (args: any) => {
   console.log('Template initing', { client, rootStore, store });

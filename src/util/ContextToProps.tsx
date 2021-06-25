@@ -110,7 +110,7 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     );
   });
 export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, renderers, cells, enabled, parent, form }) => {
+  observer<RenderProps>(({ uischema, viewElement, view, enabled, parent, form }) => {
     if (!view['@id']) {
       return null;
     }
@@ -126,8 +126,6 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
         uischema={uischema}
         viewElement={viewElement}
         view={view}
-        renderers={renderers}
-        cells={cells}
         enabled={enabledLayout}
         visible={visible}
         parent={parent}
@@ -142,19 +140,19 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
   });
 export const withStoreToViewClassProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, viewElement, view, renderers, cells } = props;
+    const { uischema, viewElement, view } = props;
     const { store } = useContext(MstContext);
     const scope = viewElement.resultsScope;
     if (!store.getSelectedDataJs(scope)) {
       return <Spin />;
     }
     //const id = store.getSelectedDataJs(scope).type;
-    return <Component uischema={uischema} viewElement={viewElement} view={view} renderers={renderers} cells={cells} />;
+    return <Component uischema={uischema} viewElement={viewElement} view={view} />;
   });
 
 export const withStoreToViewProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, view, viewElement, parent, renderers, cells } = props;
+    const { uischema, view, viewElement, parent } = props;
     const { store } = useContext(MstContext);
     const scope = viewElement.resultsScope;
     const coll = store.getColl(scope);
@@ -183,8 +181,6 @@ export const withStoreToViewProps = (Component: any): any =>
         uischema={uischema}
         viewElement={newViewElement}
         view={newView}
-        renderers={renderers}
-        cells={cells}
         onChange={(state: boolean) => store.setEditing(viewElement.resultsScope, state)}
       />
     );
@@ -403,7 +399,7 @@ export const withStoreToTabProps = (Component: any): any =>
 
 export const withStoreToMenuProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, uischema, viewElement, view, parent, renderers, cells } = props;
+    const { schema, uischema, viewElement, view, parent } = props;
     const { store } = useContext(MstContext);
     //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
     //  store.setSaveLogic(parent, viewElement.resultsScope);
@@ -424,8 +420,6 @@ export const withStoreToMenuProps = (Component: any): any =>
         modals={viewElement.elements ? viewElement.elements.filter((e: any) => e.options && e.options.modal) : []}
         schema={schema}
         view={view}
-        cells={cells}
-        renderers={renderers}
         uischema={uischema}
         uri={scope}
         tabs={data}
@@ -438,24 +432,15 @@ export const withStoreToMenuProps = (Component: any): any =>
 
 export const withStoreToCollapseProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, viewElement, view, renderers, cells } = props;
+    const { uischema, viewElement, view } = props;
     const options = viewElement.options || {};
 
-    return (
-      <Component
-        options={options}
-        uischema={uischema}
-        viewElement={viewElement}
-        view={view}
-        renderers={renderers}
-        cells={cells}
-      />
-    );
+    return <Component options={options} uischema={uischema} viewElement={viewElement} view={view} />;
   });
 
 export const withStoreToArrayProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, view, parent, renderers, cells } = props;
+    const { schema, viewElement, view, parent } = props;
     const { store } = useContext(MstContext);
     //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
     //  store.setSaveLogic(parent, viewElement.resultsScope);
@@ -476,13 +461,13 @@ export const withStoreToArrayProps = (Component: any): any =>
     };
     const withConnections = options.connections;
     const onChange = (data: any) => {
-      store.setSelectedData(scope, data);
+      /*store.setSelectedData(scope, data);
       withConnections &&
         options.connections.forEach((e: any) => {
           const condition: any = {};
           condition[e.by] = data['@id'];
           store.editCondition(e.to, condition, scope, e.by, data);
-        });
+        });*/
     };
     const loadExpandedData = (subject: string) => {
       //const newQuery = store.queries[viewElement.resultsScope];
@@ -503,14 +488,12 @@ export const withStoreToArrayProps = (Component: any): any =>
         data={data}
         options={options}
         onSelect={onChange}
-        renderers={renderers}
-        cells={cells}
       />
     );
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, renderers, cells, enabled, form, parent }) => {
+  observer<RenderProps>(({ uischema, viewElement, view, enabled, form, parent }) => {
     const id = viewElement['@id'] || '';
     const enabledLayout = enabled && checkProperty('editable', id, uischema, viewElement, view);
     const visible = checkProperty('visible', id, uischema, viewElement, view);
@@ -523,8 +506,6 @@ export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<
         uischema={uischema}
         viewElement={viewElement}
         view={view}
-        renderers={renderers}
-        cells={cells}
         enabled={enabledLayout}
         visible={visible}
         parent={parent}
@@ -534,7 +515,7 @@ export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<
   });
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, renderers, cells, enabled, parent }) => {
+  observer<RenderProps>(({ uischema, viewElement, view, enabled, parent }) => {
     const { store } = useContext(MstContext);
     if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
       store.setSaveLogic(parent, viewElement.resultsScope);
@@ -735,12 +716,7 @@ export const withContextFormsSaveControlProps =
 //type FormsPropTypes = ControlProps | CombinatorProps | LayoutProps | CellProps | ArrayLayoutProps | StatePropsOfControlWithDetail | OwnPropsOfRenderer;
 
 export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/) => {
-  const prev = omit(prevProps, ['handleChange', 'renderers', 'cells', 'uischemas']);
-  const next = omit(nextProps, ['handleChange', 'renderers', 'cells', 'uischemas']);
-  return (
-    isEqual(prev, next) &&
-    get(prevProps, 'renderers.length') === get(nextProps, 'renderers.length') &&
-    get(prevProps, 'cells.length') === get(nextProps, 'cells.length') &&
-    get(prevProps, 'uischemas.length') === get(nextProps, 'uischemas.length')
-  );
+  const prev = omit(prevProps, ['handleChange', 'uischemas']);
+  const next = omit(nextProps, ['handleChange', 'uischemas']);
+  return isEqual(prev, next) && get(prevProps, 'uischemas.length') === get(nextProps, 'uischemas.length');
 };

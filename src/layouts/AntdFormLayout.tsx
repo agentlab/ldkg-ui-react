@@ -77,8 +77,6 @@ export const AntdFormLayout: React.FC<any> = ({
   uischema,
   viewElement,
   view,
-  renderers,
-  cells,
   enabled,
   title,
   visible,
@@ -105,8 +103,6 @@ export const AntdFormLayout: React.FC<any> = ({
               viewElement={viewElement}
               enabled={enabled}
               view={view}
-              renderers={renderers}
-              cells={cells}
               parent={parent}
               form={formId}
             />

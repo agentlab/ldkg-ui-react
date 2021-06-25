@@ -8,11 +8,12 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { isEqual, maxBy } from 'lodash-es';
-import React from 'react';
+import React, { useContext } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { UnknownRenderer } from './UnknownRenderer';
 import { ErrorFallback, DispatchCellProps, FormsCell, RenderCellProps } from './Form';
+import { MstContext } from './MstContext';
 
 /**
  * Dispatch renderer component for cells.
@@ -27,14 +28,13 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
     viewElement,
     view,
     enabled,
-    renderers,
-    cells,
     id,
     parent,
     CKey,
     rowData,
     ...rest
   }) => {
+    const { cells } = useContext(MstContext);
     const renderer = maxBy(cells, (r) => r.tester(viewElement, schema));
     if (renderer === undefined || renderer.tester(viewElement, schema) === -1) {
       return (
@@ -57,8 +57,6 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
             uri={uri}
             enabled={enabled}
             view={view}
-            renderers={renderers}
-            cells={cells}
             id={id}
             parent={parent}
             {...rest}

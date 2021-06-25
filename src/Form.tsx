@@ -55,8 +55,6 @@ export interface InitStateProps {
   uischema: UISchema;
   viewElement: ViewElement;
   view: View;
-  renderers: FormsRenderer[];
-  cells?: FormsCell[];
 }
 export interface FormsInitStateProps {
   viewIri: string;
@@ -89,7 +87,8 @@ export interface DispatchCellProps extends RenderProps {
 }
 
 const FormDispatch: React.FC<FormDispatchProps> = observer<FormDispatchProps>(
-  ({ uischema, schema, uri, viewElement, view, enabled, renderers, cells, parent, form }) => {
+  ({ uischema, schema, uri, viewElement, view, enabled, parent, form }) => {
+    const { renderers } = useContext(MstContext);
     const id = uri ? /*createId(uri)*/ uri : '';
     const renderer = maxBy(renderers, (r) => r.tester(viewElement, schema));
     const isModal = viewElement.options && viewElement.options.modal;
@@ -105,8 +104,6 @@ const FormDispatch: React.FC<FormDispatchProps> = observer<FormDispatchProps>(
             viewElement={viewElement}
             enabled={enabled}
             view={view}
-            renderers={renderers}
-            cells={cells}
             id={id}
             parent={parent}
             form={form}
@@ -120,7 +117,7 @@ const FormDispatch: React.FC<FormDispatchProps> = observer<FormDispatchProps>(
 const withStoreToFormDispatch = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
     const { view, viewElement, parent, form, uischema } = props;
-    const { store, renderers, cells } = useContext(MstContext);
+    const { store } = useContext(MstContext);
 
     const shapes = viewElement.resultsScope ? viewElement.resultsScope.split('/') : [];
     const iri = shapes.length === 2 ? shapes[0] : viewElement.resultsScope;
@@ -140,16 +137,7 @@ const withStoreToFormDispatch = (Component: any): any =>
     }
     const s = shapes.length === 2 ? schema.properties[shapes[1]] : schema;
     return (
-      <Component
-        schema={s}
-        uischema={uischema}
-        viewElement={viewElement}
-        view={view}
-        renderers={renderers}
-        cells={cells}
-        parent={parent}
-        form={form}
-      />
+      <Component schema={s} uischema={uischema} viewElement={viewElement} view={view} parent={parent} form={form} />
     );
   });
 export const FormsDispatch = withStoreToFormDispatch(FormDispatch);

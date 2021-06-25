@@ -22,24 +22,12 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   uischema,
   viewElement,
   view,
-  renderers,
-  cells,
   enabled,
   visible,
   parent,
 }) => {
   //const layout = viewElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({
-    idx,
-    uischema,
-    viewElement,
-    view,
-    enabled,
-    renderers,
-    cells,
-    parent,
-    form,
-  }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, uischema, viewElement, view, enabled, parent, form }) => {
     const options = viewElement.options || {};
     const style: any = options.style;
     const span = options.contentSize || !viewElement.elements ? undefined : Math.ceil(24 / viewElement.elements.length);
@@ -50,8 +38,6 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
           view={view}
           uischema={uischema}
           enabled={enabled}
-          renderers={renderers}
-          cells={cells}
           parent={parent}
           form={form}
         />
@@ -61,7 +47,7 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   const justify: any = viewElement.options ? viewElement.options.justify : 'center';
   return (
     <Row justify={justify || 'center'} style={{ flexWrap: 'nowrap' }} align={'middle'}>
-      {renderLayoutElements({ uischema, viewElement, view, enabled, renderers, cells, Render, parent })}
+      {renderLayoutElements({ uischema, viewElement, view, enabled, Render, parent })}
     </Row>
   );
 };
