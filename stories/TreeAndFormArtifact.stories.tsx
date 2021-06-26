@@ -8,40 +8,54 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
 
 import {
-  RendererRegistryEntry,
-  MstContextProvider,
-  Form,
   antdCells,
   antdControlRenderers,
   antdLayoutRenderers,
+  antdRataControlRenderers,
+  Form,
+  MstContextProvider,
+  RendererRegistryEntry,
 } from '../src';
 
-const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
+const antdRenderers: RendererRegistryEntry[] = [
+  ...antdControlRenderers,
+  ...antdLayoutRenderers,
+  ...antdRataControlRenderers,
+];
 
 const viewDescrs = [
   {
-    '@id': 'rm:FormView',
+    '@id': 'mktp:TreeAndFormViewDescr',
     '@type': 'rm:View',
-    //'viewKind': 'rm:FormViewClass',
-    title: 'Малая форма',
-    description: 'Small form',
-    type: 'FormLayout',
+    title: 'TreeAndForm',
+    description: 'TreeAndForm',
+    viewKind: 'rm:TreeAndFormViewKind',
     collsConstrs: [
       {
-        '@id': 'rm:FormView_Artifacts_Coll',
+        '@id': 'rm:Folders_Coll',
         '@type': 'rm:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:FormView_Artifacts_Coll_Ent0',
+            '@id': 'rm:Folders_Coll_Shape0',
+            '@type': 'rm:EntConstr',
+            schema: 'nav:folderShape',
+          },
+        ],
+      },
+      {
+        '@id': 'rm:Artifacts_Coll',
+        '@type': 'rm:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'rm:Artifacts_Coll_Ent0',
             '@type': 'rm:EntConstr',
             schema: 'rm:ArtifactShape',
           },
@@ -49,30 +63,56 @@ const viewDescrs = [
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
       },
     ],
+    type: 'SplitPaneLayout',
+    options: {
+      defaultSize: {
+        'rm:Folders_Coll': '17%',
+        ArtifactForm: '83%',
+      },
+      height: 'all-empty-space',
+      //width: 'all-empty-space',
+    },
+    // child ui elements configs
     elements: [
       {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/creator',
-      },
-      {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/assetFolder',
-      },
-      {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/description',
+        type: 'DataControl',
+        resultsScope: 'rm:Folders_Coll',
         options: {
-          validation: [
-            {
-              validator: 'RegExp',
-              propsToValidator: {
-                regExp: 'bo*',
-              },
-              validateStatus: 'error',
-              help: 'Работает',
-            },
-          ],
+          renderType: 'tree',
         },
+      },
+      {
+        '@id': 'ArtifactForm',
+        type: 'FormLayout',
+        options: {
+          title: 'Aртефакт',
+        },
+        elements: [
+          {
+            type: 'Control',
+            resultsScope: 'rm:Artifacts_Coll/creator',
+          },
+          {
+            type: 'Control',
+            resultsScope: 'rm:Artifacts_Coll/assetFolder',
+          },
+          {
+            type: 'Control',
+            resultsScope: 'rm:Artifacts_Coll/description',
+            options: {
+              validation: [
+                {
+                  validator: 'RegExp',
+                  propsToValidator: {
+                    regExp: 'bo*',
+                  },
+                  validateStatus: 'error',
+                  help: 'Работает',
+                },
+              ],
+            },
+          },
+        ],
       },
     ],
   },
@@ -119,22 +159,19 @@ const store: any = asReduxStore(rootStore);
 connectReduxDevtools(require('remotedev'), rootStore);
 
 export default {
-  title: 'Form/ArtifactForm',
+  title: 'Several Controls/TreeAndForm Artifacts',
   component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
 } as Meta;
 
-const Template: Story<any> = (args: any) => (
+export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-      <div style={{ height: '1000px' }}>
+      <div style={{ height: '1000px', width: '100%' }}>
         <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>
 );
-
-export const RemoteData = Template.bind({});
-RemoteData.args = {};

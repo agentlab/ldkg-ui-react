@@ -45,8 +45,10 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
     );
   };
   const justify: any = viewElement.options ? viewElement.options.justify : 'center';
+  const rowStyle: any = { flexWrap: 'nowrap' };
+  if (viewElement.options && viewElement.options.width === 'all-empty-space') rowStyle.width = '100%';
   return (
-    <Row justify={justify || 'center'} style={{ flexWrap: 'nowrap' }} align={'middle'}>
+    <Row justify={justify} style={rowStyle} align={'middle'}>
       {renderLayoutElements({ uischema, viewElement, view, enabled, Render, parent })}
     </Row>
   );

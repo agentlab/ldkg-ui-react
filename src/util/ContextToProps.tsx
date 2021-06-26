@@ -248,7 +248,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
     const options = viewElement.options || {};
     const withConnections = options.connections;
     const onChange = (data: any) => {
-      if (data) {
+      /*if (data) {
         store.setSelectedData(scope, data);
         withConnections &&
           options.connections.forEach((e: any) => {
@@ -256,7 +256,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
             condition[e.by] = data['@id'];
             //store.editCondition(e.to, condition, scope, e.by, data);
           });
-      }
+      }*/
     };
     const getData = (parentId: string) => {
       const conditions = { ...store.queries[scope].shapes[0].conditions, parent: parentId };
@@ -326,40 +326,6 @@ export const withStoreToSelectControlProps = (Component: any): any =>
         options={viewElement.options}
         handleChange={onChange}
         {...props}
-      />
-    );
-  });
-
-export const withStoreToQueryProps = (Component: any): any =>
-  observer<any>(({ ...props }: any) => {
-    const { schema, viewElement } = props;
-    const { store } = useContext(MstContext);
-    const uri = viewElement.scope;
-    return (
-      <Component
-        schema={schema}
-        uri={uri}
-        tags={
-          [
-            /*Object.values(store.filters)*/
-          ]
-        }
-        options={{}}
-        addFilter={
-          (/*data: FilterType*/) => {
-            //return store.setSelectedData('nav:folder', { '@id': 'folders:samples_module',  title: ''});
-            //store.queryFilter(uri, data);
-          }
-        }
-        removeFilter={
-          (/*data: FilterType*/) => {
-            //store.removeFilter(uri, data.property);
-          }
-        }
-        fullTextSearchString={'' /*store.fullTextSearchString*/}
-        setFullTextSearchString={(newValue: string) => {
-          //store.fullTextSearchString = newValue;
-        }}
       />
     );
   });
@@ -532,51 +498,6 @@ export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>)
     );
   });
 
-export const withStoreToAspenTree = (Component: any): any =>
-  observer<any>(({ ...props }: any) => {
-    const { viewElement, view, parent } = props;
-    const { store } = useContext(MstContext);
-    if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-      store.setSaveLogic(parent, viewElement.resultsScope);
-    }
-    const custom = view[viewElement.resultsScope.split('/')[0]]
-      ? view[viewElement.resultsScope.split('/')[0]].customReq
-      : undefined;
-    const uri = custom ? custom : viewElement.resultsScope;
-    const options = viewElement.options || {};
-    const withConnections = options.connections;
-    const onChange = (data: any) => {
-      store.setSelectedData(uri, data);
-      withConnections &&
-        options.connections.forEach((e: any) => {
-          const condition: any = {};
-          condition[e.by] = data['@id'];
-          store.editCondition(e.to, condition, uri, e.by, data);
-        });
-    };
-    const getData = (path: string) => {
-      if (path === '/root') {
-        const conditions = { ...store.queries[uri].shapes[0].conditions, title: 'Проект Требования ЕМД' };
-        const newQuery = cloneDeep(store.queries[uri]);
-        newQuery.shapes[0].conditions = conditions;
-        return store.getDataByQuery(newQuery);
-      }
-      const parentId = path.split('/').pop();
-      const newQuery = store.queries[uri];
-      newQuery.shapes[0].conditions = { ...newQuery.shapes[0].conditions, parent: parentId };
-      return store.getDataByQuery(newQuery);
-    };
-    return (
-      <Component
-        uri={uri}
-        rootId={options.rootId}
-        editing={store.editingData.get(uri)}
-        getData={getData}
-        handleChange={onChange}
-        {...props}
-      />
-    );
-  });
 export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): React.FC<SaveDialogProps> =>
   observer<SaveDialogProps>(({ visible, schemaUri, onCancel, onOk }) => {
     const { store } = useContext(MstContext);

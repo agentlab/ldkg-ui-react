@@ -8,31 +8,15 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { RendererRegistryEntry } from '../renderers';
-import { AntdBooleanControl, antdBooleanControlTester, AntdBooleanControlWithStore } from './AntdBooleanControl';
-import { AntdButtonControl, antdButtonControlTester, AntdButtonControlWithStore } from './AntdButtonControl';
-import { AntdDateControl, antdDateControlTester, AntdDateControlWithStore } from './AntdDateControl';
-import { AntdEnumControl, antdEnumControlTester, AntdEnumControlWithStore } from './AntdEnumControl';
-import { AntdNumberControl, antdNumberControlTester, AntdNumberControlWithStore } from './AntdNumberControl';
-import {
-  AntdRadioGroupControl,
-  antdRadioGroupControlTester,
-  AntdRadioGroupControlWithStore,
-} from './AntdRadioGroupControl';
-import { AntdSliderControl, antdSliderControlTester, AntdSliderControlWithStore } from './AntdSliderControl';
-import { AntdTextControl, antdTextControlTester, AntdTextControlWithStore } from './AntdTextControl';
-import { TinyMCEControl, tinyMCEControlTester, TinyMCEControlWithStore } from './TinyMCEControl';
-
-export const Unwrapped = {
-  AntdBooleanControl: AntdBooleanControl,
-  AntdButtonControl: AntdButtonControl,
-  AntdDateControl: AntdDateControl,
-  AntdEnumControl: AntdEnumControl,
-  AntdNumberControl: AntdNumberControl,
-  AntdRadioGroupControl: AntdRadioGroupControl,
-  AntdSliderControl: AntdSliderControl,
-  AntdTextControl: AntdTextControl,
-  TinyMCEControl: TinyMCEControl,
-};
+import { antdBooleanControlTester, AntdBooleanControlWithStore } from './AntdBooleanControl';
+import { antdButtonControlTester, AntdButtonControlWithStore } from './AntdButtonControl';
+import { antdDateControlTester, AntdDateControlWithStore } from './AntdDateControl';
+import { antdEnumControlTester, AntdEnumControlWithStore } from './AntdEnumControl';
+import { antdNumberControlTester, AntdNumberControlWithStore } from './AntdNumberControl';
+import { antdRadioGroupControlTester, AntdRadioGroupControlWithStore } from './AntdRadioGroupControl';
+import { antdSliderControlTester, AntdSliderControlWithStore } from './AntdSliderControl';
+import { antdTextControlTester, AntdTextControlWithStore } from './AntdTextControl';
+import { tinyMCEControlTester, TinyMCEControlWithStore } from './TinyMCEControl';
 
 export const antdControlRenderers: RendererRegistryEntry[] = [
   { tester: antdBooleanControlTester, renderer: AntdBooleanControlWithStore },
