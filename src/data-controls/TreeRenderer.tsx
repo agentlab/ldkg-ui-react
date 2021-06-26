@@ -121,7 +121,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
     setAutoExpandParent(false);
   };
 
-  const titlePropName = viewElement?.options?.title || 'title';
+  const titlePropName = viewElement?.options?.treeNodeTitleKey || 'title';
 
   const searchEdit = (data: any) =>
     data.map((item: any) => {
@@ -235,15 +235,17 @@ export const TreeRenderer: React.FC<any> = (props) => {
   };
 
   const onCreateDirectory = (parentId: string) => {
-    onCreateFolder({ [titlePropName]: 'new', [viewElement?.options.parent || 'parent']: parentId }).then((e: any) => {
-      const data = [...treeData];
-      loop(data, parentId, (item: any) => {
-        const newNode = { ...e, ...{ edited: true, '@type': 'nav:folder', key: e['@id'] } };
-        item.children = [...item.children, ...[newNode]];
-        //item.children.unshift(newNode);
-      });
-      setTreeData(data);
-    });
+    onCreateFolder({ [titlePropName]: 'new', [viewElement?.options.treeNodeParentKey || 'parent']: parentId }).then(
+      (e: any) => {
+        const data = [...treeData];
+        loop(data, parentId, (item: any) => {
+          const newNode = { ...e, ...{ edited: true, '@type': 'nav:folder', key: e['@id'] } };
+          item.children = [...item.children, ...[newNode]];
+          //item.children.unshift(newNode);
+        });
+        setTreeData(data);
+      },
+    );
   };
   const onDeleteDirectory = (id: string) => {
     onDeleteFolder(id).then((e: any) => {

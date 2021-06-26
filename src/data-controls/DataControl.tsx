@@ -11,14 +11,12 @@ import React from 'react';
 
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { withStoreToDataControlProps, treeify, strcmp } from '../util/ContextToProps';
-import { TabsRenderer } from './TabsRenderer';
 import { TableRenderer } from './TableRenderer';
 import { TreeRenderer } from './TreeRenderer';
 
 const renderType: any = {
   tree: TreeRenderer,
   table: TableRenderer,
-  tab: TabsRenderer,
 };
 
 export const AntdDataLayout: React.FC<any> = (props) => {
@@ -37,7 +35,7 @@ export const AntdDataLayout: React.FC<any> = (props) => {
     onDeleteFolder,
     onRename,
   } = props;
-  const data = treeify(dataSource, '@id', viewElement?.options.parent || 'parent', 'children', strcmp);
+  const data = treeify(dataSource, '@id', viewElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
 
   const onSelect = (selected: { [key: string]: any }) => {
     handleChange(selected);

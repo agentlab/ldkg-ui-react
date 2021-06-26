@@ -51,6 +51,21 @@ const viewDescrs = [
         ],
       },
       {
+        '@id': 'rm:Category_Coll',
+        '@type': 'rm:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'rm:Cards_Coll_Ent0',
+            '@type': 'rm:EntConstr',
+            schema: 'hs:CategoryShape',
+            conditions: {
+              '_@id': 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie',
+            },
+          },
+        ],
+        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+      },
+      {
         '@id': 'rm:Cards_Coll',
         '@type': 'rm:CollConstr',
         entConstrs: [
@@ -66,8 +81,9 @@ const viewDescrs = [
     type: 'SplitPaneLayout',
     options: {
       defaultSize: {
-        'rm:Folders_Coll': '17%',
-        ArtifactForm: '83%',
+        MktpTabs: '17%',
+        CatForm: '40%',
+        CardForm: '43%',
       },
       height: 'all-empty-space',
       //width: 'all-empty-space',
@@ -75,17 +91,68 @@ const viewDescrs = [
     // child ui elements configs
     elements: [
       {
-        type: 'DataControl',
-        resultsScope: 'rm:Categories_Coll',
-        options: {
-          renderType: 'tree',
-          title: 'name',
-          parent: 'SubcatInCatLink',
-        },
+        '@id': 'MktpTabs',
+        type: 'TabsLayout',
+        elements: [
+          {
+            type: 'DataControl',
+            resultsScope: 'rm:Categories_Coll',
+            options: {
+              renderType: 'tree',
+              title: 'WildBerries',
+              treeNodeTitleKey: 'name',
+              treeNodeParentKey: 'SubcatInCatLink',
+            },
+          },
+          {
+            type: 'DataControl',
+            resultsScope: 'rm:Categories_Coll',
+            options: {
+              renderType: 'tree',
+              title: 'Amazon',
+              treeNodeTitleKey: 'name',
+              treeNodeParentKey: 'SubcatInCatLink',
+            },
+          },
+          {
+            type: 'DataControl',
+            resultsScope: 'rm:Categories_Coll',
+            options: {
+              renderType: 'tree',
+              title: '1688',
+              treeNodeTitleKey: 'name',
+              treeNodeParentKey: 'SubcatInCatLink',
+            },
+          },
+        ],
       },
       {
-        '@id': 'ArtifactForm',
+        '@id': 'CatForm',
         type: 'VerticalLayout',
+        options: {
+          style: {
+            margin: '5px',
+          },
+        },
+        elements: [
+          {
+            type: 'Control',
+            resultsScope: 'rm:Category_Coll/name',
+          },
+          {
+            type: 'Control',
+            resultsScope: 'rm:Category_Coll/description',
+          },
+        ],
+      },
+      {
+        '@id': 'CardForm',
+        type: 'VerticalLayout',
+        options: {
+          style: {
+            margin: '5px',
+          },
+        },
         elements: [
           {
             type: 'Control',

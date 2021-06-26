@@ -11,18 +11,20 @@ import { RendererRegistryEntry } from '../renderers';
 import { antdDataControlTester, AntdDataControlWithStore } from './DataControl';
 import { saveControlTester, AntdSaveControlWithStore } from './SaveControl';
 import { antdSelectControlTester, AntdSelectControlWithStore } from './SelectControl';
+import { antdTabControlTester, AntdTabControlWithStore } from './TabControlRenderer';
 
 export const antdRataControlRenderers: RendererRegistryEntry[] = [
   { tester: antdDataControlTester, renderer: AntdDataControlWithStore },
   { tester: saveControlTester, renderer: AntdSaveControlWithStore },
   { tester: antdSelectControlTester, renderer: AntdSelectControlWithStore },
+  { tester: antdTabControlTester, renderer: AntdTabControlWithStore },
 ];
 
 export * from './DataControl';
 export * from './NodeRenderer';
 export * from './SaveControl';
 export * from './SelectControl';
+export * from './TabControlRenderer';
 export * from './TableRenderer';
-export * from './TabsRenderer';
 export * from './TreeContextMenu';
 export * from './TreeRenderer';
