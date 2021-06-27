@@ -13,7 +13,7 @@ import { saveControlTester, AntdSaveControlWithStore } from './SaveControl';
 import { antdSelectControlTester, AntdSelectControlWithStore } from './SelectControl';
 import { antdTabControlTester, AntdTabControlWithStore } from './TabControlRenderer';
 
-export const antdRataControlRenderers: RendererRegistryEntry[] = [
+export const antdDataControlRenderers: RendererRegistryEntry[] = [
   { tester: antdDataControlTester, renderer: AntdDataControlWithStore },
   { tester: saveControlTester, renderer: AntdSaveControlWithStore },
   { tester: antdSelectControlTester, renderer: AntdSelectControlWithStore },

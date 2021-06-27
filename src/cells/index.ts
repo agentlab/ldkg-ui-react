@@ -10,7 +10,12 @@
 import { CellRendererRegistryEntry } from '../renderers';
 import { antdBooleanCellTester, AntdBooleanCellWithStore } from './AntdBooleanCell';
 import { antdEnumCellTester, AntdEnumCellWithStore } from './AntdEnumCell';
-import { antdNumberCellTester, AntdNumberCellWithStore } from './AntdNumberCell';
+import {
+  antdIntegerCellTester,
+  AntdIntegerCellWithStore,
+  antdNumberCellTester,
+  AntdNumberCellWithStore,
+} from './AntdNumberCell';
 import { antdTextCellTester, AntdTextCellWithStore } from './AntdTextCell';
 import { antdTimeCellTester, AntdTimeCellWithStore } from './AntdTimeCell';
 import { tinyMCECellTester, TinyMCECellWithStore } from './TinyMCECell';
@@ -18,6 +23,7 @@ import { tinyMCECellTester, TinyMCECellWithStore } from './TinyMCECell';
 export const antdCells: CellRendererRegistryEntry[] = [
   { tester: antdBooleanCellTester, cell: AntdBooleanCellWithStore },
   { tester: antdEnumCellTester, cell: AntdEnumCellWithStore },
+  { tester: antdIntegerCellTester, cell: AntdIntegerCellWithStore },
   { tester: antdNumberCellTester, cell: AntdNumberCellWithStore },
   { tester: antdTextCellTester, cell: AntdTextCellWithStore },
   { tester: antdTimeCellTester, cell: AntdTimeCellWithStore },

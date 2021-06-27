@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 
-import { rankWith, RankedTester, isIntegerControl } from '../testers';
+import { rankWith, RankedTester, isIntegerControl, isNumberControl } from '../testers';
 import { withStoreToCellProps } from '../util/ContextToProps';
 
 import { AntdInputNumber } from '../antd-controls/AntdInputNumber';
@@ -19,10 +19,8 @@ export const AntdNumberCell = (props: any) => {
   return <CellRenderer Cell={AntdInputNumber} {...props} />;
 };
 
-/**
- * Default tester for text-based/string controls.
- * @type {RankedTester}
- */
-export const antdNumberCellTester: RankedTester = rankWith(2, isIntegerControl);
+export const antdIntegerCellTester: RankedTester = rankWith(2, isIntegerControl);
+export const AntdIntegerCellWithStore = withStoreToCellProps(AntdNumberCell);
 
+export const antdNumberCellTester: RankedTester = rankWith(2, isNumberControl);
 export const AntdNumberCellWithStore = withStoreToCellProps(AntdNumberCell);

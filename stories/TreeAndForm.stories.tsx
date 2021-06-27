@@ -19,7 +19,7 @@ import {
   antdCells,
   antdControlRenderers,
   antdLayoutRenderers,
-  antdRataControlRenderers,
+  antdDataControlRenderers,
   Form,
   MstContextProvider,
   RendererRegistryEntry,
@@ -28,7 +28,7 @@ import {
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
   ...antdLayoutRenderers,
-  ...antdRataControlRenderers,
+  ...antdDataControlRenderers,
 ];
 
 const viewDescrs = [

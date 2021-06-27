@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@agentlab/sparql-jsld-client@^5.0.0-rc.8":
-  version "5.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@agentlab/sparql-jsld-client/-/sparql-jsld-client-5.0.0-rc.8.tgz#f0902bd1c298a4f20f1a15f04fde30e74037e6d4"
-  integrity sha512-SjAfHLOn5K0Cbw2QFlSmsWm04vyrzJMOZbPc75hmVToaCUgH+lxaNEGOztjWWiCcac8Sg7McbmSVvEwQI5dJrA==
+"@agentlab/sparql-jsld-client@^5.0.0-rc.9":
+  version "5.0.0-rc.9"
+  resolved "https://registry.yarnpkg.com/@agentlab/sparql-jsld-client/-/sparql-jsld-client-5.0.0-rc.9.tgz#c91316343cdf79da8b5953103998745083a27e60"
+  integrity sha512-oxGBRsJUzZHxqUaeaOTuQx9aNM6UhopW5cVkYOtJi3UUkTwd5ytcS5FKMCnxnfta5UrI+rS2m9mtqJL05E1mWA==
   dependencies:
     "@rdfjs/data-model" "^1.2.0"
     "@types/json-schema" "^7.0.7"

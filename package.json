@@ -33,7 +33,7 @@
     "lint-staged": "lint-staged"
   },
   "peerDependencies": {
-    "@agentlab/sparql-jsld-client": ">=5.0.0-rc.8",
+    "@agentlab/sparql-jsld-client": ">=5.0.0-rc.9",
     "@ant-design/icons": ">=4.6.2",
     "@tinymce/tinymce-react": ">=3.12.6",
     "antd": ">=4.16.5",
@@ -55,7 +55,7 @@
     "uri-js": ">=4.4.1"
   },
   "dependencies": {
-    "@agentlab/sparql-jsld-client": "^5.0.0-rc.8",
+    "@agentlab/sparql-jsld-client": "^5.0.0-rc.9",
     "@ant-design/icons": "^4.6.2",
     "@tinymce/tinymce-react": "^3.12.6",
     "@types/react": "^17.0.11",
