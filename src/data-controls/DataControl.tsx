@@ -13,10 +13,12 @@ import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { withStoreToDataControlProps, treeify, strcmp } from '../util/ContextToProps';
 import { TableRenderer } from './TableRenderer';
 import { TreeRenderer } from './TreeRenderer';
+import { GridRenderer } from './GridRenderer';
 
 const renderType: any = {
   tree: TreeRenderer,
   table: TableRenderer,
+  grid: GridRenderer,
 };
 
 export const AntdDataLayout: React.FC<any> = (props) => {
@@ -36,7 +38,6 @@ export const AntdDataLayout: React.FC<any> = (props) => {
     onRename,
   } = props;
   const data = treeify(dataSource, '@id', viewElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
-
   const onSelect = (selected: { [key: string]: any }) => {
     handleChange(selected);
   };
