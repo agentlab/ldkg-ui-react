@@ -14,7 +14,7 @@ import { DispatchCell } from '../DispatchCell';
 import { DispatchCellProps } from '../Form';
 import { ViewElement } from '../models/uischema';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 
 import { Idx } from '../util/layout';
 

@@ -31,53 +31,6 @@ const antdRenderers: RendererRegistryEntry[] = [
   ...antdDataControlRenderers,
 ];
 
-const cardData = [
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '2',
-    name: 'test2',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-  {
-    '@id': '1',
-    name: 'test1',
-    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  },
-];
 const viewDescrs = [
   {
     '@id': 'mktp:CardCellViewDescr',

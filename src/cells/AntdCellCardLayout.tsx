@@ -10,7 +10,7 @@
 import React from 'react';
 
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 
 import { ViewElement } from '../models/uischema';
 import { Card } from 'antd';
