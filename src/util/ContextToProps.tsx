@@ -203,7 +203,8 @@ export const withStoreToButtonProps = (Component: any): any =>
   });
 export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>((props: any) => {
-    const { data, onMeasureChange, height, uri, CKey, rowData } = props;
+    const { data, onMeasureChange, height, uri, CKey, rowData, viewElement } = props;
+    const path = viewElement.scope ? viewElement.scope.split('/').join('.') : null;
     const controlProps = mapStateToControlProps(props);
     /*const { store } = useRootCtx();
     const onSave = (data: any) => {
@@ -213,7 +214,7 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
     };*/
     return (
       <Component
-        data={data}
+        data={path ? get(data, path) : data}
         height={height}
         rowData={rowData}
         onMeasureChange={onMeasureChange}

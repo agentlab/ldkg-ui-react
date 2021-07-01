@@ -66,7 +66,7 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
   }
   //console.log('RENDER', props.data);
   return (
-    <div style={{ margin: '5px', display: 'block', alignSelf: 'start', width: width }}>
+    <div style={{ margin: '5px', display: 'block', alignSelf: 'start', width: width, ...uiOptions.style }}>
       {editable ? (
         editing ? (
           <Cell inputRef={inputRef} value={currentData} handleChange={save} {...props} />
@@ -76,6 +76,7 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
               myRef={myRef}
               query={query}
               propKey={uiOptions.key}
+              options={uiOptions}
               value={currentData}
               {...specialProps}
               {...props}
@@ -83,7 +84,14 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
           </div>
         )
       ) : (
-        <Formater value={props.data} query={query} propKey={uiOptions.key} {...specialProps} {...props} />
+        <Formater
+          value={props.data}
+          query={query}
+          propKey={uiOptions.key}
+          options={uiOptions}
+          {...specialProps}
+          {...props}
+        />
       )}
     </div>
   );

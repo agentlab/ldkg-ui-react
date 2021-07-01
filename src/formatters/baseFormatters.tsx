@@ -11,9 +11,10 @@ import { isArray } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Image } from 'antd';
+import { Image, Row, Col } from 'antd';
 
 import { spriteSheet } from './iconsGreed';
+import { number } from 'mobx-state-tree/dist/internal';
 interface SpriteProps {
   filename: string;
   x: number;
@@ -79,4 +80,39 @@ export const artifactTitle = ({ value, type }: any) => {
 
 export const dateTime = ({ value }: any) => <span>{moment(value).subtract(10, 'days').calendar()}</span>;
 
-export const link = ({ value, link }: any) => <a href={link ? link : value}>{value ? value : link}</a>;
+export const link = ({ value, link, options }: any) => {
+  const label = options.label || value || link;
+  const specialImage = options.specialImage;
+  return (
+    <React.Fragment>
+      {specialImage ? (
+        <Image style={{ display: 'inline', width: '1em', height: '1em' }} src={specialImage} preview={false} />
+      ) : null}
+      <a style={{ color: 'black', verticalAlign: 'middle' }} href={link ? link : value}>
+        {label}
+      </a>
+    </React.Fragment>
+  );
+};
+
+export const labeledValue = ({ value, options }: any) => {
+  const label = options.label || null;
+  const specialChar = options.specialChar || '';
+  return (
+    <React.Fragment>
+      <span>{label}</span> : <span>{`${specialChar}${value}`}</span>
+    </React.Fragment>
+  );
+};
+
+export const сomparison = ({ value, prevValue, options }: any) => {
+  const delta: number = value - prevValue;
+  const label = options.label;
+  return (
+    <React.Fragment>
+      {label ? <span>{`${label} : `}</span> : null}
+      <span style={{ color: delta < 0 ? '#F7021B' : '#0CED1B' }}>{`${delta < 0 ? '↓' : '↑'}${value}`}</span>
+      <sup>{`${delta < 0 ? '' : '+'}${delta}`}</sup>
+    </React.Fragment>
+  );
+};
