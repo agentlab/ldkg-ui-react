@@ -147,7 +147,7 @@ const viewDescrs = [
                       options: {
                         formater: 'labeledValue',
                         label: 'Цена',
-                        specialChar: '$',
+                        specialChar: '₽',
                         style: {
                           textAlign: 'left',
                           fontFamily: 'Lato,Tahoma,sans-serif',
