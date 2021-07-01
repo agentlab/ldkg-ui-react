@@ -22,6 +22,9 @@ import { tinyMCECellTester, TinyMCECellWithStore } from './TinyMCECell';
 import { antdImageCellTester, AntdImageCellWithStore } from './AntdImageCell';
 import { antdCellCardLayoutTester, AntdCellCardLayout } from './AntdCellCardLayout';
 import { antdHorizontalLayoutTester, AntdHorizontalLayoutRenderer } from './AntdCellHorizontalLayout';
+import { antdCellRateWidgetTester, AntdCellRateWidgetWithStore } from './AntdCellRateWidget';
+import { antdCellG2Tester, AntdCellG2 } from './AntdCellG2';
+import { antdButtonCellTester, AntdButtonCellWithStore } from './AntdButtonCell';
 
 export const antdCells: CellRendererRegistryEntry[] = [
   { tester: antdBooleanCellTester, cell: AntdBooleanCellWithStore },
@@ -34,6 +37,9 @@ export const antdCells: CellRendererRegistryEntry[] = [
   { tester: antdImageCellTester, cell: AntdImageCellWithStore },
   { tester: antdCellCardLayoutTester, cell: AntdCellCardLayout },
   { tester: antdHorizontalLayoutTester, cell: AntdHorizontalLayoutRenderer },
+  { tester: antdCellRateWidgetTester, cell: AntdCellRateWidgetWithStore },
+  { tester: antdCellG2Tester, cell: AntdCellG2 },
+  { tester: antdButtonCellTester, cell: AntdButtonCellWithStore },
 ];
 
 export * from './AntdBooleanCell';

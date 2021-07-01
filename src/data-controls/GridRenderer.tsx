@@ -30,6 +30,7 @@ export const GridRenderer: React.FC<any> = (props) => {
           key={String(id) + String(idx)}
           view={view}
           data={data}
+          rowData={data}
           schema={schema}
           viewElement={e}
           uischema={uischema}
@@ -45,9 +46,10 @@ export const GridRenderer: React.FC<any> = (props) => {
   );
   const createGrid = () =>
     child.reduce((acc: any, e: any, idx: number) => {
-      if ((idx !== 0 && (idx + 4) % 4 === 0) || idx === child.length - 1) {
+      const remainder = (idx + 1) % 4;
+      if (remainder === 0 || idx === child.length - 1) {
         const newColl = createCol(e, idx);
-        const colls = acc.splice(idx % 4 === 0 ? -3 : 1 - (idx % 4));
+        const colls = remainder === 1 ? [] : acc.splice(remainder === 0 ? -3 : 1 - remainder);
         colls.push(newColl);
         acc.push(
           <Row style={{ height: '100px' }} key={idx / 4} gutter={[10, 10]}>

@@ -34,13 +34,48 @@ const antdRenderers: RendererRegistryEntry[] = [
 const cardData = [
   {
     '@id': '1',
-    title: 'test1',
-    image: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
   {
     '@id': '2',
-    title: 'test2',
-    image: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    name: 'test2',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+  },
+  {
+    '@id': '1',
+    name: 'test1',
+    imageUrl: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
   },
 ];
 const viewDescrs = [
@@ -80,11 +115,138 @@ const viewDescrs = [
               elements: [
                 {
                   type: 'ImageCell',
-                  scope: 'image',
+                  scope: 'imageUrl',
                 },
                 {
                   type: 'Control',
-                  scope: 'title',
+                  scope: 'name',
+                  options: {
+                    style: {
+                      height: '3.5em',
+                      textAlign: 'left',
+                      fontFamily: 'Lato,Tahoma,sans-serif',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      margin: 0,
+                    },
+                  },
+                },
+                {
+                  type: 'Rate',
+                  scope: 'starsValue',
+                },
+                {
+                  type: 'CellHorizontalLayout',
+                  options: {
+                    justify: 'space-between',
+                  },
+                  elements: [
+                    {
+                      type: 'Control',
+                      scope: 'price',
+                      options: {
+                        formater: 'labeledValue',
+                        label: 'Цена',
+                        specialChar: '$',
+                        style: {
+                          textAlign: 'left',
+                          fontFamily: 'Lato,Tahoma,sans-serif',
+                          color: 'gray',
+                        },
+                      },
+                    },
+                    {
+                      type: 'Control',
+                      scope: 'totalSales',
+                      options: {
+                        formater: 'labeledValue',
+                        label: 'Всего продано',
+                        style: {
+                          textAlign: 'right',
+                          fontFamily: 'Lato,Tahoma,sans-serif',
+                          color: 'gray',
+                        },
+                      },
+                    },
+                  ],
+                },
+                {
+                  type: 'Control',
+                  scope: 'lastMonthSalesAmount',
+                  options: {
+                    formater: 'сomparison',
+                    dataToFormater: {
+                      prevValue: 'prevMonthSalesAmount',
+                    },
+                    label: 'Продажи за месяц',
+                    style: {
+                      textAlign: 'left',
+                      fontFamily: 'Lato,Tahoma,sans-serif',
+                      color: 'gray',
+                    },
+                  },
+                },
+                {
+                  type: 'Control',
+                  scope: 'lastMonthSalesValue',
+                  options: {
+                    formater: 'сomparison',
+                    dataToFormater: {
+                      prevValue: 'prevMonthSalesValue',
+                    },
+                    label: 'Объем продаж',
+                    style: {
+                      textAlign: 'left',
+                      fontFamily: 'Lato,Tahoma,sans-serif',
+                      color: 'gray',
+                    },
+                  },
+                },
+                {
+                  type: 'G2',
+                },
+                {
+                  type: 'CellHorizontalLayout',
+                  options: {
+                    justify: 'space-around',
+                  },
+                  elements: [
+                    {
+                      type: 'Control',
+                      scope: '@id',
+                      options: {
+                        style: {
+                          border: '1.5px solid black',
+                          borderRadius: '2px',
+                          height: '2em',
+                          textAlign: 'center',
+                          fontWeight: 500,
+                          width: '90px',
+                          color: 'black',
+                        },
+                        specialImage: 'https://www.meme-arsenal.com/memes/f8e9bfb9fdf368272b21a5dac8f01ec1.jpg',
+                        editable: false,
+                        formater: 'link',
+                        dataToFormater: {
+                          link: '@id',
+                        },
+                        label: 'Wildberries',
+                      },
+                    },
+                    {
+                      type: 'Button',
+                      options: {
+                        label: 'Добавить',
+                        style: {
+                          border: '1.5px solid black',
+                          borderRadius: '2px',
+                          width: '90px',
+                          fontWeight: 500,
+                          color: 'black',
+                        },
+                      },
+                    },
+                  ],
                 },
               ],
             },
@@ -127,20 +289,10 @@ const additionalColls: CollState[] = [
       // for viewDescrs.collConstrs (it loads lazily -- after the first access)
     },
   },
-  {
-    constr: viewDescrs[0].collsConstrs[0],
-    data: cardData,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
-      // for viewDescrs.collConstrs (it loads lazily -- after the first access)
-    },
-  },
 ];
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+const rootStore = createModelFromState('mktp', client, rootModelInitialState, additionalColls);
 console.log('rootStore', rootStore);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -157,7 +309,14 @@ export default {
 export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-      <div style={{ height: '1000px', width: '100%' }}>
+      <div
+        style={{
+          height: '1000px',
+          width: '1000px',
+          backgroundColor: 'rgba(230, 235, 242, 0.5)',
+          margin: '0 auto',
+          padding: '5px',
+        }}>
         <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>

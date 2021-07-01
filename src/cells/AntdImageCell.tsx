@@ -3,11 +3,12 @@ import React from 'react';
 import { uiTypeIs, rankWith, RankedTester } from '../testers';
 import { withStoreToCellProps } from '../util/ContextToProps';
 import { Image } from 'antd';
+import { useEffect } from '@storybook/addons';
+import './cell.css';
 
 export const AntdImageCell = (props: any) => {
   const { data } = props;
-  console.log('data', data);
-  return <Image src={data} />;
+  return <Image style={{ height: '100%', width: '100%' }} src={data[0]} />;
 };
 
 /**

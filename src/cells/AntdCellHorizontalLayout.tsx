@@ -38,18 +38,19 @@ export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
     form,
   }) => {
     const options = viewElement.options || {};
-    const style: any = options.style;
+    //const style: any = options.style;
     const span = options.contentSize || !viewElement.elements ? undefined : Math.ceil(24 / viewElement.elements.length);
     const newSchema = viewElement.scope
       ? get(schema, 'properties.' + viewElement.scope.replace(/\//, '.properties.'))
       : schema;
     return (
-      <Col key={idx} style={style} span={span}>
+      <Col key={idx} span={span}>
         <DispatchCell
           id={String(idx)}
           data={data}
           viewElement={viewElement}
           view={view}
+          rowData={data}
           schema={newSchema || schema}
           uischema={uischema}
           enabled={enabled}

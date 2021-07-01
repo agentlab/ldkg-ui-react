@@ -25,3 +25,18 @@
 [data-theme='dark'] .editable-row:hover .editable-cell-value-wrap {
   border: 1px solid #434343;
 }
+
+.ant-card-body {
+  padding: 8px !important;
+}
+
+.image-wrapper {
+  position: relative;
+  background-color: #fe0;
+  width: 100%;
+}
+.image-wrapper {
+  content: '';
+  padding-top: 100%;
+  display: block;
+}

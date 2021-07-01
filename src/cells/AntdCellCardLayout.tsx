@@ -15,6 +15,7 @@ import { get } from 'lodash';
 import { ViewElement } from '../models/uischema';
 import { Card } from 'antd';
 import { DispatchCell } from '../DispatchCell';
+import './cell.css';
 
 export const AntdCellCardLayout = (props: any) => {
   const { viewElement, view, schema, uischema, data, id } = props;
@@ -22,13 +23,13 @@ export const AntdCellCardLayout = (props: any) => {
     viewElement.elements
       ? viewElement.elements.map((e: ViewElement, idx: number) => {
           const newSchema = e.scope ? get(schema, 'properties.' + e.scope.replace(/\//, '.properties.')) : schema;
-          console.log('newSCHEMA', newSchema, schema);
           return (
             <DispatchCell
               id={id + String(idx)}
               key={id + String(idx)}
               view={view}
               data={data}
+              rowData={data}
               schema={newSchema || schema}
               viewElement={e}
               uischema={uischema}
@@ -36,11 +37,7 @@ export const AntdCellCardLayout = (props: any) => {
           );
         })
       : null;
-  return (
-    <Card hoverable style={{ padding: '0px' }}>
-      {createCardChilds()}
-    </Card>
-  );
+  return <Card hoverable>{createCardChilds()}</Card>;
 };
 
 /**

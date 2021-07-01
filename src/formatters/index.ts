@@ -9,7 +9,17 @@
  ********************************************************************************/
 import { JsObject } from '@agentlab/sparql-jsld-client';
 
-import { base, identifier, dateTime, artifactTitle, integer, link, image } from './baseFormatters';
+import {
+  base,
+  identifier,
+  dateTime,
+  artifactTitle,
+  integer,
+  link,
+  image,
+  labeledValue,
+  сomparison,
+} from './baseFormatters';
 import { StoreDataFormater } from './StoreDataFormater';
 import { TinyMCE } from './tinyMCE';
 
@@ -23,4 +33,6 @@ export const formatters: JsObject = {
   link,
   tinyMCE: TinyMCE,
   dataFormater: StoreDataFormater,
+  labeledValue,
+  сomparison,
 };
