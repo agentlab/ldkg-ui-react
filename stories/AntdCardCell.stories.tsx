@@ -69,7 +69,7 @@ const viewDescrs = [
             md: 3,
             lg: 3,
             xl: 4,
-            xxl: 5,
+            xxl: 7,
           },
           elementTemplate: [
             {
