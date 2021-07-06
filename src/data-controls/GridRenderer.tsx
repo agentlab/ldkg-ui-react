@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Pagination } from 'antd';
+import { List, Row, Col, Pagination } from 'antd';
 import { ViewElement } from '../models/uischema';
 
 import { DispatchCell } from '../DispatchCell';
@@ -21,6 +21,8 @@ const divStyle: React.CSSProperties = {
 
 export const GridRenderer: React.FC<any> = (props) => {
   const { child, onSelect, viewElement, uischema, view, schema } = props;
+  const grid = viewElement?.options?.grid || { gutter: 16, column: 4 };
+  console.log('UISCEMA', uischema);
   const template = viewElement?.options?.elementTemplate || null;
   const createCell = (data: any, id: string | number) =>
     template ? (
@@ -39,32 +41,7 @@ export const GridRenderer: React.FC<any> = (props) => {
     ) : (
       <span key={id}>{data['@id']}</span>
     );
-  const createCol = (data: any, idx: number) => (
-    <Col span={6} style={{ height: '100%' }} key={idx}>
-      {createCell(data, idx)}
-    </Col>
-  );
-  const createGrid = () =>
-    child.reduce((acc: any, e: any, idx: number) => {
-      const remainder = (idx + 1) % 4;
-      if (remainder === 0 || idx === child.length - 1) {
-        const newColl = createCol(e, idx);
-        const colls = remainder === 1 ? [] : acc.splice(remainder === 0 ? -3 : 1 - remainder);
-        colls.push(newColl);
-        acc.push(
-          <Row style={{ height: '100px' }} key={idx / 4} gutter={[10, 10]}>
-            {colls}
-          </Row>,
-        );
-      } else {
-        acc.push(createCol(e, idx));
-      }
-      return acc;
-    }, []);
   return (
-    <React.Fragment>
-      {createGrid()}
-      <Pagination />
-    </React.Fragment>
+    <List grid={grid} dataSource={child} renderItem={(item, idx) => <List.Item>{createCell(item, idx)}</List.Item>} />
   );
 };
