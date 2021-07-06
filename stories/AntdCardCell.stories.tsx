@@ -62,7 +62,15 @@ const viewDescrs = [
         resultsScope: 'rm:Cards_Coll',
         options: {
           renderType: 'grid',
-          grid: { gutter: 16, column: 4 },
+          grid: {
+            gutter: 16,
+            xs: 2,
+            sm: 2,
+            md: 3,
+            lg: 3,
+            xl: 4,
+            xxl: 5,
+          },
           elementTemplate: [
             {
               type: 'CardLayout',
@@ -75,6 +83,7 @@ const viewDescrs = [
                   type: 'Control',
                   scope: 'name',
                   options: {
+                    editable: false,
                     style: {
                       height: '3.5em',
                       textAlign: 'left',
@@ -88,6 +97,9 @@ const viewDescrs = [
                 {
                   type: 'Rate',
                   scope: 'starsValue',
+                  options: {
+                    editable: false,
+                  },
                 },
                 {
                   type: 'CellHorizontalLayout',
@@ -100,6 +112,7 @@ const viewDescrs = [
                       scope: 'price',
                       options: {
                         formater: 'labeledValue',
+                        editable: false,
                         label: 'Цена',
                         specialChar: '₽',
                         style: {
@@ -114,6 +127,7 @@ const viewDescrs = [
                       scope: 'totalSales',
                       options: {
                         formater: 'labeledValue',
+                        editable: false,
                         label: 'Всего продано',
                         style: {
                           textAlign: 'right',
@@ -128,6 +142,7 @@ const viewDescrs = [
                   type: 'Control',
                   scope: 'lastMonthSalesAmount',
                   options: {
+                    editable: false,
                     formater: 'сomparison',
                     dataToFormater: {
                       prevValue: 'prevMonthSalesAmount',
@@ -145,6 +160,7 @@ const viewDescrs = [
                   scope: 'lastMonthSalesValue',
                   options: {
                     formater: 'сomparison',
+                    editable: false,
                     dataToFormater: {
                       prevValue: 'prevMonthSalesValue',
                     },
@@ -265,8 +281,8 @@ export const Empty: Story<{}> = () => (
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div
         style={{
-          height: '1000px',
-          width: '1000px',
+          //height: '1000px',
+          width: '100%',
           backgroundColor: 'rgba(230, 235, 242, 0.5)',
           margin: '0 auto',
           padding: '5px',
