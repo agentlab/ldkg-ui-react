@@ -11,8 +11,7 @@ const template: any = {
   'https://www.wildberries.ru/catalog/18247707/detail.aspx': '/img/chart_4.png',
 };
 export const AntdCellG2 = (props: any) => {
-  console.log('PROPS', props);
-  return <Image src={template[props.data['@id']]} />;
+  return <Image style={{ height: '217px' }} src={template[props.data['@id']]} />;
 };
 
 /**

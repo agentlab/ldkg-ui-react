@@ -62,6 +62,7 @@ const viewDescrs = [
         resultsScope: 'rm:Cards_Coll',
         options: {
           renderType: 'grid',
+          grid: { gutter: 16, column: 4 },
           elementTemplate: [
             {
               type: 'CardLayout',
