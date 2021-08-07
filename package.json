@@ -1,6 +1,6 @@
 {
   "name": "@agentlab/ldkg-ui-react",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "LDKG Forms UI Components",
   "license": "GPL-3.0",
   "author": "Alexey Ivanov <amivanoff@gmail.com>",
