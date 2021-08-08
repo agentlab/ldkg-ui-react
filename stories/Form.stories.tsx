@@ -14,7 +14,13 @@ import { Meta, Story } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import {
+  SparqlClientImpl,
+  rootModelInitialState,
+  createModelFromState,
+  CollState,
+  mstSchemas,
+} from '@agentlab/sparql-jsld-client';
 
 import {
   RendererRegistryEntry,
@@ -24,13 +30,15 @@ import {
   antdControlRenderers,
   antdLayoutRenderers,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
+import { ViewDescr } from '../src/stores/ViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
 const viewDescrs = [
   {
     '@id': 'rm:FormView',
-    '@type': 'rm:View',
+    '@type': 'aldkg:ViewDescr',
     //'viewKind': 'rm:FormViewClass',
     title: 'Малая форма',
     description: 'Small form',
@@ -38,11 +46,11 @@ const viewDescrs = [
     collsConstrs: [
       {
         '@id': 'rm:FormView_Artifacts_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:FormView_Artifacts_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
           },
         ],
@@ -78,16 +86,6 @@ const viewDescrs = [
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
-
 const additionalColls: CollState[] = [
   // ViewKinds Collection
   /*{
@@ -111,6 +109,8 @@ const additionalColls: CollState[] = [
     },
   },
 ];
+
+mstSchemas['aldkg:ViewDescr'] = ViewDescr;
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
 const rootStore = createModelFromState('reqs2', client, rootModelInitialState, additionalColls);

@@ -13,50 +13,58 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import {
+  SparqlClientImpl,
+  rootModelInitialState,
+  createModelFromState,
+  CollState,
+  mstSchemas,
+} from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
   antdControlRenderers,
   antdLayoutRenderers,
-  antdRataControlRenderers,
+  antdDataControlRenderers,
   Form,
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
+import { ViewDescr } from '../src/stores/ViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
   ...antdLayoutRenderers,
-  ...antdRataControlRenderers,
+  ...antdDataControlRenderers,
 ];
 
 const viewDescrs = [
   {
     '@id': 'mktp:TreeAndFormViewDescr',
-    '@type': 'rm:View',
+    '@type': 'aldkg:ViewDescr',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
     viewKind: 'rm:TreeAndFormViewKind',
     collsConstrs: [
       {
         '@id': 'rm:Folders_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Folders_Coll_Shape0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'nav:folderShape',
           },
         ],
       },
       {
         '@id': 'rm:Artifacts_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Artifacts_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
           },
         ],
@@ -118,16 +126,6 @@ const viewDescrs = [
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
-
 const additionalColls: CollState[] = [
   // ViewKinds Collection
   /*{
@@ -151,6 +149,8 @@ const additionalColls: CollState[] = [
     },
   },
 ];
+
+mstSchemas['aldkg:ViewDescr'] = ViewDescr;
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
 const rootStore = createModelFromState('reqs2', client, rootModelInitialState, additionalColls);

@@ -52,15 +52,15 @@ export interface ButtonComponent {
 
 export const withStoreToControlProps = (Component: React.FC<ControlComponent>): React.FC<ToControlProps> =>
   observer<ToControlProps>((props) => {
-    const succesValidation = {
-      validateStatus: 'succes',
+    const successValidation = {
+      validateStatus: 'success',
     };
     const { form, viewElement } = props;
     const id = viewElement.resultsScope;
     const [validateObj, setValidateObj] = useState<{
       validateStatus: string;
       help?: string;
-    }>(succesValidation);
+    }>(successValidation);
     const [req] = id?.split('/') || [];
     const [testReq, testUri] = viewElement.resultsScope?.split('/') || [];
     const { store } = useContext(MstContext);
@@ -86,7 +86,7 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
             help,
           });
         } else {
-          setValidateObj(succesValidation);
+          setValidateObj(successValidation);
           store.setOnValidate(form, viewElement.resultsScope, true);
         }
       }

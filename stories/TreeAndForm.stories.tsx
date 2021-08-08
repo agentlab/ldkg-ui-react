@@ -13,7 +13,13 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import {
+  SparqlClientImpl,
+  rootModelInitialState,
+  createModelFromState,
+  CollState,
+  mstSchemas,
+} from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -24,6 +30,8 @@ import {
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
+import { ViewDescr } from '../src/stores/ViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -34,29 +42,29 @@ const antdRenderers: RendererRegistryEntry[] = [
 const viewDescrs = [
   {
     '@id': 'mktp:TreeAndFormViewDescr',
-    '@type': 'rm:View',
+    '@type': 'aldkg:ViewDescr',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
     viewKind: 'rm:TreeAndFormViewKind',
     collsConstrs: [
       {
         '@id': 'rm:Categories_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Categories_Coll_Shape0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
           },
         ],
       },
       {
         '@id': 'rm:Category_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Cards_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
             conditions: {
               '_@id': 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie',
@@ -67,11 +75,11 @@ const viewDescrs = [
       },
       {
         '@id': 'rm:Cards_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Cards_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
           },
         ],
@@ -279,16 +287,6 @@ const viewDescrs = [
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
-
 const additionalColls: CollState[] = [
   // ViewKinds Collection
   /*{
@@ -312,6 +310,8 @@ const additionalColls: CollState[] = [
     },
   },
 ];
+
+mstSchemas['aldkg:ViewDescr'] = ViewDescr;
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
 const rootStore = createModelFromState('mktp', client, rootModelInitialState, additionalColls);

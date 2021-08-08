@@ -164,12 +164,13 @@ export const Form: React.FC<FormsInitStateProps> = observer<FormsInitStateProps>
   //const collSS = getSnapshot(coll);
   const views = coll?.data;
   const viewObs: any = coll?.dataByIri(viewIri);
-
+  if (!viewObs) {
+    return <Spin />;
+  }
   const view = getSnapshot(viewObs);
-  const viewElement = view;
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-      <FormsDispatch {...props} view={view} viewElement={viewElement} />
+      <FormsDispatch {...props} view={view} viewElement={view} />
     </ErrorBoundary>
   );
 });
