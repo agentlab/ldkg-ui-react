@@ -16,7 +16,7 @@
             "request": "launch",
             "name": "Launch Storybook in Chrome",
             "breakOnLoad": true,
-            "url": "http://localhost:6006/?path=/story/several-controls-treeandform-mktp--empty",
+            "url": "http://localhost:6006/?path=/story/several-controls-treeandform-cards--empty",
             "sourceMaps": true,
             "webRoot": "${workspaceFolder}",
             "sourceMapPathOverrides": {
