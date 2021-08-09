@@ -13,13 +13,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import {
-  SparqlClientImpl,
-  rootModelInitialState,
-  createModelFromState,
-  CollState,
-  mstSchemas,
-} from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -31,7 +25,7 @@ import {
   RendererRegistryEntry,
 } from '../src';
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
-import { ViewDescr } from '../src/stores/ViewDescr';
+import { createUiModelFromState } from '../src/stores/ViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -39,13 +33,12 @@ const antdRenderers: RendererRegistryEntry[] = [
   ...antdDataControlRenderers,
 ];
 
-const viewDescrs = [
+const viewKinds = [
   {
-    '@id': 'mktp:TreeAndFormViewDescr',
+    '@id': 'mktp:TreeAndFormViewKind',
     '@type': 'aldkg:ViewDescr',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
-    viewKind: 'rm:TreeAndFormViewKind',
     collsConstrs: [
       {
         '@id': 'rm:Cards_Coll',
@@ -231,17 +224,34 @@ const viewDescrs = [
   },
 ];
 
+const viewDescrs = [
+  {
+    '@id': 'mktp:TreeAndFormViewDescr',
+    '@type': 'aldkg:ViewDescr',
+    viewKind: 'mktp:TreeAndFormViewKind',
+    type: 'VerticalLayout',
+    title: 'CardCellGrid',
+    description: 'CardCellGrid',
+    collsConstrs: [],
+    options: {
+      //width: 'all-empty-space',
+    },
+    // child ui elements configs
+    elements: [],
+  },
+];
+
 const additionalColls: CollState[] = [
   // ViewKinds Collection
-  /*{
+  {
     constr: viewKindCollConstr,
     data: viewKinds,
     opt: {
       updPeriod: undefined,
       lastSynced: moment.now(),
-      resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
     },
-  },*/
+  },
   // ViewDescrs Collection
   {
     constr: viewDescrCollConstr,
@@ -255,10 +265,8 @@ const additionalColls: CollState[] = [
   },
 ];
 
-mstSchemas['aldkg:ViewDescr'] = ViewDescr;
-
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createModelFromState('mktp', client, rootModelInitialState, additionalColls);
+const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 connectReduxDevtools(require('remotedev'), rootStore);
@@ -275,7 +283,11 @@ export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px', width: '100%' }}>
-        <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
+        <Form
+          viewDescrId={viewDescrs[0]['@id']}
+          viewDescrCollId={viewDescrCollConstr['@id']}
+          viewKindCollId={viewKindCollConstr['@id']}
+        />
       </div>
     </MstContextProvider>
   </Provider>

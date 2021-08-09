@@ -19,7 +19,6 @@ import { Idx } from '../util/layout';
 import { LayoutComponent } from './LayoutComponent';
 
 export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
-  uischema,
   viewElement,
   view,
   enabled,
@@ -27,20 +26,13 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   parent,
 }) => {
   //const layout = viewElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, uischema, viewElement, view, enabled, parent, form }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled, parent, form }) => {
     const options = viewElement.options || {};
     const style: any = options.style;
     const span = options.contentSize || !viewElement.elements ? undefined : Math.ceil(24 / viewElement.elements.length);
     return (
       <Col key={idx} style={style} span={span}>
-        <FormsDispatch
-          viewElement={viewElement}
-          view={view}
-          uischema={uischema}
-          enabled={enabled}
-          parent={parent}
-          form={form}
-        />
+        <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} parent={parent} form={form} />
       </Col>
     );
   };
@@ -49,7 +41,7 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   if (viewElement.options && viewElement.options.width === 'all-empty-space') rowStyle.width = '100%';
   return (
     <Row justify={justify} style={rowStyle} align={'middle'}>
-      {renderLayoutElements({ uischema, viewElement, view, enabled, Render, parent })}
+      {renderLayoutElements({ viewElement, view, enabled, Render, parent })}
     </Row>
   );
 };

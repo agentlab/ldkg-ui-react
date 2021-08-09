@@ -11,7 +11,7 @@ import { JSONSchema6forRdf } from '@agentlab/sparql-jsld-client';
 
 export const ViewShapeSchema: JSONSchema6forRdf = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  '@id': 'rm:ViewShape',
+  '@id': 'aldkg:ViewShape',
   '@type': 'sh:NodeShape',
   title: 'View Shape',
   description: 'Artifact Shape',
@@ -37,7 +37,7 @@ export const ViewShapeSchema: JSONSchema6forRdf = {
 
 export const ViewKindShapeSchema: JSONSchema6forRdf = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  '@id': 'rm:ViewShape',
+  '@id': 'aldkg:ViewShape',
   '@type': 'sh:NodeShape',
   title: 'View Shape',
   description: 'Artifact Shape',

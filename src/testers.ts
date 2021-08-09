@@ -9,7 +9,7 @@
  ********************************************************************************/
 import { find, includes, isArray, isEmpty } from 'lodash-es';
 import { JsonSchema7 } from './models/jsonSchema7';
-import { UISchemaElement, ViewElement } from './models/uischema';
+import { ViewElement } from './models/uischema';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -68,8 +68,8 @@ export const rankWith =
  */
 export const uiTypeIs =
   (expected: string): Tester =>
-  (uischema: UISchemaElement): boolean =>
-    !isEmpty(uischema) && uischema.type === expected;
+  (viewElement: ViewElement): boolean =>
+    !isEmpty(viewElement) && viewElement.type === expected;
 
 /**
  * Checks whether the given UI schema has an option with the given
@@ -81,12 +81,12 @@ export const uiTypeIs =
  */
 export const optionIs =
   (optionName: string, optionValue: any): Tester =>
-  (uischema: UISchemaElement): boolean => {
-    if (isEmpty(uischema)) {
+  (viewElement: ViewElement): boolean => {
+    if (isEmpty(viewElement)) {
       return false;
     }
 
-    const options = (uischema as any).options;
+    const options = (viewElement as any).options;
     return !isEmpty(options) && options[optionName] === optionValue;
   };
 

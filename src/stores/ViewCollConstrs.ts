@@ -8,11 +8,11 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 export const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
+  '@id': 'aldkg:Views_Coll',
   entConstrs: [
     {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
+      '@id': 'aldkg:Views_EntConstr0',
+      schema: 'aldkg:ViewShape',
     },
   ],
 };

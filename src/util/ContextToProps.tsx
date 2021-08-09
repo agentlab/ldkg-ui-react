@@ -16,7 +16,7 @@ import { observer } from 'mobx-react-lite';
 
 import { createLabelDescriptionFrom } from './label';
 import { LayoutComponent } from '../layouts/LayoutComponent';
-import { UISchema, View, ViewElement, ViewClassElement } from '../models/uischema';
+import { View, ViewElement } from '../models/uischema';
 import { ControlComponent, RenderProps } from '../Form';
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
@@ -25,9 +25,6 @@ import { MstContext } from '../MstContext';
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
 
-export interface Control extends ViewClassElement {
-  resultsScope: string;
-}
 export type ToControlProps = RenderProps;
 
 export interface SaveDialogProps {
@@ -110,20 +107,19 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     );
   });
 export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, enabled, parent, form }) => {
+  observer<RenderProps>(({ viewElement, view, enabled, parent, form }) => {
     if (!view['@id']) {
       return null;
     }
     const title = viewElement.options ? viewElement.options.title : '';
     const id = viewElement['@id'];
-    const enabledLayout = enabled && checkProperty('editable', id, uischema, viewElement, view);
-    const visible = checkProperty('visible', id, uischema, viewElement, view);
+    const enabledLayout = enabled && checkProperty('editable', id, viewElement, view);
+    const visible = checkProperty('visible', id, viewElement, view);
     const { store } = useContext(MstContext);
     return (
       <Component
         formId={id}
         title={title}
-        uischema={uischema}
         viewElement={viewElement}
         view={view}
         enabled={enabledLayout}
@@ -140,19 +136,19 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
   });
 export const withStoreToViewClassProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, viewElement, view } = props;
+    const { viewElement, view } = props;
     const { store } = useContext(MstContext);
     const scope = viewElement.resultsScope;
     if (!store.getSelectedDataJs(scope)) {
       return <Spin />;
     }
     //const id = store.getSelectedDataJs(scope).type;
-    return <Component uischema={uischema} viewElement={viewElement} view={view} />;
+    return <Component viewElement={viewElement} view={view} />;
   });
 
 export const withStoreToViewProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, view, viewElement, parent } = props;
+    const { view, viewElement, parent } = props;
     const { store } = useContext(MstContext);
     const scope = viewElement.resultsScope;
     const coll = store.getColl(scope);
@@ -178,7 +174,6 @@ export const withStoreToViewProps = (Component: any): any =>
     return (
       <Component
         id={scope}
-        uischema={uischema}
         viewElement={newViewElement}
         view={newView}
         onChange={(state: boolean) => store.setEditing(viewElement.resultsScope, state)}
@@ -366,7 +361,7 @@ export const withStoreToTabProps = (Component: any): any =>
 
 export const withStoreToMenuProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, uischema, viewElement, view, parent } = props;
+    const { schema, viewElement, view, parent } = props;
     const { store } = useContext(MstContext);
     //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
     //  store.setSaveLogic(parent, viewElement.resultsScope);
@@ -387,7 +382,6 @@ export const withStoreToMenuProps = (Component: any): any =>
         modals={viewElement.elements ? viewElement.elements.filter((e: any) => e.options && e.options.modal) : []}
         schema={schema}
         view={view}
-        uischema={uischema}
         uri={scope}
         tabs={data}
         handleChange={(data: JsObject) => store.setSelectedData(scope, data)}
@@ -399,10 +393,10 @@ export const withStoreToMenuProps = (Component: any): any =>
 
 export const withStoreToCollapseProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, viewElement, view } = props;
+    const { viewElement, view } = props;
     const options = viewElement.options || {};
 
-    return <Component options={options} uischema={uischema} viewElement={viewElement} view={view} />;
+    return <Component options={options} viewElement={viewElement} view={view} />;
   });
 
 export const withStoreToArrayProps = (Component: any): any =>
@@ -460,17 +454,16 @@ export const withStoreToArrayProps = (Component: any): any =>
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, enabled, form, parent }) => {
+  observer<RenderProps>(({ viewElement, view, enabled, form, parent }) => {
     const id = viewElement['@id'] || '';
-    const enabledLayout = enabled && checkProperty('editable', id, uischema, viewElement, view);
-    const visible = checkProperty('visible', id, uischema, viewElement, view);
+    const enabledLayout = enabled && checkProperty('editable', id, viewElement, view);
+    const visible = checkProperty('visible', id, viewElement, view);
     const { store } = useContext(MstContext);
     if (viewElement.options && viewElement.options.connections) {
       viewElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
     }
     return (
       <Component
-        uischema={uischema}
         viewElement={viewElement}
         view={view}
         enabled={enabledLayout}
@@ -482,12 +475,12 @@ export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<
   });
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, enabled, parent }) => {
+  observer<RenderProps>(({ viewElement, view, enabled, parent }) => {
     const { store } = useContext(MstContext);
     if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
       store.setSaveLogic(parent, viewElement.resultsScope);
     }
-    const key = (viewElement as Control).resultsScope;
+    const key = viewElement.resultsScope;
     return (
       <Component
         editing={store.editingData.get(key)}
@@ -509,10 +502,10 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
     return <Component visible={visible} onOk={onSave} onCancel={onCancel} />;
   });
 
-const mapStateToControlProps = ({ id, uischema, schema, viewElement, view, enabled }: ToControlProps) => {
+const mapStateToControlProps = ({ id, schema, viewElement, view, enabled }: ToControlProps) => {
   const pathSegments = id.split('/');
   const path = pathSegments.join('.properties.');
-  const visible = checkProperty('visible', path, uischema, viewElement, view);
+  const visible = checkProperty('visible', path, viewElement, view);
   const editable = viewElement.options && 'editable' in viewElement.options ? viewElement.options.editable : true;
   const required = true;
   const uiOptions = viewElement.options;
@@ -533,13 +526,10 @@ const mapStateToControlProps = ({ id, uischema, schema, viewElement, view, enabl
   };
 };
 
-const checkProperty = (property: Property, path: string, uischema: UISchema, viewElement: ViewElement, view: View) => {
-  const uiProp = get(uischema, path);
+const checkProperty = (property: Property, path: string, viewElement: ViewElement, view: View) => {
   const viewClassProp = viewElement.options;
   const viewProp = get(view, path);
-  if (uiProp && uiProp[property]) {
-    return uiProp[property];
-  } else if (viewClassProp && viewClassProp[property]) {
+  if (viewClassProp && viewClassProp[property]) {
     return viewClassProp[property];
   } else if (viewProp && viewProp[property]) {
     return viewProp[property];
@@ -638,7 +628,7 @@ export const withContextFormsSaveControlProps =
 //type FormsPropTypes = ControlProps | CombinatorProps | LayoutProps | CellProps | ArrayLayoutProps | StatePropsOfControlWithDetail | OwnPropsOfRenderer;
 
 export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/) => {
-  const prev = omit(prevProps, ['handleChange', 'uischemas']);
-  const next = omit(nextProps, ['handleChange', 'uischemas']);
-  return isEqual(prev, next) && get(prevProps, 'uischemas.length') === get(nextProps, 'uischemas.length');
+  const prev = omit(prevProps, ['handleChange']);
+  const next = omit(nextProps, ['handleChange']);
+  return isEqual(prev, next);
 };

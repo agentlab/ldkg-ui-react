@@ -28,7 +28,6 @@ export const AntdDataLayout: React.FC<any> = (props) => {
     handleChange = () => {},
     dataSource,
     view,
-    uischema,
     schema,
     editing,
     getData,
@@ -53,7 +52,6 @@ export const AntdDataLayout: React.FC<any> = (props) => {
       onDnD={onDnD}
       viewElement={viewElement}
       view={view}
-      uischema={uischema}
       onCreateFolder={onCreateFolder}
       onDeleteFolder={onDeleteFolder}
       onRename={onRename}

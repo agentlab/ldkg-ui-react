@@ -15,20 +15,14 @@ import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
 
 export const TabsLayout: React.FC<any> = (props) => {
-  const { enabled, onSelect = () => {}, uischema, viewElement, view } = props;
+  const { enabled, onSelect = () => {}, viewElement, view } = props;
   const elements = viewElement.elements;
   const viewTabs = elements
     ? elements.map((e: any, index: number) => {
         const title = e.options && e.options.title;
         return (
           <Tabs.TabPane tab={title} key={'' + index}>
-            <FormsDispatch
-              viewElement={e}
-              uischema={uischema}
-              enabled={enabled}
-              view={view}
-              parent={viewElement.resultsScope}
-            />
+            <FormsDispatch viewElement={e} enabled={enabled} view={view} parent={viewElement.resultsScope} />
           </Tabs.TabPane>
         );
       })

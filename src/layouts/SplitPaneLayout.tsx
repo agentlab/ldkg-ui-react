@@ -26,7 +26,7 @@ const divStyle: React.CSSProperties = {
   margin: '1px',
 };
 
-const renderSplitElements = ({ viewElement, uischema, view, enabled, Render, parent, form }: RenderLayoutProps) => {
+const renderSplitElements = ({ viewElement, view, enabled, Render, parent, form }: RenderLayoutProps) => {
   const elements = viewElement.elements;
   const defaultSize = viewElement.options && viewElement.options.defaultSize;
   const id = viewElement['@id'];
@@ -42,14 +42,7 @@ const renderSplitElements = ({ viewElement, uischema, view, enabled, Render, par
         const style = childView.options && childView.options.style;
         res.push(
           <Pane key={idx} style={style} initialSize={defaultSize[id]}>
-            <FormsDispatch
-              viewElement={childView}
-              view={view}
-              uischema={uischema}
-              enabled={enabled}
-              parent={parent}
-              form={form}
-            />
+            <FormsDispatch viewElement={childView} view={view} enabled={enabled} parent={parent} form={form} />
           </Pane>,
         );
       }
@@ -62,7 +55,7 @@ const renderSplitElements = ({ viewElement, uischema, view, enabled, Render, par
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
           <div style={{ height: '100%', ...style }}>
-            <FormsDispatch viewElement={el} view={view} uischema={uischema} enabled={enabled} parent={parent} />
+            <FormsDispatch viewElement={el} view={view} enabled={enabled} parent={parent} />
           </div>
         </Pane>
       );
@@ -72,26 +65,19 @@ const renderSplitElements = ({ viewElement, uischema, view, enabled, Render, par
   );
 };
 
-export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
-  uischema,
-  viewElement,
-  view,
-  enabled,
-  visible,
-  parent,
-}) => {
+export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({ viewElement, view, enabled, visible, parent }) => {
   //const layout = viewElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, uischema, viewElement, view, enabled, parent }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled, parent }) => {
     return (
       <div>
-        <FormsDispatch viewElement={viewElement} view={view} uischema={uischema} enabled={enabled} parent={parent} />
+        <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} parent={parent} />
       </div>
     );
   };
   return (
     <React.Fragment>
       <SplitPane split='vertical' style={divStyle} minSize={300}>
-        {renderSplitElements({ uischema, viewElement, view, enabled, Render, parent })}
+        {renderSplitElements({ viewElement, view, enabled, Render, parent })}
       </SplitPane>
     </React.Fragment>
   );

@@ -18,18 +18,11 @@ import { get } from 'lodash-es';
 
 import { Idx } from '../util/layout';
 
-export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
-  uischema,
-  viewElement,
-  view,
-  data,
-  schema,
-}) => {
+export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ viewElement, view, data, schema }) => {
   //const layout = viewElement as Layout;
   const Render: React.FC<DispatchCellProps & Idx> = ({
     idx,
     schema,
-    uischema,
     viewElement,
     view,
     data,
@@ -52,7 +45,6 @@ export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
           view={view}
           rowData={data}
           schema={newSchema || schema}
-          uischema={uischema}
           enabled={enabled}
           parent={parent}
           form={form}
@@ -66,15 +58,7 @@ export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
   return (
     <Row justify={justify} style={rowStyle} align={'middle'}>
       {(viewElement.elements || []).map((e: ViewElement, idx: number) => (
-        <Render
-          viewElement={e}
-          schema={schema}
-          uischema={uischema}
-          idx={idx}
-          data={data}
-          id={String(idx)}
-          view={view}
-        />
+        <Render viewElement={e} schema={schema} idx={idx} data={data} id={String(idx)} view={view} />
       ))}
     </Row>
   );

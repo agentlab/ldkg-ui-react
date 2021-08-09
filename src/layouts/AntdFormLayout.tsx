@@ -74,7 +74,6 @@ export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onS
 });
 
 export const AntdFormLayout: React.FC<any> = ({
-  uischema,
   viewElement,
   view,
   enabled,
@@ -98,7 +97,6 @@ export const AntdFormLayout: React.FC<any> = ({
           <Form {...formItemLayout}>
             <AntdVerticalLayoutWithStore
               id={`${formId}Layout`}
-              uischema={uischema}
               schema={{}}
               viewElement={viewElement}
               enabled={enabled}

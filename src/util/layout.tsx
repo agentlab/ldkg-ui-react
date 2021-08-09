@@ -21,12 +21,12 @@ export interface RenderLayoutProps extends FormsDispatchProps {
   Render: React.FC<FormsDispatchProps & Idx>;
 }
 
-export const renderLayoutElements = ({ viewElement, uischema, view, enabled, Render, parent }: RenderLayoutProps) => {
+export const renderLayoutElements = ({ viewElement, view, enabled, Render, parent }: RenderLayoutProps) => {
   const elements = viewElement.elements;
   //const id = view['@id'];
   //const sort = id ? view.properties && view.properties[id] && view.properties[id].order : undefined;
   if (!elements || elements.length === 0) return <></>;
   return elements.map((el: ViewElement, idx: number) => (
-    <Render key={idx} idx={idx} viewElement={el} uischema={uischema} view={view} enabled={enabled} parent={parent} />
+    <Render key={idx} idx={idx} viewElement={el} view={view} enabled={enabled} parent={parent} />
   ));
 };

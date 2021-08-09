@@ -20,9 +20,8 @@ const divStyle: React.CSSProperties = {
 };
 
 export const GridRenderer: React.FC<any> = (props) => {
-  const { child, onSelect, viewElement, uischema, view, schema } = props;
+  const { child, onSelect, viewElement, view, schema } = props;
   const grid = viewElement?.options?.grid || { gutter: 16, column: 4 };
-  console.log('UISCEMA', uischema);
   const template = viewElement?.options?.elementTemplate || null;
   const createCell = (data: any, id: string | number) =>
     template ? (
@@ -35,7 +34,6 @@ export const GridRenderer: React.FC<any> = (props) => {
           rowData={data}
           schema={schema}
           viewElement={e}
-          uischema={uischema}
         />
       ))
     ) : (

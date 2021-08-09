@@ -7,30 +7,16 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-export interface UISchemaElement {
-  type: string;
-  editable?: boolean;
-  visible?: boolean;
-  properties?: {
-    [key: string]: UISchemaElement;
-  };
-}
-
-export interface UISchema {
-  [key: string]: UISchemaElement;
-}
-
-export interface ViewElement extends UISchemaElement {
-  //customReq?: any;
-  order?: string[];
-  properties?: {
-    [key: string]: ViewElement;
-  };
+export interface ViewElement {
   '@id': string;
   '@type': string;
   title?: string;
   description?: string;
-  queries?: any[];
+  viewKind?: string;
+
+  type: string;
+  //order?: string[];
+  //queries?: any[];
   scope?: string;
   resultsScope?: string;
   options?: {

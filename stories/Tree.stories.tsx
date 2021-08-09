@@ -146,7 +146,6 @@ export const Empty: Story<{}> = () => (
       schema={artifactSchema}
       view={{} as any}
       id={'test'}
-      uischema={{}}
       enabled={true}
       dataSource={data}
     />

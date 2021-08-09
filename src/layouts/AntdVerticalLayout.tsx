@@ -19,7 +19,6 @@ import { Idx } from '../util/layout';
 import { LayoutComponent } from './LayoutComponent';
 
 export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
-  uischema,
   viewElement,
   view,
   enabled,
@@ -27,7 +26,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   parent,
   form,
 }) => {
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, uischema, viewElement, view, enabled, parent }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled, parent }) => {
     const options = viewElement.options || {};
     const style: any = options.style;
     return (
@@ -37,14 +36,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
           flex: viewElement.options && viewElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
         }}>
         <Col style={style} span={24}>
-          <FormsDispatch
-            viewElement={viewElement}
-            view={view}
-            uischema={uischema}
-            enabled={enabled}
-            parent={parent}
-            form={form}
-          />
+          <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} parent={parent} form={form} />
         </Col>
       </Row>
     );
@@ -52,7 +44,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   return (
     <React.Fragment>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {renderLayoutElements({ uischema, viewElement, view, enabled, Render, parent })}
+        {renderLayoutElements({ viewElement, view, enabled, Render, parent })}
       </div>
     </React.Fragment>
   );

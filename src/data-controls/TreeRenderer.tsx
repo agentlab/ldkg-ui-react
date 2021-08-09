@@ -30,7 +30,6 @@ export const TreeRenderer: React.FC<any> = (props) => {
     onSelect,
     viewElement,
     dataSource,
-    uischema,
     view,
     editing,
     onDnD,
