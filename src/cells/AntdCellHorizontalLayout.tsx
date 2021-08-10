@@ -18,7 +18,7 @@ import { get } from 'lodash-es';
 
 import { Idx } from '../util/layout';
 
-export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ viewElement, view, data, schema }) => {
+export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ viewElement, view, data, schema }) => {
   //const layout = viewElement as Layout;
   const Render: React.FC<DispatchCellProps & Idx> = ({ idx, schema, viewElement, view, data, enabled, form }) => {
     const options = viewElement.options || {};
@@ -54,4 +54,4 @@ export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ view
   );
 };
 
-export const antdHorizontalLayoutTester: RankedTester = rankWith(2, uiTypeIs('CellHorizontalLayout'));
+export const antdCellHorizontalLayoutTester: RankedTester = rankWith(2, uiTypeIs('CellHorizontalLayout'));

@@ -8,23 +8,30 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { CellRendererRegistryEntry } from '../renderers';
-import { antdBooleanCellTester, AntdBooleanCellWithStore } from './AntdBooleanCell';
-import { antdEnumCellTester, AntdEnumCellWithStore } from './AntdEnumCell';
 import {
+  antdBooleanCellTester,
+  AntdBooleanCellWithStore,
+  antdButtonCellTester,
+  AntdButtonCellWithStore,
+  antdEnumCellTester,
+  AntdEnumCellWithStore,
   antdIntegerCellTester,
   AntdIntegerCellWithStore,
+  antdImageCellTester,
+  AntdImageCellWithStore,
   antdNumberCellTester,
   AntdNumberCellWithStore,
-} from './AntdNumberCell';
-import { antdTextCellTester, AntdTextCellWithStore } from './AntdTextCell';
-import { antdTimeCellTester, AntdTimeCellWithStore } from './AntdTimeCell';
+  antdRateCellTester,
+  AntdRateCellWithStore,
+  antdTextCellTester,
+  AntdTextCellWithStore,
+  antdTimeCellTester,
+  AntdTimeCellWithStore,
+} from './AntdSimpleCells';
 import { tinyMCECellTester, TinyMCECellWithStore } from './TinyMCECell';
-import { antdImageCellTester, AntdImageCellWithStore } from './AntdImageCell';
 import { antdCellCardLayoutTester, AntdCellCardLayout } from './AntdCellCardLayout';
-import { antdHorizontalLayoutTester, AntdHorizontalLayoutRenderer } from './AntdCellHorizontalLayout';
-import { antdCellRateWidgetTester, AntdCellRateWidgetWithStore } from './AntdCellRateWidget';
+import { antdCellHorizontalLayoutTester, AntdCellHorizontalLayoutRenderer } from './AntdCellHorizontalLayout';
 import { antdCellG2Tester, AntdCellG2 } from './AntdCellG2';
-import { antdButtonCellTester, AntdButtonCellWithStore } from './AntdButtonCell';
 
 export const antdCells: CellRendererRegistryEntry[] = [
   { tester: antdBooleanCellTester, cell: AntdBooleanCellWithStore },
@@ -36,15 +43,14 @@ export const antdCells: CellRendererRegistryEntry[] = [
   { tester: tinyMCECellTester, cell: TinyMCECellWithStore },
   { tester: antdImageCellTester, cell: AntdImageCellWithStore },
   { tester: antdCellCardLayoutTester, cell: AntdCellCardLayout },
-  { tester: antdHorizontalLayoutTester, cell: AntdHorizontalLayoutRenderer },
-  { tester: antdCellRateWidgetTester, cell: AntdCellRateWidgetWithStore },
+  { tester: antdCellHorizontalLayoutTester, cell: AntdCellHorizontalLayoutRenderer },
+  { tester: antdRateCellTester, cell: AntdRateCellWithStore },
   { tester: antdCellG2Tester, cell: AntdCellG2 },
   { tester: antdButtonCellTester, cell: AntdButtonCellWithStore },
 ];
 
-export * from './AntdBooleanCell';
-export * from './AntdEnumCell';
-export * from './AntdNumberCell';
-export * from './AntdTextCell';
-export * from './AntdTimeCell';
+export * from './AntdSimpleCells';
 export * from './TinyMCECell';
+export * from './AntdCellCardLayout';
+export * from './AntdCellHorizontalLayout';
+export * from './AntdCellG2';
