@@ -107,7 +107,7 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     );
   });
 export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewElement, view, enabled, parent, form }) => {
+  observer<RenderProps>(({ viewElement, view, enabled, form }) => {
     if (!view['@id']) {
       return null;
     }
@@ -124,7 +124,6 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
         view={view}
         enabled={enabledLayout}
         visible={visible}
-        parent={parent}
         onSave={() => store.onSaveFormData(id)}
         editing={store.editingData.get(id)}
         onEdit={() => store.setEditing(id, true)}
@@ -148,7 +147,7 @@ export const withStoreToViewClassProps = (Component: any): any =>
 
 export const withStoreToViewProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { view, viewElement, parent } = props;
+    const { view, viewElement } = props;
     const { store } = useContext(MstContext);
     const scope = viewElement.resultsScope;
     const coll = store.getColl(scope);
@@ -160,8 +159,8 @@ export const withStoreToViewProps = (Component: any): any =>
       return <Spin />;
     }
     data = getSnapshot(data);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+    //  store.setSaveLogic(viewElement.resultsScope);
     //}
     //const id = store.getSelectedDataJs(scope)['@type'];
     //const selection = getSnapshot(store.selectedData);
@@ -187,10 +186,10 @@ export const withStoreToModalProps = (Component: any): any =>
   });
 export const withStoreToButtonProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, parent } = props;
+    const { schema, viewElement } = props;
     const { store } = useContext(MstContext);
-    if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-      store.setSaveLogic(parent, viewElement.resultsScope);
+    if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+      store.setSaveLogic(viewElement.resultsScope);
     }
     const options = viewElement.options || {};
 
@@ -224,10 +223,10 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
 
 export const withStoreToDataControlProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { viewElement, view, parent } = props;
+    const { viewElement, view } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+    //  store.setSaveLogic(viewElement.resultsScope);
     //}
     const custom = view[viewElement.resultsScope.split('/')[0]]
       ? view[view.resultsScope.split('/')[0]].customReq
@@ -328,10 +327,10 @@ export const withStoreToSelectControlProps = (Component: any): any =>
 
 export const withStoreToTabProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, view, parent } = props;
+    const { schema, viewElement, view } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+    //  store.setSaveLogic(viewElement.resultsScope);
     //}
     const options = viewElement.options || {};
     const custom = view[viewElement.resultsScope.split('/')[0]]
@@ -361,10 +360,10 @@ export const withStoreToTabProps = (Component: any): any =>
 
 export const withStoreToMenuProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, view, parent } = props;
+    const { schema, viewElement, view } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+    //  store.setSaveLogic(viewElement.resultsScope);
     //}
     const options = viewElement.options || {};
     const custom = view[viewElement.resultsScope.split('/')[0]]
@@ -401,10 +400,10 @@ export const withStoreToCollapseProps = (Component: any): any =>
 
 export const withStoreToArrayProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, view, parent } = props;
+    const { schema, viewElement, view } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+    //  store.setSaveLogic(viewElement.resultsScope);
     //}
     const options = viewElement.options || {};
     const custom = view[viewElement.resultsScope.split('/')[0]]
@@ -454,7 +453,7 @@ export const withStoreToArrayProps = (Component: any): any =>
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewElement, view, enabled, form, parent }) => {
+  observer<RenderProps>(({ viewElement, view, enabled, form }) => {
     const id = viewElement['@id'] || '';
     const enabledLayout = enabled && checkProperty('editable', id, viewElement, view);
     const visible = checkProperty('visible', id, viewElement, view);
@@ -462,23 +461,14 @@ export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<
     if (viewElement.options && viewElement.options.connections) {
       viewElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
     }
-    return (
-      <Component
-        viewElement={viewElement}
-        view={view}
-        enabled={enabledLayout}
-        visible={visible}
-        parent={parent}
-        form={form}
-      />
-    );
+    return <Component viewElement={viewElement} view={view} enabled={enabledLayout} visible={visible} form={form} />;
   });
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewElement, view, enabled, parent }) => {
+  observer<RenderProps>(({ viewElement, view, enabled }) => {
     const { store } = useContext(MstContext);
-    if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-      store.setSaveLogic(parent, viewElement.resultsScope);
+    if (viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
+      store.setSaveLogic(viewElement.resultsScope);
     }
     const key = viewElement.resultsScope;
     return (

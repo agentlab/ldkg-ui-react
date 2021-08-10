@@ -41,15 +41,7 @@ export const AntdModal: React.FC<any> = observer<any>(
         cancelText='Отмена'
         width={1200}
         okText='Сохранить'>
-        <Render
-          schema={schema}
-          viewElement={viewElement}
-          enabled={enabled}
-          view={view}
-          cells={cells}
-          id={childrenId}
-          parent={id}
-        />
+        <Render schema={schema} viewElement={viewElement} enabled={enabled} view={view} cells={cells} id={childrenId} />
         <SaveReqDialog
           visible={visible}
           onOk={() => {

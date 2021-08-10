@@ -26,36 +26,17 @@ const divStyle: React.CSSProperties = {
   margin: '1px',
 };
 
-const renderSplitElements = ({ viewElement, view, enabled, Render, parent, form }: RenderLayoutProps) => {
+const renderSplitElements = ({ viewElement, view, enabled, Render, form }: RenderLayoutProps) => {
   const elements = viewElement.elements;
   const defaultSize = viewElement.options && viewElement.options.defaultSize;
-  const id = viewElement['@id'];
-  const sort = id
-    ? viewElement.properties && viewElement.properties[id] && viewElement.properties[id].order
-    : undefined;
-  return sort ? (
-    sort.reduce((res: ReactElement[], e: string, idx: number) => {
-      const key = elements ? elements.findIndex((el: ViewElement) => el['@id'] === e || el.scope === e) : -1;
-      if (key !== -1 && elements) {
-        const childView = elements[key];
-        const id = childView['@id'] || childView.scope || '';
-        const style = childView.options && childView.options.style;
-        res.push(
-          <Pane key={idx} style={style} initialSize={defaultSize[id]}>
-            <FormsDispatch viewElement={childView} view={view} enabled={enabled} parent={parent} form={form} />
-          </Pane>,
-        );
-      }
-      return res;
-    }, [])
-  ) : elements ? (
+  return elements ? (
     elements.map((el: ViewElement, idx: number) => {
       const id = el['@id'] || el.resultsScope || '';
       const style = el.options && el.options.style;
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
           <div style={{ height: '100%', ...style }}>
-            <FormsDispatch viewElement={el} view={view} enabled={enabled} parent={parent} />
+            <FormsDispatch viewElement={el} view={view} enabled={enabled} />
           </div>
         </Pane>
       );
@@ -65,19 +46,19 @@ const renderSplitElements = ({ viewElement, view, enabled, Render, parent, form 
   );
 };
 
-export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({ viewElement, view, enabled, visible, parent }) => {
+export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({ viewElement, view, enabled, visible }) => {
   //const layout = viewElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled, parent }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled }) => {
     return (
       <div>
-        <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} parent={parent} />
+        <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} />
       </div>
     );
   };
   return (
     <React.Fragment>
       <SplitPane split='vertical' style={divStyle} minSize={300}>
-        {renderSplitElements({ viewElement, view, enabled, Render, parent })}
+        {renderSplitElements({ viewElement, view, enabled, Render })}
       </SplitPane>
     </React.Fragment>
   );

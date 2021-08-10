@@ -62,7 +62,6 @@ export interface FormsInitStateProps {
 }
 export interface FormsDispatchProps extends InitStateProps {
   enabled?: boolean;
-  parent?: string;
   form?: string;
 }
 export interface FormDispatchProps extends FormsDispatchProps {
@@ -87,7 +86,7 @@ export interface DispatchCellProps extends RenderProps {
 }
 
 export const FormsDispatch: React.FC<FormDispatchProps> = observer<FormDispatchProps>(
-  ({ view, viewElement, parent, form, uri, enabled }: any) => {
+  ({ view, viewElement, form, uri, enabled }: any) => {
     const { store, renderers } = useContext(MstContext);
 
     const shapes = viewElement.resultsScope ? viewElement.resultsScope.split('/') : [];
@@ -117,15 +116,7 @@ export const FormsDispatch: React.FC<FormDispatchProps> = observer<FormDispatchP
       const Render: React.FC<RenderProps> = renderer.renderer;
       return (
         <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-          <Render
-            schema={schema}
-            viewElement={viewElement}
-            enabled={enabled}
-            view={view}
-            id={id}
-            parent={parent}
-            form={form}
-          />
+          <Render schema={schema} viewElement={viewElement} enabled={enabled} view={view} id={id} form={form} />
         </ErrorBoundary>
       );
     }

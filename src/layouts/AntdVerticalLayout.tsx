@@ -23,10 +23,9 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   view,
   enabled,
   visible,
-  parent,
   form,
 }) => {
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled, parent }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled }) => {
     const options = viewElement.options || {};
     const style: any = options.style;
     return (
@@ -36,7 +35,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
           flex: viewElement.options && viewElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
         }}>
         <Col style={style} span={24}>
-          <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} parent={parent} form={form} />
+          <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} form={form} />
         </Col>
       </Row>
     );
@@ -44,7 +43,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   return (
     <React.Fragment>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {renderLayoutElements({ viewElement, view, enabled, Render, parent })}
+        {renderLayoutElements({ viewElement, view, enabled, Render })}
       </div>
     </React.Fragment>
   );

@@ -22,7 +22,7 @@ export const TabsLayout: React.FC<any> = (props) => {
         const title = e.options && e.options.title;
         return (
           <Tabs.TabPane tab={title} key={'' + index}>
-            <FormsDispatch viewElement={e} enabled={enabled} view={view} parent={viewElement.resultsScope} />
+            <FormsDispatch viewElement={e} enabled={enabled} view={view} />
           </Tabs.TabPane>
         );
       })

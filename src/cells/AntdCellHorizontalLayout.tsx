@@ -20,16 +20,7 @@ import { Idx } from '../util/layout';
 
 export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ viewElement, view, data, schema }) => {
   //const layout = viewElement as Layout;
-  const Render: React.FC<DispatchCellProps & Idx> = ({
-    idx,
-    schema,
-    viewElement,
-    view,
-    data,
-    enabled,
-    parent,
-    form,
-  }) => {
+  const Render: React.FC<DispatchCellProps & Idx> = ({ idx, schema, viewElement, view, data, enabled, form }) => {
     const options = viewElement.options || {};
     //const style: any = options.style;
     const span = options.contentSize || !viewElement.elements ? undefined : Math.ceil(24 / viewElement.elements.length);
@@ -46,7 +37,6 @@ export const AntdHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ view
           rowData={data}
           schema={newSchema || schema}
           enabled={enabled}
-          parent={parent}
           form={form}
         />
       </Col>

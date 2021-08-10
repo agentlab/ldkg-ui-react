@@ -79,7 +79,6 @@ export const AntdFormLayout: React.FC<any> = ({
   enabled,
   title,
   visible,
-  parent,
   formId,
   validation,
   editable,
@@ -101,7 +100,6 @@ export const AntdFormLayout: React.FC<any> = ({
               viewElement={viewElement}
               enabled={enabled}
               view={view}
-              parent={parent}
               form={formId}
             />
           </Form>
