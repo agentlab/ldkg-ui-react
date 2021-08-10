@@ -13,7 +13,7 @@ import { observer } from 'mobx-react-lite';
 
 import { MstContext } from '../MstContext';
 
-export const StoreDataFormater: any = observer<any>(({ value, query, propKey }: any) => {
+export const StoreDataFormatter: any = observer<any>(({ value, query, propKey }: any) => {
   const { store } = useContext(MstContext);
   const coll = store.getColl(query);
   let data = coll?.data;

@@ -20,7 +20,7 @@ import {
   labeledValue,
   сomparison,
 } from './baseFormatters';
-import { StoreDataFormater } from './StoreDataFormater';
+import { StoreDataFormatter } from './StoreDataFormatter';
 import { TinyMCE } from './tinyMCE';
 
 export const formatters: JsObject = {
@@ -32,7 +32,7 @@ export const formatters: JsObject = {
   integer,
   link,
   tinyMCE: TinyMCE,
-  dataFormater: StoreDataFormater,
+  dataFormatter: StoreDataFormatter,
   labeledValue,
   сomparison,
 };

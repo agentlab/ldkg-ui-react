@@ -110,7 +110,7 @@ const viewKinds = [
                       type: 'Control',
                       scope: 'price',
                       options: {
-                        formater: 'labeledValue',
+                        formatter: 'labeledValue',
                         editable: false,
                         label: 'Цена',
                         specialChar: '₽',
@@ -125,7 +125,7 @@ const viewKinds = [
                       type: 'Control',
                       scope: 'totalSales',
                       options: {
-                        formater: 'labeledValue',
+                        formatter: 'labeledValue',
                         editable: false,
                         label: 'Всего продано',
                         style: {
@@ -142,8 +142,8 @@ const viewKinds = [
                   scope: 'lastMonthSalesAmount',
                   options: {
                     editable: false,
-                    formater: 'сomparison',
-                    dataToFormater: {
+                    formatter: 'сomparison',
+                    dataToFormatter: {
                       prevValue: 'prevMonthSalesAmount',
                     },
                     label: 'Продажи за месяц',
@@ -158,9 +158,9 @@ const viewKinds = [
                   type: 'Control',
                   scope: 'lastMonthSalesValue',
                   options: {
-                    formater: 'сomparison',
+                    formatter: 'сomparison',
                     editable: false,
-                    dataToFormater: {
+                    dataToFormatter: {
                       prevValue: 'prevMonthSalesValue',
                     },
                     label: 'Объем продаж',
@@ -195,8 +195,8 @@ const viewKinds = [
                         },
                         specialImage: 'https://www.meme-arsenal.com/memes/f8e9bfb9fdf368272b21a5dac8f01ec1.jpg',
                         editable: false,
-                        formater: 'link',
-                        dataToFormater: {
+                        formatter: 'link',
+                        dataToFormatter: {
                           link: '@id',
                         },
                         label: 'Wildberries',
