@@ -24,8 +24,8 @@ import {
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
-import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
-import { createUiModelFromState } from '../src/stores/ViewDescr';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -36,7 +36,7 @@ const antdRenderers: RendererRegistryEntry[] = [
 const viewKinds = [
   {
     '@id': 'mktp:TreeAndFormViewKind',
-    '@type': 'aldkg:ViewDescr',
+    '@type': 'aldkg:ViewKind',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
     collsConstrs: [
@@ -53,169 +53,195 @@ const viewKinds = [
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
       },
     ],
-    type: 'SplitPaneLayout',
-    options: {
-      defaultSize: {
-        'rm:Folders_Coll': '17%',
-        ArtifactForm: '83%',
-      },
-      height: 'all-empty-space',
-      //width: 'all-empty-space',
-    },
     // child ui elements configs
     elements: [
       {
-        '@id': 'ArtifactForm',
-        type: 'HorizontalLayout',
+        '@id': 'mktp:_92Jf4u78',
+        '@type': 'aldkg:SplitPaneLayout',
         options: {
-          justify: 'start', // start end center space-between space-around
-          //contentSize: true,
-          style: {
-            //flexGrow: '5',
-            width: '100%',
+          defaultSize: {
+            'rm:Folders_Coll': '17%',
+            'mktp:_87Dfg78': '83%',
           },
-          width: 'all-empty-space',
+          height: 'all-empty-space',
+          //width: 'all-empty-space',
         },
         elements: [
           {
-            type: 'VerticalLayout',
+            '@id': 'mktp:_87Dfg78',
+            '@type': 'aldkg:HorizontalLayout',
             options: {
+              justify: 'start', // start end center space-between space-around
+              //contentSize: true,
               style: {
-                width: '50%',
-              },
-              width: 'all-empty-space',
-            },
-            elements: [
-              /*{
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/identifier',
-              },*/
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/name',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/country',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/brand',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/price',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/saleValue',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/seller',
-              },
-            ],
-          },
-          {
-            type: 'VerticalLayout',
-            options: {
-              style: {
-                width: '50%',
+                //flexGrow: '5',
+                width: '100%',
               },
               width: 'all-empty-space',
             },
             elements: [
               {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/categoryPopularity',
+                '@id': 'mktp:_93JhdA78',
+                '@type': 'aldkg:VerticalLayout',
+                options: {
+                  style: {
+                    width: '50%',
+                  },
+                  width: 'all-empty-space',
+                },
+                elements: [
+                  /*{
+                    '@id': 'mktp:_92KdFj6',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/identifier',
+                  },*/
+                  {
+                    '@id': 'mktp:_63JdF67',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/name',
+                  },
+                  {
+                    '@id': 'mktp:_Kjd7F7s8',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/country',
+                  },
+                  {
+                    '@id': 'mktp:_Kf893Jd6',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/brand',
+                  },
+                  {
+                    '@id': 'mktp:_K84jd^',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/price',
+                  },
+                  {
+                    '@id': 'mktp:_dF7jdF6',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/saleValue',
+                  },
+                  {
+                    '@id': 'mktp:_93Kdf7j',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/seller',
+                  },
+                ],
               },
               {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/commentsCount',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/starsValue',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/questionsCount',
-              },
+                '@id': 'mktp:_87Kdf3Ry7',
+                '@type': 'aldkg:VerticalLayout',
+                options: {
+                  style: {
+                    width: '50%',
+                  },
+                  width: 'all-empty-space',
+                },
+                elements: [
+                  {
+                    '@id': 'mktp:_93Kd8hH',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/categoryPopularity',
+                  },
+                  {
+                    '@id': 'mktp:_j7JG8d',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/commentsCount',
+                  },
+                  {
+                    '@id': 'mktp:_fg78Dfj6',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/starsValue',
+                  },
+                  {
+                    '@id': 'mktp:_924KFhf7',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/questionsCount',
+                  },
 
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/lastMonthSalesAmount',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/lastMonthSalesValue',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/perMonthSalesAmount',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/perMonthSalesValue',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/prevMonthSalesAmount',
-              },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/prevMonthSalesValue',
-              },
+                  {
+                    '@id': 'mktp:_Kd83457',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/lastMonthSalesAmount',
+                  },
+                  {
+                    '@id': 'mktp:_8385jKd',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/lastMonthSalesValue',
+                  },
+                  {
+                    '@id': 'mktp:_8357KhfEm',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/perMonthSalesAmount',
+                  },
+                  {
+                    '@id': 'mktp:_956jsnH',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/perMonthSalesValue',
+                  },
+                  {
+                    '@id': 'mktp:_834LdjR',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/prevMonthSalesAmount',
+                  },
+                  {
+                    '@id': 'mktp:_935jFhj',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/prevMonthSalesValue',
+                  },
 
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/salesAmountDiff',
+                  {
+                    '@id': 'mktp:_912JdmF',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/salesAmountDiff',
+                  },
+                  {
+                    '@id': 'mktp:_935KfH',
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/totalSales',
+                  },
+                  /*{
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/totalSalesDiff',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/stocks',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/stocksDiffOrders',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/stocksDiffReturns',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/rootId',
+                  },
+        
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/photosCount',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/firstParsedAt',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/lastMonthParsedAt',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/parsedAt',
+                  },
+                  {
+                    '@type': 'aldkg:Control',
+                    resultsScope: 'rm:Cards_Coll/prevParsedAt',
+                  },*/
+                ],
               },
-              {
-                type: 'Control',
-                resultsScope: 'rm:Cards_Coll/totalSales',
-              },
-              /*{
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/totalSalesDiff',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/stocks',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/stocksDiffOrders',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/stocksDiffReturns',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/rootId',
-          },
-
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/photosCount',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/firstParsedAt',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/lastMonthParsedAt',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/parsedAt',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/prevParsedAt',
-          },*/
             ],
           },
         ],
@@ -229,13 +255,10 @@ const viewDescrs = [
     '@id': 'mktp:TreeAndFormViewDescr',
     '@type': 'aldkg:ViewDescr',
     viewKind: 'mktp:TreeAndFormViewKind',
-    type: 'VerticalLayout',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
-    options: {
-      //width: 'all-empty-space',
-    },
+    options: {},
     // child ui elements configs
     elements: [],
   },
@@ -283,11 +306,7 @@ export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px', width: '100%' }}>
-        <Form
-          viewDescrId={viewDescrs[0]['@id']}
-          viewDescrCollId={viewDescrCollConstr['@id']}
-          viewKindCollId={viewKindCollConstr['@id']}
-        />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

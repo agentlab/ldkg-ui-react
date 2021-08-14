@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 
-import { ViewElement } from '../models/uischema';
+import { IViewKindElement } from '../models/uischema';
 import { FormsDispatchProps } from '../Form';
 
 export declare type Idx = {
@@ -17,16 +17,16 @@ export declare type Idx = {
 };
 
 export interface RenderLayoutProps extends FormsDispatchProps {
-  viewElement: ViewElement;
+  viewKindElement: IViewKindElement;
   Render: React.FC<FormsDispatchProps & Idx>;
 }
 
-export const renderLayoutElements = ({ viewElement, view, enabled, Render }: RenderLayoutProps) => {
-  const elements = viewElement.elements;
-  //const id = view['@id'];
-  //const sort = id ? view.properties && view.properties[id] && view.properties[id].order : undefined;
+export const renderLayoutElements = ({ viewKindElement, viewKind, enabled, Render }: RenderLayoutProps) => {
+  const elements = viewKindElement.elements;
+  //const id = viewKind['@id'];
+  //const sort = id ? viewKind.properties && viewKind.properties[id] && viewKind.properties[id].order : undefined;
   if (!elements || elements.length === 0) return <></>;
-  return elements.map((el: ViewElement, idx: number) => (
-    <Render key={idx} idx={idx} viewElement={el} view={view} enabled={enabled} />
+  return elements.map((el: IViewKindElement, idx: number) => (
+    <Render key={idx} idx={idx} viewKindElement={el} viewKind={viewKind} enabled={enabled} />
   ));
 };

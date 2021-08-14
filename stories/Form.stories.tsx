@@ -23,18 +23,18 @@ import {
   antdControlRenderers,
   antdLayoutRenderers,
 } from '../src';
-import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
-import { createUiModelFromState } from '../src/stores/ViewDescr';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
 const viewKinds = [
   {
     '@id': 'rm:FormViewKind',
-    '@type': 'aldkg:ViewDescr',
+    '@type': 'aldkg:ViewKind',
     title: 'Малая форма',
     description: 'Small form',
-    type: 'FormLayout',
+
     collsConstrs: [
       {
         '@id': 'rm:FormView_Artifacts_Coll',
@@ -51,28 +51,37 @@ const viewKinds = [
     ],
     elements: [
       {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/creator',
-      },
-      {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/assetFolder',
-      },
-      {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/description',
-        options: {
-          validation: [
-            {
-              validator: 'RegExp',
-              propsToValidator: {
-                regExp: 'bo*',
-              },
-              validateStatus: 'error',
-              help: 'Работает',
+        '@id': 'rm:_83hd7f',
+        '@type': 'aldkg:FormLayout',
+        elements: [
+          {
+            '@id': 'rm:_17Gj78',
+            '@type': 'aldkg:Control',
+            resultsScope: 'rm:FormView_Artifacts_Coll/creator',
+          },
+          {
+            '@id': 'rm:_297Hgf56',
+            '@type': 'aldkg:Control',
+            resultsScope: 'rm:FormView_Artifacts_Coll/assetFolder',
+          },
+          {
+            '@id': 'rm:_934jHd67',
+            '@type': 'aldkg:Control',
+            resultsScope: 'rm:FormView_Artifacts_Coll/description',
+            options: {
+              validation: [
+                {
+                  validator: 'RegExp',
+                  propsToValidator: {
+                    regExp: 'bo*',
+                  },
+                  validateStatus: 'error',
+                  help: 'Работает',
+                },
+              ],
             },
-          ],
-        },
+          },
+        ],
       },
     ],
   },
@@ -83,13 +92,9 @@ const viewDescrs = [
     '@id': 'rm:FormViewDescr',
     '@type': 'aldkg:ViewDescr',
     viewKind: 'rm:FormViewKind',
-    type: 'VerticalLayout',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
-    options: {
-      //width: 'all-empty-space',
-    },
     // child ui elements configs
     elements: [],
   },
@@ -137,11 +142,7 @@ const Template: Story<any> = (args: any) => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px' }}>
-        <Form
-          viewDescrId={viewDescrs[0]['@id']}
-          viewDescrCollId={viewDescrCollConstr['@id']}
-          viewKindCollId={viewKindCollConstr['@id']}
-        />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

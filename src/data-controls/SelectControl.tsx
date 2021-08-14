@@ -15,7 +15,7 @@ import { withStoreToSelectControlProps } from '../util/ContextToProps';
 
 export const AntdSelectControl: React.FC<any> = (props) => {
   const { handleChange, dataSource } = props;
-  //const options = merge({}, viewElement.options);
+  //const options = merge({}, viewKindElement.options);
   const data: any = [];
   const dataObject: any = {};
 
@@ -63,5 +63,5 @@ export const AntdSelectControl: React.FC<any> = (props) => {
   );
 };
 
-export const antdSelectControlTester: RankedTester = rankWith(2, uiTypeIs('SelectControl'));
+export const antdSelectControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:SelectControl'));
 export const AntdSelectControlWithStore = withStoreToSelectControlProps(AntdSelectControl);

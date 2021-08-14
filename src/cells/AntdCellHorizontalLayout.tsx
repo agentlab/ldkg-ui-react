@@ -12,28 +12,42 @@ import { Row, Col } from 'antd';
 
 import { DispatchCell } from '../DispatchCell';
 import { DispatchCellProps } from '../Form';
-import { ViewElement } from '../models/uischema';
+import { IViewKindElement } from '../models/uischema';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { get } from 'lodash-es';
 
 import { Idx } from '../util/layout';
 
-export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ viewElement, view, data, schema }) => {
-  //const layout = viewElement as Layout;
-  const Render: React.FC<DispatchCellProps & Idx> = ({ idx, schema, viewElement, view, data, enabled, form }) => {
-    const options = viewElement.options || {};
+export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
+  viewKindElement,
+  viewKind,
+  data,
+  schema,
+}) => {
+  //const layout = viewKindElement as Layout;
+  const Render: React.FC<DispatchCellProps & Idx> = ({
+    idx,
+    schema,
+    viewKindElement,
+    viewKind,
+    data,
+    enabled,
+    form,
+  }) => {
+    const options = viewKindElement.options || {};
     //const style: any = options.style;
-    const span = options.contentSize || !viewElement.elements ? undefined : Math.ceil(24 / viewElement.elements.length);
-    const newSchema = viewElement.scope
-      ? get(schema, 'properties.' + viewElement.scope.replace(/\//, '.properties.'))
+    const span =
+      options.contentSize || !viewKindElement.elements ? undefined : Math.ceil(24 / viewKindElement.elements.length);
+    const newSchema = viewKindElement.scope
+      ? get(schema, 'properties.' + viewKindElement.scope.replace(/\//, '.properties.'))
       : schema;
     return (
       <Col key={idx} span={span}>
         <DispatchCell
           id={String(idx)}
           data={data}
-          viewElement={viewElement}
-          view={view}
+          viewKindElement={viewKindElement}
+          viewKind={viewKind}
           rowData={data}
           schema={newSchema || schema}
           enabled={enabled}
@@ -42,16 +56,16 @@ export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({ 
       </Col>
     );
   };
-  const justify: any = viewElement.options ? viewElement.options.justify : 'center';
+  const justify: any = viewKindElement.options ? viewKindElement.options.justify : 'center';
   const rowStyle: any = { flexWrap: 'nowrap' };
-  if (viewElement.options && viewElement.options.width === 'all-empty-space') rowStyle.width = '100%';
+  if (viewKindElement.options && viewKindElement.options.width === 'all-empty-space') rowStyle.width = '100%';
   return (
     <Row justify={justify} style={rowStyle} align={'middle'}>
-      {(viewElement.elements || []).map((e: ViewElement, idx: number) => (
-        <Render viewElement={e} schema={schema} idx={idx} data={data} id={String(idx)} view={view} />
+      {(viewKindElement.elements || []).map((e: IViewKindElement, idx: number) => (
+        <Render viewKindElement={e} schema={schema} idx={idx} data={data} id={String(idx)} viewKind={viewKind} />
       ))}
     </Row>
   );
 };
 
-export const antdCellHorizontalLayoutTester: RankedTester = rankWith(2, uiTypeIs('CellHorizontalLayout'));
+export const antdCellHorizontalLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:CellHorizontalLayout'));

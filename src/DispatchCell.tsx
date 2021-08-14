@@ -19,10 +19,10 @@ import { MstContext } from './MstContext';
  * Dispatch renderer component for cells.
  */
 export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
-  ({ data, onMeasureChange, uri, schema, viewElement, view, enabled, id, CKey, rowData, ...rest }) => {
+  ({ data, onMeasureChange, uri, schema, viewKindElement, viewKind, enabled, id, CKey, rowData, ...rest }) => {
     const { cells } = useContext(MstContext);
-    const renderer = maxBy(cells, (r) => r.tester(viewElement, schema));
-    if (renderer === undefined || renderer.tester(viewElement, schema) === -1) {
+    const renderer = maxBy(cells, (r) => r.tester(viewKindElement, schema));
+    if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
       return (
         <td>
           <UnknownRenderer type={'renderer'} />
@@ -38,10 +38,10 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
             rowData={rowData}
             onMeasureChange={onMeasureChange}
             schema={schema}
-            viewElement={viewElement}
+            viewKindElement={viewKindElement}
             uri={uri}
             enabled={enabled}
-            view={view}
+            viewKind={viewKind}
             id={id}
             {...rest}
           />

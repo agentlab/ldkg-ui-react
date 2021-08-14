@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React, { ReactElement } from 'react';
+import React from 'react';
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 
@@ -17,7 +17,7 @@ import { withLayoutProps } from '../util/ContextToProps';
 
 import { LayoutComponent } from './LayoutComponent';
 import { Idx, RenderLayoutProps } from '../util/layout';
-import { ViewElement } from '../models/uischema';
+import { IViewKindElement } from '../models/uischema';
 
 const divStyle: React.CSSProperties = {
   position: 'relative',
@@ -26,17 +26,17 @@ const divStyle: React.CSSProperties = {
   margin: '1px',
 };
 
-const renderSplitElements = ({ viewElement, view, enabled, Render, form }: RenderLayoutProps) => {
-  const elements = viewElement.elements;
-  const defaultSize = viewElement.options && viewElement.options.defaultSize;
+const renderSplitElements = ({ viewKindElement, viewKind, enabled, Render, form }: RenderLayoutProps) => {
+  const elements = viewKindElement.elements;
+  const defaultSize = viewKindElement.options && viewKindElement.options.defaultSize;
   return elements ? (
-    elements.map((el: ViewElement, idx: number) => {
+    elements.map((el: IViewKindElement, idx: number) => {
       const id = el['@id'] || el.resultsScope || '';
       const style = el.options && el.options.style;
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
           <div style={{ height: '100%', ...style }}>
-            <FormsDispatch viewElement={el} view={view} enabled={enabled} />
+            <FormsDispatch viewKindElement={el} viewKind={viewKind} enabled={enabled} />
           </div>
         </Pane>
       );
@@ -46,23 +46,23 @@ const renderSplitElements = ({ viewElement, view, enabled, Render, form }: Rende
   );
 };
 
-export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({ viewElement, view, enabled, visible }) => {
-  //const layout = viewElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled }) => {
+export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({ viewKindElement, viewKind, enabled, visible }) => {
+  //const layout = viewKindElement as Layout;
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKindElement, viewKind, enabled }) => {
     return (
       <div>
-        <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} />
+        <FormsDispatch viewKindElement={viewKindElement} viewKind={viewKind} enabled={enabled} />
       </div>
     );
   };
   return (
     <React.Fragment>
       <SplitPane split='vertical' style={divStyle} minSize={300}>
-        {renderSplitElements({ viewElement, view, enabled, Render })}
+        {renderSplitElements({ viewKindElement, viewKind, enabled, Render })}
       </SplitPane>
     </React.Fragment>
   );
 };
 
-export const splitPaneLayoutTester: RankedTester = rankWith(2, uiTypeIs('SplitPaneLayout'));
+export const splitPaneLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:SplitPaneLayout'));
 export const SplitPaneLayoutWithStore = withLayoutProps(SplitPaneLayoutRenderer);

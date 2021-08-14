@@ -19,7 +19,7 @@ import { JsonSchema7 } from './models/jsonSchema7';
 import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
 import { RankedTester } from './testers';
-import { View, ViewElement } from './models/uischema';
+import { IViewDescr, IViewKind, IViewKindElement } from './models/uischema';
 
 export interface ControlComponent {
   data: any;
@@ -51,16 +51,15 @@ export interface FormsCell {
   tester: RankedTester;
   cell: React.FC<any>;
 }
-export interface InitStateProps {
-  viewElement: ViewElement;
-  view: View;
-}
 export interface FormsInitStateProps {
   viewDescrCollId: string;
   viewDescrId: string;
-  viewKindCollId: string;
 }
-export interface FormsDispatchProps extends InitStateProps {
+export interface FormsDispatchProps {
+  viewKind: IViewKind;
+  viewKindElement: IViewKindElement;
+  viewDescr?: IViewDescr;
+  viewDescrElement?: IViewKindElement;
   enabled?: boolean;
   form?: string;
 }
@@ -86,14 +85,24 @@ export interface DispatchCellProps extends RenderProps {
 }
 
 export const FormsDispatch: React.FC<FormDispatchProps> = observer<FormDispatchProps>(
-  ({ view, viewElement, form, uri, enabled }: any) => {
+  ({ viewKind, viewKindElement, viewDescr, viewDescrElement, form, uri, enabled }) => {
     const { store, renderers } = useContext(MstContext);
 
-    const shapes = viewElement.resultsScope ? viewElement.resultsScope.split('/') : [];
-    const iri = shapes.length === 2 ? shapes[0] : viewElement.resultsScope;
+    // if ViewElement extend-override exists
+    if (!viewDescrElement && viewDescr) {
+      viewDescrElement = viewDescr.elements?.find((el) => el['@parent'] === viewKindElement['@id']);
+    }
+
+    const shapes = viewKindElement.resultsScope ? viewKindElement.resultsScope.split('/') : [];
+    let collIri = shapes.length === 2 ? shapes[0] : viewKindElement.resultsScope;
     let schema: any;
-    if (iri) {
-      const coll = store.getColl(iri);
+    if (collIri) {
+      // if CollConstr extend-override exists switch to extCollConstr
+      if (viewDescr && viewDescr.collsConstrs) {
+        const extCollConstr = viewDescr.collsConstrs?.find((el) => el['@parent'] === viewKindElement['@id']);
+        if (extCollConstr) collIri = extCollConstr['@id'];
+      }
+      const coll = store.getColl(collIri);
       schema = coll?.collConstr.entConstrs[0]?.schemaJs;
       //if (store.schemas[iri]) {
       //  schema = store.schemas[iri];
@@ -108,15 +117,26 @@ export const FormsDispatch: React.FC<FormDispatchProps> = observer<FormDispatchP
     schema = shapes.length === 2 ? schema.properties[shapes[1]] : schema;
 
     const id = uri ? /*createId(uri)*/ uri : '';
-    const renderer = maxBy(renderers, (r) => r.tester(viewElement, schema));
-    //const isModal = viewElement.options && viewElement.options.modal;
-    if (renderer === undefined || renderer.tester(viewElement, schema) === -1) {
-      return <UnknownRenderer type={'renderer'} />;
+    const renderer = maxBy(renderers, (r) => r.tester(viewKindElement, schema));
+    //const isModal = viewKindElement.options && viewKindElement.options.modal;
+    if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
+      return (
+        <UnknownRenderer type={'renderer'} elementId={viewKindElement['@id']} elementType={viewKindElement['@type']} />
+      );
     } else {
       const Render: React.FC<RenderProps> = renderer.renderer;
       return (
         <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-          <Render schema={schema} viewElement={viewElement} enabled={enabled} view={view} id={id} form={form} />
+          <Render
+            id={id}
+            viewKind={viewKind}
+            viewKindElement={viewKindElement}
+            viewDescr={viewDescr}
+            viewDescrElement={viewDescrElement}
+            schema={schema}
+            enabled={enabled}
+            form={form}
+          />
         </ErrorBoundary>
       );
     }
@@ -144,7 +164,7 @@ export const Form: React.FC<FormsInitStateProps> = observer<FormsInitStateProps>
     return <Spin />;
   }
 
-  const { viewDescrId, viewDescrCollId, viewKindCollId } = props;
+  const { viewDescrId, viewDescrCollId } = props;
 
   const collWithViewDescrsObs = store.getColl(viewDescrCollId);
   if (!collWithViewDescrsObs) {
@@ -158,22 +178,23 @@ export const Form: React.FC<FormsInitStateProps> = observer<FormsInitStateProps>
     return <Spin />;
   }
 
-  const collWithViewKindsObs = store.getColl(viewKindCollId);
-  if (!collWithViewKindsObs) {
-    console.log('!collWithViewKindsObs', viewKindCollId);
-    return <Spin />;
-  }
-  const viewKindId = viewDescrObs.viewKind;
-  const viewKindObs = collWithViewKindsObs.dataByIri(viewKindId);
+  //const collWithViewKindsObs = store.getColl(viewKindCollId);
+  //if (!collWithViewKindsObs) {
+  //  console.log('!collWithViewKindsObs', viewKindCollId);
+  //  return <Spin />;
+  //}
+  const viewKindObs = viewDescrObs.viewKind;
   if (!viewKindObs) {
-    console.log('!viewKindObs', viewKindId);
+    console.log('!viewKindObs', viewKindObs);
     return <Spin />;
   }
   const viewKind: any = getSnapshot(viewKindObs);
-  const view: any = getSnapshot(viewDescrObs);
+  const viewDescr: any = getSnapshot(viewDescrObs);
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-      <FormsDispatch {...props} view={viewKind} viewElement={viewKind} />
+      {viewKind.elements.map((el: IViewKindElement) => (
+        <FormsDispatch {...props} viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} />
+      ))}
     </ErrorBoundary>
   );
 });

@@ -74,8 +74,8 @@ export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onS
 });
 
 export const AntdFormLayout: React.FC<any> = ({
-  viewElement,
-  view,
+  viewKindElement,
+  viewKind,
   enabled,
   title,
   visible,
@@ -97,9 +97,9 @@ export const AntdFormLayout: React.FC<any> = ({
             <AntdVerticalLayoutWithStore
               id={`${formId}Layout`}
               schema={{}}
-              viewElement={viewElement}
+              viewKindElement={viewKindElement}
               enabled={enabled}
-              view={view}
+              viewKind={viewKind}
               form={formId}
             />
           </Form>
@@ -109,5 +109,5 @@ export const AntdFormLayout: React.FC<any> = ({
   );
 };
 
-export const antdFormLayoutTester: RankedTester = rankWith(2, uiTypeIs('FormLayout'));
+export const antdFormLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:FormLayout'));
 export const AntdFormLayoutWithStore = withStoreToFormProps(AntdFormLayout);

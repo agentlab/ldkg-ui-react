@@ -24,8 +24,8 @@ import {
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
-import { viewKindCollConstr, viewDescrCollConstr } from '../src/stores/ViewCollConstrs';
-import { createUiModelFromState } from '../src/stores/ViewDescr';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -35,8 +35,8 @@ const antdRenderers: RendererRegistryEntry[] = [
 
 const viewKinds = [
   {
-    '@id': 'mktp:TreeAndFormArtifactViewKind',
-    '@type': 'aldkg:ViewDescr',
+    '@id': 'rm:TreeAndFormArtifactViewKind',
+    '@type': 'aldkg:ViewKind',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
     collsConstrs: [
@@ -64,54 +64,63 @@ const viewKinds = [
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
       },
     ],
-    type: 'SplitPaneLayout',
-    options: {
-      defaultSize: {
-        'rm:Folders_Coll': '17%',
-        ArtifactForm: '83%',
-      },
-      height: 'all-empty-space',
-      //width: 'all-empty-space',
-    },
     // child ui elements configs
     elements: [
       {
-        type: 'DataControl',
-        resultsScope: 'rm:Folders_Coll',
+        '@id': 'rm:_kf8Df7',
+        '@type': 'aldkg:SplitPaneLayout',
         options: {
-          renderType: 'tree',
-        },
-      },
-      {
-        '@id': 'ArtifactForm',
-        type: 'FormLayout',
-        options: {
-          title: 'Aртефакт',
+          defaultSize: {
+            'rm:Folders_Coll': '17%',
+            'rm:_fgu778f': '83%',
+          },
+          height: 'all-empty-space',
+          //width: 'all-empty-space',
         },
         elements: [
           {
-            type: 'Control',
-            resultsScope: 'rm:Artifacts_Coll/creator',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Artifacts_Coll/assetFolder',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Artifacts_Coll/description',
+            '@id': 'rm:_9fKJ7dv',
+            '@type': 'aldkg:DataControl',
+            resultsScope: 'rm:Folders_Coll',
             options: {
-              validation: [
-                {
-                  validator: 'RegExp',
-                  propsToValidator: {
-                    regExp: 'bo*',
-                  },
-                  validateStatus: 'error',
-                  help: 'Работает',
-                },
-              ],
+              renderType: 'tree',
             },
+          },
+          {
+            '@id': 'rm:_fgu778f',
+            '@type': 'aldkg:FormLayout',
+            options: {
+              title: 'Aртефакт',
+            },
+            elements: [
+              {
+                '@id': 'rm:_kf8Jdf',
+                '@type': 'aldkg:Control',
+                resultsScope: 'rm:Artifacts_Coll/creator',
+              },
+              {
+                '@id': 'rm:_9dF78',
+                '@type': 'aldkg:Control',
+                resultsScope: 'rm:Artifacts_Coll/assetFolder',
+              },
+              {
+                '@id': 'rm:_37Jdf67',
+                '@type': 'aldkg:Control',
+                resultsScope: 'rm:Artifacts_Coll/description',
+                options: {
+                  validation: [
+                    {
+                      validator: 'RegExp',
+                      propsToValidator: {
+                        regExp: 'bo*',
+                      },
+                      validateStatus: 'error',
+                      help: 'Работает',
+                    },
+                  ],
+                },
+              },
+            ],
           },
         ],
       },
@@ -121,16 +130,13 @@ const viewKinds = [
 
 const viewDescrs = [
   {
-    '@id': 'mktp:TreeAndFormArtifactViewDescr',
+    '@id': 'rm:TreeAndFormArtifactViewDescr',
     '@type': 'aldkg:ViewDescr',
-    viewKind: 'mktp:TreeAndFormArtifactViewKind',
-    type: 'VerticalLayout',
+    viewKind: 'rm:TreeAndFormArtifactViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
-    options: {
-      //width: 'all-empty-space',
-    },
+    options: {},
     // child ui elements configs
     elements: [],
   },
@@ -178,11 +184,7 @@ export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px', width: '100%' }}>
-        <Form
-          viewDescrId={viewDescrs[0]['@id']}
-          viewDescrCollId={viewDescrCollConstr['@id']}
-          viewKindCollId={viewKindCollConstr['@id']}
-        />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

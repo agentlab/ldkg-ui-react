@@ -18,6 +18,6 @@ export const AntdCellG2 = (props: any) => {
  * Default tester for text-based/string controls.
  * @type {RankedTester}
  */
-export const antdCellG2Tester: RankedTester = rankWith(2, uiTypeIs('G2'));
+export const antdCellG2Tester: RankedTester = rankWith(2, uiTypeIs('aldkg:G2'));
 
 export const AntdCellG2WithStore = withStoreToCellProps(AntdCellG2);

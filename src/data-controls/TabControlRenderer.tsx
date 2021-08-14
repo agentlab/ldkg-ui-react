@@ -57,5 +57,5 @@ export const TabControlRenderer = (props: any) => {
   return <TabControl {...props} />;
 };
 
-export const antdTabControlTester: RankedTester = rankWith(2, uiTypeIs('TabControl'));
+export const antdTabControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:TabControl'));
 export const AntdTabControlWithStore = withStoreToTabProps(TabControlRenderer);

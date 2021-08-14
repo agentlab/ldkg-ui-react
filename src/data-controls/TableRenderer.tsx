@@ -22,7 +22,7 @@ const divStyle: React.CSSProperties = {
 
 export const TableRenderer: React.FC<any> = React.memo(
   (props) => {
-    const { schema, enabled, child, onSelect, viewElement, view, editing } = props;
+    const { schema, enabled, child, onSelect, viewKindElement, viewKind, editing } = props;
     const [selected, setSelected] = useState(child[0]);
     const [cacheSelect, setCacheSelect] = useState();
     const [dataSource, setDataSource] = useState(child);
@@ -77,12 +77,12 @@ export const TableRenderer: React.FC<any> = React.memo(
               })}
             />
           </div>
-          {selected.viewElement || viewElement.elements ? (
+          {selected.viewKindElement || viewKindElement.elements ? (
             <div style={divStyle}>
               <FormsDispatch
-                viewElement={selected.viewElement || viewElement.elements[0]}
+                viewKindElement={selected.viewKindElement || viewKindElement.elements[0]}
                 enabled={enabled}
-                view={view}
+                viewKind={viewKind}
               />
             </div>
           ) : null}
@@ -94,7 +94,7 @@ export const TableRenderer: React.FC<any> = React.memo(
             onSelect(cacheSelect);
             setSelected(cacheSelect);
           }}
-          //schemaUri={viewElement.resultsScope}
+          //schemaUri={viewKindElement.resultsScope}
           onCancel={() => setVisible(false)}
         />
       </React.Fragment>

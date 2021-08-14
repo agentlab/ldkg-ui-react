@@ -18,6 +18,8 @@ export interface UnknownRendererProps {
    * The type for which no renderer has been found.
    */
   type: 'renderer' | 'cell';
+  elementId: string;
+  elementType: string;
 }
 
 /**
@@ -25,6 +27,11 @@ export interface UnknownRendererProps {
  */
 export class UnknownRenderer extends Component<UnknownRendererProps, any> {
   render() {
-    return <div style={{ color: 'red' }}>No applicable {this.props.type} found.</div>;
+    return (
+      <div style={{ color: 'red' }}>
+        No applicable {this.props.type} found for element with id={this.props.elementId} and type=
+        {this.props.elementType}.
+      </div>
+    );
   }
 }

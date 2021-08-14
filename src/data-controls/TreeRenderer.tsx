@@ -28,9 +28,9 @@ export const TreeRenderer: React.FC<any> = (props) => {
     enabled,
     child,
     onSelect,
-    viewElement,
+    viewKindElement,
     dataSource,
-    view,
+    viewKind,
     editing,
     onDnD,
     onCreateFolder,
@@ -120,7 +120,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
     setAutoExpandParent(false);
   };
 
-  const titlePropName = viewElement?.options?.treeNodeTitleKey || 'title';
+  const titlePropName = viewKindElement?.options?.treeNodeTitleKey || 'title';
 
   const searchEdit = (data: any) =>
     data.map((item: any) => {
@@ -234,7 +234,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
   };
 
   const onCreateDirectory = (parentId: string) => {
-    onCreateFolder({ [titlePropName]: 'new', [viewElement?.options.treeNodeParentKey || 'parent']: parentId }).then(
+    onCreateFolder({ [titlePropName]: 'new', [viewKindElement?.options.treeNodeParentKey || 'parent']: parentId }).then(
       (e: any) => {
         const data = [...treeData];
         loop(data, parentId, (item: any) => {
@@ -281,7 +281,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
       <SaveReqDialoglWithStore
         visible={visible}
         onOk={() => setVisible(false)}
-        schemaUri={viewElement.resultsScope}
+        schemaUri={viewKindElement.resultsScope}
         onCancel={() => setVisible(false)}
       />
       <TreeContextMenu

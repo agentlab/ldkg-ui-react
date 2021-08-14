@@ -23,11 +23,11 @@ const renderType: any = {
 
 export const AntdDataLayout: React.FC<any> = (props) => {
   const {
-    viewElement,
+    viewKindElement,
     enabled,
     handleChange = () => {},
     dataSource,
-    view,
+    viewKind,
     schema,
     editing,
     getData,
@@ -36,11 +36,11 @@ export const AntdDataLayout: React.FC<any> = (props) => {
     onDeleteFolder,
     onRename,
   } = props;
-  const data = treeify(dataSource, '@id', viewElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
+  const data = treeify(dataSource, '@id', viewKindElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
   const onSelect = (selected: { [key: string]: any }) => {
     handleChange(selected);
   };
-  const Render = renderType[viewElement?.options.renderType];
+  const Render = renderType[viewKindElement?.options.renderType];
 
   return (
     <Render
@@ -50,8 +50,8 @@ export const AntdDataLayout: React.FC<any> = (props) => {
       child={data}
       editing={editing}
       onDnD={onDnD}
-      viewElement={viewElement}
-      view={view}
+      viewKindElement={viewKindElement}
+      viewKind={viewKind}
       onCreateFolder={onCreateFolder}
       onDeleteFolder={onDeleteFolder}
       onRename={onRename}
@@ -62,5 +62,5 @@ export const AntdDataLayout: React.FC<any> = (props) => {
   );
 };
 
-export const antdDataControlTester: RankedTester = rankWith(2, uiTypeIs('DataControl'));
+export const antdDataControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:DataControl'));
 export const AntdDataControlWithStore = withStoreToDataControlProps(AntdDataLayout);

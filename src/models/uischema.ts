@@ -7,40 +7,64 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-export interface ViewElement {
+
+import { ICollConstrJsOpt } from '@agentlab/sparql-jsld-client';
+
+export interface IViewDescrElement {
   '@id': string;
   '@type': string;
+  '@parent'?: string;
+
   title?: string;
   description?: string;
+
+  scope?: string;
+  resultsScope?: string;
+  options?: {
+    [key: string]: any;
+  };
+  elements?: IViewDescrElement[];
+}
+
+export interface IViewDescr {
+  '@id': string;
+  '@type': string;
   viewKind?: string;
 
-  type: string;
-  //order?: string[];
-  //queries?: any[];
-  scope?: string;
-  resultsScope?: string;
-  options?: {
-    [key: string]: any;
-  };
-  elements?: ViewElement[];
-}
-export type View = ViewElement;
-
-export interface ViewClassElement {
-  '@id'?: string;
-  '@type'?: string;
   title?: string;
   description?: string;
-  queries?: any[];
-  type: string;
+
+  options?: {
+    [key: string]: any;
+  };
+  elements: IViewDescrElement[];
+  collsConstrs: ICollConstrJsOpt[];
+}
+
+export interface IViewKindElement {
+  '@id': string;
+  '@type': string;
+
+  title?: string;
+  description?: string;
+
   scope?: string;
   resultsScope?: string;
   options?: {
     [key: string]: any;
   };
+  elements?: IViewKindElement[];
 }
-export interface Layout extends ViewClassElement {
-  elements: (Layout | ViewClassElement)[];
-}
+export interface IViewKind {
+  '@id': string;
+  '@type': string;
 
-export declare type ViewClass = Layout | ViewClassElement;
+  title?: string;
+  description?: string;
+
+  options?: {
+    [key: string]: any;
+  };
+  elements: IViewKindElement[];
+  collsConstrs: ICollConstrJsOpt[];
+}

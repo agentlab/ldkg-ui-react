@@ -30,5 +30,5 @@ export const AntdButtonControl: React.FC<ButtonControlProps> = ({ handleChange, 
   );
 };
 
-export const antdButtonControlTester: RankedTester = rankWith(2, uiTypeIs('Button'));
+export const antdButtonControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:Button'));
 export const AntdButtonControlWithStore = withStoreToButtonProps(AntdButtonControl);

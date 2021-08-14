@@ -19,23 +19,23 @@ import { Idx } from '../util/layout';
 import { LayoutComponent } from './LayoutComponent';
 
 export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
-  viewElement,
-  view,
+  viewKindElement,
+  viewKind,
   enabled,
   visible,
   form,
 }) => {
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewElement, view, enabled }) => {
-    const options = viewElement.options || {};
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKindElement, viewKind, enabled }) => {
+    const options = viewKindElement.options || {};
     const style: any = options.style;
     return (
       <Row
         style={{
           width: '100%',
-          flex: viewElement.options && viewElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
+          flex: viewKindElement.options && viewKindElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
         }}>
         <Col style={style} span={24}>
-          <FormsDispatch viewElement={viewElement} view={view} enabled={enabled} form={form} />
+          <FormsDispatch viewKindElement={viewKindElement} viewKind={viewKind} enabled={enabled} form={form} />
         </Col>
       </Row>
     );
@@ -43,11 +43,11 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   return (
     <React.Fragment>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {renderLayoutElements({ viewElement, view, enabled, Render })}
+        {renderLayoutElements({ viewKindElement, viewKind, enabled, Render })}
       </div>
     </React.Fragment>
   );
 };
 
-export const antdVerticalLayoutTester: RankedTester = rankWith(2, uiTypeIs('VerticalLayout'));
+export const antdVerticalLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:VerticalLayout'));
 export const AntdVerticalLayoutWithStore = withLayoutProps(AntdVerticalLayoutRenderer);

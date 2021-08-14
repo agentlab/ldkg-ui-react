@@ -15,7 +15,7 @@ import { SaveReqDialog } from './OnSaveDialog';
 import { MstContext } from '../MstContext';
 
 export const AntdModal: React.FC<any> = observer<any>(
-  ({ id, schema, viewElement, enabled, view, cells, childrenId, Render }) => {
+  ({ id, schema, viewKindElement, enabled, viewKind, cells, childrenId, Render }) => {
     const [visible, setVisible] = useState(false);
     const { store } = useContext(MstContext);
 
@@ -41,7 +41,14 @@ export const AntdModal: React.FC<any> = observer<any>(
         cancelText='Отмена'
         width={1200}
         okText='Сохранить'>
-        <Render schema={schema} viewElement={viewElement} enabled={enabled} view={view} cells={cells} id={childrenId} />
+        <Render
+          schema={schema}
+          viewKindElement={viewKindElement}
+          enabled={enabled}
+          viewKind={viewKind}
+          cells={cells}
+          id={childrenId}
+        />
         <SaveReqDialog
           visible={visible}
           onOk={() => {

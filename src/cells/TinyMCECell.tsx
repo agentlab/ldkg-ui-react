@@ -25,7 +25,7 @@ export const TinyMCECell = (props: any) => {
  */
 export const tinyMCECellTester: RankedTester = rankWith(
   10,
-  (viewElement, schema) => viewElement.options !== undefined && viewElement.options.formatter === 'tinyMCE',
+  (viewKindElement, schema) => viewKindElement.options !== undefined && viewKindElement.options.formatter === 'tinyMCE',
 );
 
 export const TinyMCECellWithStore = withStoreToCellProps(TinyMCECell);

@@ -39,5 +39,5 @@ export const SaveControl: React.FC<any> = (props) => {
   );
 };
 
-export const saveControlTester: RankedTester = rankWith(1, uiTypeIs('SaveControl'));
+export const saveControlTester: RankedTester = rankWith(1, uiTypeIs('aldkg:SaveControl'));
 export const AntdSaveControlWithStore = withStoreToSaveButtonProps(SaveControl);

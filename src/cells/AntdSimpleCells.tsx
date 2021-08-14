@@ -54,7 +54,7 @@ export const AntdButtonCell = (props: any) => {
     </Button>
   );
 };
-export const antdButtonCellTester: RankedTester = rankWith(2, uiTypeIs('Button'));
+export const antdButtonCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:Button'));
 export const AntdButtonCellWithStore = withStoreToCellProps(AntdButtonCell);
 
 /**
@@ -84,7 +84,7 @@ export const AntdImageCell = (props: any) => {
   const { data } = props;
   return <Image style={{ height: '100%', width: '100%' }} src={data[0]} />;
 };
-export const antdImageCellTester: RankedTester = rankWith(2, uiTypeIs('ImageCell'));
+export const antdImageCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:ImageCell'));
 export const AntdImageCellWithStore = withStoreToCellProps(AntdImageCell);
 
 /**
@@ -103,7 +103,7 @@ export const AntdRateCell = (props: any /*: EnumCellProps & WithClassname*/) => 
     </React.Fragment>
   );
 };
-export const antdRateCellTester: RankedTester = rankWith(5, uiTypeIs('Rate'));
+export const antdRateCellTester: RankedTester = rankWith(5, uiTypeIs('aldkg:Rate'));
 export const AntdRateCellWithStore = withStoreToCellProps(AntdRateCell);
 
 /**
