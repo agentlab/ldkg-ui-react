@@ -13,7 +13,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -24,6 +24,8 @@ import {
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -31,32 +33,31 @@ const antdRenderers: RendererRegistryEntry[] = [
   ...antdDataControlRenderers,
 ];
 
-const viewDescrs = [
+const viewKinds = [
   {
-    '@id': 'mktp:TreeAndFormViewDescr',
-    '@type': 'rm:View',
+    '@id': 'mktp:TreeAndFormViewKind',
+    '@type': 'aldkg:ViewKind',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
-    viewKind: 'rm:TreeAndFormViewKind',
     collsConstrs: [
       {
-        '@id': 'rm:Categories_Coll',
-        '@type': 'rm:CollConstr',
+        '@id': 'mktp:Categories_Coll',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:Categories_Coll_Shape0',
-            '@type': 'rm:EntConstr',
+            '@id': 'mktp:Categories_Coll_Shape0',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
           },
         ],
       },
       {
-        '@id': 'rm:Category_Coll',
-        '@type': 'rm:CollConstr',
+        '@id': 'mktp:Category_Coll',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:Cards_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@id': 'mktp:Cards_Coll_Ent0',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
             conditions: {
               '_@id': 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie',
@@ -66,212 +67,251 @@ const viewDescrs = [
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
       },
       {
-        '@id': 'rm:Cards_Coll',
-        '@type': 'rm:CollConstr',
+        '@id': 'mktp:Cards_Coll',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:Cards_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@id': 'mktp:Cards_Coll_Ent0',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
       },
     ],
-    type: 'SplitPaneLayout',
-    options: {
-      defaultSize: {
-        MktpTabs: '17%',
-        CatForm: '40%',
-        CardForm: '43%',
-      },
-      height: 'all-empty-space',
-      //width: 'all-empty-space',
-    },
     // child ui elements configs
     elements: [
       {
-        '@id': 'MktpTabs',
-        type: 'TabsLayout',
-        elements: [
-          {
-            type: 'DataControl',
-            resultsScope: 'rm:Categories_Coll',
-            options: {
-              renderType: 'tree',
-              title: 'WildBerries',
-              treeNodeTitleKey: 'name',
-              treeNodeParentKey: 'SubcatInCatLink',
-            },
-          },
-          {
-            type: 'DataControl',
-            resultsScope: 'rm:Categories_Coll',
-            options: {
-              renderType: 'tree',
-              title: 'Amazon',
-              treeNodeTitleKey: 'name',
-              treeNodeParentKey: 'SubcatInCatLink',
-            },
-          },
-          {
-            type: 'DataControl',
-            resultsScope: 'rm:Categories_Coll',
-            options: {
-              renderType: 'tree',
-              title: '1688',
-              treeNodeTitleKey: 'name',
-              treeNodeParentKey: 'SubcatInCatLink',
-            },
-          },
-        ],
-      },
-      {
-        '@id': 'CatForm',
-        type: 'VerticalLayout',
+        '@id': 'mktp:_934Jfg7',
+        '@type': 'aldkg:SplitPaneLayout',
         options: {
-          style: {
-            margin: '5px',
+          defaultSize: {
+            'mktp:_85dfg67': '17%',
+            'mktp:_83jdv8': '40%',
+            'mktp:_933ndh8': '43%',
           },
+          height: 'all-empty-space',
+          //width: 'all-empty-space',
         },
         elements: [
           {
-            type: 'Control',
-            resultsScope: 'rm:Category_Coll/name',
+            '@id': 'mktp:_85dfg67',
+            '@type': 'aldkg:TabsLayout',
+            elements: [
+              {
+                '@id': 'mktp:_k345jh',
+                '@type': 'aldkg:DataControl',
+                resultsScope: 'mktp:Categories_Coll',
+                options: {
+                  renderType: 'tree',
+                  title: 'WildBerries',
+                  treeNodeTitleKey: 'name',
+                  treeNodeParentKey: 'SubcatInCatLink',
+                },
+              },
+              {
+                '@id': 'mktp:_876df86',
+                '@type': 'aldkg:DataControl',
+                resultsScope: 'mktp:Categories_Coll',
+                options: {
+                  renderType: 'tree',
+                  title: 'Amazon',
+                  treeNodeTitleKey: 'name',
+                  treeNodeParentKey: 'SubcatInCatLink',
+                },
+              },
+              {
+                '@id': 'mktp:_13hF67',
+                '@type': 'aldkg:DataControl',
+                resultsScope: 'mktp:Categories_Coll',
+                options: {
+                  renderType: 'tree',
+                  title: '1688',
+                  treeNodeTitleKey: 'name',
+                  treeNodeParentKey: 'SubcatInCatLink',
+                },
+              },
+            ],
           },
           {
-            type: 'Control',
-            resultsScope: 'rm:Category_Coll/description',
-          },
-        ],
-      },
-      {
-        '@id': 'CardForm',
-        type: 'VerticalLayout',
-        options: {
-          style: {
-            margin: '5px',
-          },
-        },
-        elements: [
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/identifier',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/name',
+            '@id': 'mktp:_83jdv8',
+            '@type': 'aldkg:VerticalLayout',
+            options: {
+              style: {
+                margin: '5px',
+              },
+            },
+            elements: [
+              {
+                '@id': 'mktp:_986hAty',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Category_Coll/name',
+              },
+              {
+                '@id': 'mktp:_23jGj2',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Category_Coll/description',
+              },
+            ],
           },
           {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/country',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/brand',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/price',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/saleValue',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/seller',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/categoryPopularity',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/commentsCount',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/starsValue',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/questionsCount',
-          },
+            '@id': 'mktp:_933ndh8',
+            '@type': 'aldkg:VerticalLayout',
+            options: {
+              style: {
+                margin: '5px',
+              },
+            },
+            elements: [
+              {
+                '@id': 'mktp:_29jGu67',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/identifier',
+              },
+              {
+                '@id': 'mktp:_18hfgG78',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/name',
+              },
+              {
+                '@id': 'mktp:_732HJfg6',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/country',
+              },
+              {
+                '@id': 'mktp:_93jaSy67',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/brand',
+              },
+              {
+                '@id': 'mktp:_Ogy87',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/price',
+              },
+              {
+                '@id': 'mktp:_Jhf678',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/saleValue',
+              },
+              {
+                '@id': 'mktp:_dfUy679',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/seller',
+              },
+              {
+                '@id': 'mktp:_skUy67',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/categoryPopularity',
+              },
+              {
+                '@id': 'mktp:_dkYu20',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/commentsCount',
+              },
+              {
+                '@id': 'mktp:_sHt67y',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/starsValue',
+              },
+              {
+                '@id': 'mktp:_Lkh78f',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/questionsCount',
+              },
 
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/lastMonthSalesAmount',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/lastMonthSalesValue',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/perMonthSalesAmount',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/perMonthSalesValue',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/prevMonthSalesAmount',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/prevMonthSalesValue',
-          },
+              {
+                '@id': 'mktp:_oI89g',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/lastMonthSalesAmount',
+              },
+              {
+                '@id': 'mktp:_lsG680',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/lastMonthSalesValue',
+              },
+              {
+                '@id': 'mktp:_Ljs6dh',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/perMonthSalesAmount',
+              },
+              {
+                '@id': 'mktp:_f5Ghy67',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/perMonthSalesValue',
+              },
+              {
+                '@id': 'mktp:_lj8Hf7',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/prevMonthSalesAmount',
+              },
+              {
+                '@id': 'mktp:_ls8GJd6',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/prevMonthSalesValue',
+              },
 
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/salesAmountDiff',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/totalSales',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/totalSalesDiff',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/stocks',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/stocksDiffOrders',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/stocksDiffReturns',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/rootId',
-          },
+              {
+                '@id': 'mktp:_9hD67hK',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/salesAmountDiff',
+              },
+              {
+                '@id': 'mktp:_nrFy67js',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/totalSales',
+              },
+              {
+                '@id': 'mktp:_Sdf7n4',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/totalSalesDiff',
+              },
+              {
+                '@id': 'mktp:_kF78d46',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/stocks',
+              },
+              {
+                '@id': 'mktp:_df7JHd7',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/stocksDiffOrders',
+              },
+              {
+                '@id': 'mktp:_29Kjdf78',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/stocksDiffReturns',
+              },
+              {
+                '@id': 'mktp:_10Is93',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/rootId',
+              },
 
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/photosCount',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/firstParsedAt',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/lastMonthParsedAt',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/parsedAt',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Cards_Coll/prevParsedAt',
+              {
+                '@id': 'mktp:_Kd710df',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/photosCount',
+              },
+              {
+                '@id': 'mktp:_Asf783',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/firstParsedAt',
+              },
+              {
+                '@id': 'mktp:_9kd7Mhd',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/lastMonthParsedAt',
+              },
+              {
+                '@id': 'mktp:_23Mf5dY',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/parsedAt',
+              },
+              {
+                '@id': 'mktp:_9Jke7cc6',
+                '@type': 'aldkg:Control',
+                resultsScope: 'mktp:Cards_Coll/prevParsedAt',
+              },
+            ],
           },
         ],
       },
@@ -279,27 +319,31 @@ const viewDescrs = [
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
+const viewDescrs = [
+  {
+    '@id': 'mktp:TreeAndFormViewDescr',
+    '@type': 'aldkg:ViewDescr',
+    viewKind: 'mktp:TreeAndFormViewKind',
+    title: 'CardCellGrid',
+    description: 'CardCellGrid',
+    collsConstrs: [],
+    options: {},
+    // child ui elements configs
+    elements: [],
+  },
+];
 
 const additionalColls: CollState[] = [
   // ViewKinds Collection
-  /*{
+  {
     constr: viewKindCollConstr,
     data: viewKinds,
     opt: {
       updPeriod: undefined,
       lastSynced: moment.now(),
-      resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
     },
-  },*/
+  },
   // ViewDescrs Collection
   {
     constr: viewDescrCollConstr,
@@ -314,7 +358,7 @@ const additionalColls: CollState[] = [
 ];
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createModelFromState('mktp', client, rootModelInitialState, additionalColls);
+const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 connectReduxDevtools(require('remotedev'), rootStore);
@@ -331,7 +375,7 @@ export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px', width: '100%' }}>
-        <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

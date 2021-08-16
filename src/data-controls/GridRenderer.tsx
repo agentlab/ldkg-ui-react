@@ -7,35 +7,29 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React, { useState, useEffect } from 'react';
-import { List, Row, Col, Pagination } from 'antd';
-import { ViewElement } from '../models/uischema';
+import React from 'react';
+import { List } from 'antd';
+import { IViewKindElement } from '../models/uischema';
 
 import { DispatchCell } from '../DispatchCell';
 
 import './styles.css';
 
-const divStyle: React.CSSProperties = {
-  padding: '5px',
-};
-
 export const GridRenderer: React.FC<any> = (props) => {
-  const { child, onSelect, viewElement, uischema, view, schema } = props;
-  const grid = viewElement?.options?.grid || { gutter: 16, column: 4 };
-  console.log('UISCEMA', uischema);
-  const template = viewElement?.options?.elementTemplate || null;
+  const { child, viewKindElement, viewKind, schema } = props;
+  const grid = viewKindElement?.options?.grid || { gutter: 16, column: 4 };
+  const template = viewKindElement?.options?.elementTemplate || null;
   const createCell = (data: any, id: string | number) =>
     template ? (
-      template.map((e: ViewElement, idx: number) => (
+      template.map((e: IViewKindElement, idx: number) => (
         <DispatchCell
           id={String(id) + String(idx)}
           key={String(id) + String(idx)}
-          view={view}
+          viewKindElement={e}
+          viewKind={viewKind}
+          schema={schema}
           data={data}
           rowData={data}
-          schema={schema}
-          viewElement={e}
-          uischema={uischema}
         />
       ))
     ) : (

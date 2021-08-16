@@ -13,7 +13,7 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -24,6 +24,9 @@ import {
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState, registerMstViewKindSchema } from '../src/models/MstViewDescr';
+import { MstVerticalLayout } from '../src/models/MstViewSchemas';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -31,90 +34,129 @@ const antdRenderers: RendererRegistryEntry[] = [
   ...antdDataControlRenderers,
 ];
 
-const viewDescrs = [
+const viewKinds = [
   {
-    '@id': 'mktp:CardCellViewDescr',
-    '@type': 'rm:View',
-    title: 'CardCellGrid',
-    description: 'CardCellGrid',
-    viewKind: 'rm:CardCellGridViewKind',
+    '@id': 'mktp:CardCellGridViewKind',
+    '@type': 'aldkg:ViewKind',
     collsConstrs: [
       {
-        '@id': 'rm:Cards_Coll',
-        '@type': 'rm:CollConstr',
+        '@id': 'mktp:ViewKind_Cards_Coll',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:Cards_Coll_Shape0',
-            '@type': 'rm:EntConstr',
+            '@id': 'mktp:ViewKind_Cards_Coll_Shape0',
+            '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
           },
         ],
       },
     ],
-    type: 'VerticalLayout',
-    options: {
-      //width: 'all-empty-space',
-    },
     // child ui elements configs
     elements: [
       {
-        type: 'DataControl',
-        resultsScope: 'rm:Cards_Coll',
-        options: {
-          renderType: 'grid',
-          grid: {
-            gutter: 16,
-            xs: 2,
-            sm: 2,
-            md: 3,
-            lg: 3,
-            xl: 4,
-            xxl: 7,
-          },
-          elementTemplate: [
-            {
-              type: 'CardLayout',
-              elements: [
+        '@id': 'mktp:_29kFg89',
+        '@type': 'aldkg:VerticalLayout',
+        elements: [
+          {
+            '@id': 'mktp:_24Hdr78',
+            '@type': 'aldkg:DataControl',
+            resultsScope: 'mktp:ViewKind_Cards_Coll',
+            options: {
+              renderType: 'grid',
+              grid: {
+                gutter: 16,
+                xs: 2,
+                sm: 2,
+                md: 3,
+                lg: 3,
+                xl: 4,
+                xxl: 7,
+              },
+              elementTemplate: [
                 {
-                  type: 'ImageCell',
-                  scope: 'imageUrl',
-                },
-                {
-                  type: 'Control',
-                  scope: 'name',
-                  options: {
-                    editable: false,
-                    style: {
-                      height: '3.5em',
-                      textAlign: 'left',
-                      fontFamily: 'Lato,Tahoma,sans-serif',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      margin: 0,
-                    },
-                  },
-                },
-                {
-                  type: 'Rate',
-                  scope: 'starsValue',
-                  options: {
-                    editable: false,
-                  },
-                },
-                {
-                  type: 'CellHorizontalLayout',
-                  options: {
-                    justify: 'space-between',
-                  },
+                  '@id': 'mktp:_94hfT67',
+                  '@type': 'aldkg:CardLayout',
                   elements: [
                     {
-                      type: 'Control',
-                      scope: 'price',
+                      '@id': 'mktp:_kje733js',
+                      '@type': 'aldkg:ImageCell',
+                      scope: 'imageUrl',
+                    },
+                    {
+                      '@id': 'mktp:_jw563df',
+                      '@type': 'aldkg:Control',
+                      scope: 'name',
                       options: {
-                        formater: 'labeledValue',
                         editable: false,
-                        label: 'Цена',
-                        specialChar: '₽',
+                        style: {
+                          height: '3.5em',
+                          textAlign: 'left',
+                          fontFamily: 'Lato,Tahoma,sans-serif',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          margin: 0,
+                        },
+                      },
+                    },
+                    {
+                      '@id': 'mktp:_84gdY576',
+                      '@type': 'aldkg:Rate',
+                      scope: 'starsValue',
+                      options: {
+                        editable: false,
+                      },
+                    },
+                    {
+                      '@id': 'mktp:_934Hfg78',
+                      '@type': 'aldkg:CellHorizontalLayout',
+                      options: {
+                        justify: 'space-between',
+                      },
+                      elements: [
+                        {
+                          '@id': 'mktp:_kfg67we',
+                          '@type': 'aldkg:Control',
+                          scope: 'price',
+                          options: {
+                            formatter: 'labeledValue',
+                            editable: false,
+                            label: 'Цена',
+                            specialChar: '₽',
+                            style: {
+                              textAlign: 'left',
+                              fontFamily: 'Lato,Tahoma,sans-serif',
+                              color: 'gray',
+                            },
+                          },
+                        },
+                        {
+                          '@id': 'mktp:_jdf782fK',
+                          '@type': 'aldkg:Control',
+                          scope: 'totalSales',
+                          options: {
+                            formatter: 'labeledValue',
+                            editable: false,
+                            label: 'Всего продано',
+                            style: {
+                              textAlign: 'right',
+                              fontFamily: 'Lato,Tahoma,sans-serif',
+                              color: 'gray',
+                            },
+                          },
+                        },
+                      ],
+                    },
+                    {
+                      '@id': 'mktp:_Udf783d',
+                      '@type': 'aldkg:Control',
+                      scope: 'lastMonthSalesAmount',
+                      options: {
+                        editable: false,
+                        formatter: 'сomparison',
+                        dataToFormatter: {
+                          prevValue: 'prevMonthSalesAmount',
+                        },
+                        label: 'Продажи за месяц',
                         style: {
                           textAlign: 'left',
                           fontFamily: 'Lato,Tahoma,sans-serif',
@@ -123,131 +165,121 @@ const viewDescrs = [
                       },
                     },
                     {
-                      type: 'Control',
-                      scope: 'totalSales',
+                      '@id': 'mktp:_iw789dd',
+                      '@type': 'aldkg:Control',
+                      scope: 'lastMonthSalesValue',
                       options: {
-                        formater: 'labeledValue',
+                        formatter: 'сomparison',
                         editable: false,
-                        label: 'Всего продано',
+                        dataToFormatter: {
+                          prevValue: 'prevMonthSalesValue',
+                        },
+                        label: 'Объем продаж',
                         style: {
-                          textAlign: 'right',
+                          textAlign: 'left',
                           fontFamily: 'Lato,Tahoma,sans-serif',
                           color: 'gray',
                         },
                       },
                     },
-                  ],
-                },
-                {
-                  type: 'Control',
-                  scope: 'lastMonthSalesAmount',
-                  options: {
-                    editable: false,
-                    formater: 'сomparison',
-                    dataToFormater: {
-                      prevValue: 'prevMonthSalesAmount',
-                    },
-                    label: 'Продажи за месяц',
-                    style: {
-                      textAlign: 'left',
-                      fontFamily: 'Lato,Tahoma,sans-serif',
-                      color: 'gray',
-                    },
-                  },
-                },
-                {
-                  type: 'Control',
-                  scope: 'lastMonthSalesValue',
-                  options: {
-                    formater: 'сomparison',
-                    editable: false,
-                    dataToFormater: {
-                      prevValue: 'prevMonthSalesValue',
-                    },
-                    label: 'Объем продаж',
-                    style: {
-                      textAlign: 'left',
-                      fontFamily: 'Lato,Tahoma,sans-serif',
-                      color: 'gray',
-                    },
-                  },
-                },
-                {
-                  type: 'G2',
-                },
-                {
-                  type: 'CellHorizontalLayout',
-                  options: {
-                    justify: 'space-around',
-                  },
-                  elements: [
                     {
-                      type: 'Control',
-                      scope: '@id',
-                      options: {
-                        style: {
-                          border: '1.5px solid black',
-                          borderRadius: '2px',
-                          height: '2em',
-                          textAlign: 'center',
-                          fontWeight: 500,
-                          width: '90px',
-                          color: 'black',
-                        },
-                        specialImage: 'https://www.meme-arsenal.com/memes/f8e9bfb9fdf368272b21a5dac8f01ec1.jpg',
-                        editable: false,
-                        formater: 'link',
-                        dataToFormater: {
-                          link: '@id',
-                        },
-                        label: 'Wildberries',
-                      },
+                      '@id': 'mktp:_385hgf67',
+                      '@type': 'aldkg:G2',
                     },
                     {
-                      type: 'Button',
+                      '@id': 'mktp:_jfg789df',
+                      '@type': 'aldkg:CellHorizontalLayout',
                       options: {
-                        label: 'Добавить',
-                        style: {
-                          border: '1.5px solid black',
-                          borderRadius: '2px',
-                          width: '90px',
-                          fontWeight: 500,
-                          color: 'black',
-                        },
+                        justify: 'space-around',
                       },
+                      elements: [
+                        {
+                          '@id': 'mktp:_45jdfg78',
+                          '@type': 'aldkg:Control',
+                          scope: '@id',
+                          options: {
+                            style: {
+                              border: '1.5px solid black',
+                              borderRadius: '2px',
+                              height: '2em',
+                              textAlign: 'center',
+                              fontWeight: 500,
+                              width: '90px',
+                              color: 'black',
+                            },
+                            specialImage: 'https://www.meme-arsenal.com/memes/f8e9bfb9fdf368272b21a5dac8f01ec1.jpg',
+                            editable: false,
+                            formatter: 'link',
+                            dataToFormatter: {
+                              link: '@id',
+                            },
+                            label: 'Wildberries',
+                          },
+                        },
+                        {
+                          '@id': 'mktp:_dfg897',
+                          '@type': 'aldkg:Button',
+                          options: {
+                            label: 'Добавить',
+                            style: {
+                              border: '1.5px solid black',
+                              borderRadius: '2px',
+                              width: '90px',
+                              fontWeight: 500,
+                              color: 'black',
+                            },
+                          },
+                        },
+                      ],
                     },
                   ],
                 },
               ],
             },
-          ],
-        },
+          },
+        ],
       },
     ],
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
+const viewDescrs = [
+  {
+    '@id': 'mktp:CardCellViewDescr',
+    '@type': 'aldkg:ViewDescr',
+    viewKind: 'mktp:CardCellGridViewKind',
+    title: 'CardCellGrid',
+    description: 'CardCellGrid',
+    collsConstrs: [
+      /*{
+        '@id': 'mktp:ViewDescr_Cards_Coll',
+        '@type': 'aldkg:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'mktp:ViewDescr_Cards_Coll_Shape0',
+            '@type': 'aldkg:EntConstr',
+            schema: 'hs:ProductCardShape',
+          },
+        ],
+      },*/
+    ],
+    options: {},
+    // child ui elements configs
+    elements: [],
+  },
+];
 
 const additionalColls: CollState[] = [
   // ViewKinds Collection
-  /*{
-      constr: viewKindCollConstr,
-      data: viewKinds,
-      opt: {
-        updPeriod: undefined,
-        lastSynced: moment.now(),
-        resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
-      },
-    },*/
+  {
+    constr: viewKindCollConstr,
+    data: viewKinds,
+    opt: {
+      updPeriod: undefined,
+      lastSynced: moment.now(),
+      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+    },
+  },
   // ViewDescrs Collection
   {
     constr: viewDescrCollConstr,
@@ -261,8 +293,10 @@ const additionalColls: CollState[] = [
   },
 ];
 
+registerMstViewKindSchema('aldkg:VerticalLayout', MstVerticalLayout);
+
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createModelFromState('mktp', client, rootModelInitialState, additionalColls);
+const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
 console.log('rootStore', rootStore);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -287,7 +321,7 @@ export const Empty: Story<{}> = () => (
           margin: '0 auto',
           padding: '5px',
         }}>
-        <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

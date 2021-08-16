@@ -138,15 +138,14 @@ export default {
 export const Empty: Story<{}> = () => (
   <div style={{ height: '1000px' }}>
     <AntdDataLayout
-      viewElement={{
+      viewKindElement={{
         options: {
           renderType: 'tree',
         },
       }}
       schema={artifactSchema}
-      view={{} as any}
+      viewKind={{} as any}
       id={'test'}
-      uischema={{}}
       enabled={true}
       dataSource={data}
     />

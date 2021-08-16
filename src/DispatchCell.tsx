@@ -19,27 +19,17 @@ import { MstContext } from './MstContext';
  * Dispatch renderer component for cells.
  */
 export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
-  ({
-    data,
-    uischema,
-    onMeasureChange,
-    uri,
-    schema,
-    viewElement,
-    view,
-    enabled,
-    id,
-    parent,
-    CKey,
-    rowData,
-    ...rest
-  }) => {
+  ({ data, onMeasureChange, uri, schema, viewKindElement, viewKind, enabled, id, CKey, rowData, ...rest }) => {
     const { cells } = useContext(MstContext);
-    const renderer = maxBy(cells, (r) => r.tester(viewElement, schema));
-    if (renderer === undefined || renderer.tester(viewElement, schema) === -1) {
+    const renderer = maxBy(cells, (r) => r.tester(viewKindElement, schema));
+    if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
       return (
         <td>
-          <UnknownRenderer type={'renderer'} />
+          <UnknownRenderer
+            type={'renderer'}
+            elementId={viewKindElement['@id']}
+            elementType={viewKindElement['@type']}
+          />
         </td>
       );
     } else {
@@ -51,14 +41,12 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
             data={data}
             rowData={rowData}
             onMeasureChange={onMeasureChange}
-            uischema={uischema}
             schema={schema}
-            viewElement={viewElement}
+            viewKindElement={viewKindElement}
             uri={uri}
             enabled={enabled}
-            view={view}
+            viewKind={viewKind}
             id={id}
-            parent={parent}
             {...rest}
           />
         </ErrorBoundary>

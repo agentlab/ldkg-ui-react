@@ -13,104 +13,114 @@ import { Story, Meta } from '@storybook/react/types-6-0';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
   antdControlRenderers,
   antdLayoutRenderers,
-  antdRataControlRenderers,
+  antdDataControlRenderers,
   Form,
   MstContextProvider,
   RendererRegistryEntry,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
   ...antdLayoutRenderers,
-  ...antdRataControlRenderers,
+  ...antdDataControlRenderers,
 ];
 
-const viewDescrs = [
+const viewKinds = [
   {
-    '@id': 'mktp:TreeAndFormViewDescr',
-    '@type': 'rm:View',
+    '@id': 'rm:TreeAndFormArtifactViewKind',
+    '@type': 'aldkg:ViewKind',
     title: 'TreeAndForm',
     description: 'TreeAndForm',
-    viewKind: 'rm:TreeAndFormViewKind',
     collsConstrs: [
       {
         '@id': 'rm:Folders_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Folders_Coll_Shape0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'nav:folderShape',
           },
         ],
       },
       {
         '@id': 'rm:Artifacts_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:Artifacts_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
       },
     ],
-    type: 'SplitPaneLayout',
-    options: {
-      defaultSize: {
-        'rm:Folders_Coll': '17%',
-        ArtifactForm: '83%',
-      },
-      height: 'all-empty-space',
-      //width: 'all-empty-space',
-    },
     // child ui elements configs
     elements: [
       {
-        type: 'DataControl',
-        resultsScope: 'rm:Folders_Coll',
+        '@id': 'rm:_kf8Df7',
+        '@type': 'aldkg:SplitPaneLayout',
         options: {
-          renderType: 'tree',
-        },
-      },
-      {
-        '@id': 'ArtifactForm',
-        type: 'FormLayout',
-        options: {
-          title: 'Aртефакт',
+          defaultSize: {
+            'rm:Folders_Coll': '17%',
+            'rm:_fgu778f': '83%',
+          },
+          height: 'all-empty-space',
+          //width: 'all-empty-space',
         },
         elements: [
           {
-            type: 'Control',
-            resultsScope: 'rm:Artifacts_Coll/creator',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Artifacts_Coll/assetFolder',
-          },
-          {
-            type: 'Control',
-            resultsScope: 'rm:Artifacts_Coll/description',
+            '@id': 'rm:_9fKJ7dv',
+            '@type': 'aldkg:DataControl',
+            resultsScope: 'rm:Folders_Coll',
             options: {
-              validation: [
-                {
-                  validator: 'RegExp',
-                  propsToValidator: {
-                    regExp: 'bo*',
-                  },
-                  validateStatus: 'error',
-                  help: 'Работает',
-                },
-              ],
+              renderType: 'tree',
             },
+          },
+          {
+            '@id': 'rm:_fgu778f',
+            '@type': 'aldkg:FormLayout',
+            options: {
+              title: 'Aртефакт',
+            },
+            elements: [
+              {
+                '@id': 'rm:_kf8Jdf',
+                '@type': 'aldkg:Control',
+                resultsScope: 'rm:Artifacts_Coll/creator',
+              },
+              {
+                '@id': 'rm:_9dF78',
+                '@type': 'aldkg:Control',
+                resultsScope: 'rm:Artifacts_Coll/assetFolder',
+              },
+              {
+                '@id': 'rm:_37Jdf67',
+                '@type': 'aldkg:Control',
+                resultsScope: 'rm:Artifacts_Coll/description',
+                options: {
+                  validation: [
+                    {
+                      validator: 'RegExp',
+                      propsToValidator: {
+                        regExp: 'bo*',
+                      },
+                      validateStatus: 'error',
+                      help: 'Работает',
+                    },
+                  ],
+                },
+              },
+            ],
           },
         ],
       },
@@ -118,27 +128,31 @@ const viewDescrs = [
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
+const viewDescrs = [
+  {
+    '@id': 'rm:TreeAndFormArtifactViewDescr',
+    '@type': 'aldkg:ViewDescr',
+    viewKind: 'rm:TreeAndFormArtifactViewKind',
+    title: 'CardCellGrid',
+    description: 'CardCellGrid',
+    collsConstrs: [],
+    options: {},
+    // child ui elements configs
+    elements: [],
+  },
+];
 
 const additionalColls: CollState[] = [
   // ViewKinds Collection
-  /*{
+  {
     constr: viewKindCollConstr,
     data: viewKinds,
     opt: {
       updPeriod: undefined,
       lastSynced: moment.now(),
-      resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
     },
-  },*/
+  },
   // ViewDescrs Collection
   {
     constr: viewDescrCollConstr,
@@ -153,7 +167,7 @@ const additionalColls: CollState[] = [
 ];
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 connectReduxDevtools(require('remotedev'), rootStore);
@@ -170,7 +184,7 @@ export const Empty: Story<{}> = () => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px', width: '100%' }}>
-        <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

@@ -8,8 +8,9 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { find, includes, isArray, isEmpty } from 'lodash-es';
+
 import { JsonSchema7 } from './models/jsonSchema7';
-import { UISchemaElement, ViewElement } from './models/uischema';
+import { IViewKindElement } from './models/uischema';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
@@ -22,7 +23,7 @@ export const NOT_APPLICABLE = -1;
 /**
  * A tester is a function that receives an UI schema and a JSON schema and returns a boolean.
  */
-export type Tester = (viewElement: ViewElement, schema: JsonSchema7) => boolean;
+export type Tester = (viewKindElement: IViewKindElement, schema: JsonSchema7) => boolean;
 
 /**
  * A tester that allow composing other testers by && them.
@@ -31,8 +32,8 @@ export type Tester = (viewElement: ViewElement, schema: JsonSchema7) => boolean;
  */
 export const and =
   (...testers: Tester[]): Tester =>
-  (viewElement: ViewElement, schema: JsonSchema7) =>
-    testers.reduce<boolean>((acc, tester) => acc && tester(viewElement, schema), true);
+  (viewKindElement: IViewKindElement, schema: JsonSchema7) =>
+    testers.reduce<boolean>((acc, tester) => acc && tester(viewKindElement, schema), true);
 
 /**
  * A tester that allow composing other testers by || them.
@@ -41,8 +42,8 @@ export const and =
  */
 export const or =
   (...testers: Tester[]): Tester =>
-  (viewElement: ViewElement, schema: JsonSchema7) =>
-    testers.reduce<boolean>((acc, tester) => acc || tester(viewElement, schema), false);
+  (viewKindElement: IViewKindElement, schema: JsonSchema7) =>
+    testers.reduce<boolean>((acc, tester) => acc || tester(viewKindElement, schema), false);
 
 /**
  * Create a ranked tester that will associate a number with a given tester, if the
@@ -53,8 +54,8 @@ export const or =
  */
 export const rankWith =
   (rank: number, tester: Tester) =>
-  (viewElement: ViewElement, schema: JsonSchema7): number => {
-    if (tester(viewElement, schema)) {
+  (viewKindElement: IViewKindElement, schema: JsonSchema7): number => {
+    if (tester(viewKindElement, schema)) {
       return rank;
     }
 
@@ -68,8 +69,8 @@ export const rankWith =
  */
 export const uiTypeIs =
   (expected: string): Tester =>
-  (uischema: UISchemaElement): boolean =>
-    !isEmpty(uischema) && uischema.type === expected;
+  (viewKindElement: IViewKindElement): boolean =>
+    !isEmpty(viewKindElement) && viewKindElement['@type'] === expected;
 
 /**
  * Checks whether the given UI schema has an option with the given
@@ -81,19 +82,19 @@ export const uiTypeIs =
  */
 export const optionIs =
   (optionName: string, optionValue: any): Tester =>
-  (uischema: UISchemaElement): boolean => {
-    if (isEmpty(uischema)) {
+  (viewKindElement: IViewKindElement): boolean => {
+    if (isEmpty(viewKindElement)) {
       return false;
     }
 
-    const options = (uischema as any).options;
+    const options = (viewKindElement as any).options;
     return !isEmpty(options) && options[optionName] === optionValue;
   };
 
 /**
  * A ranked tester associates a tester with a number.
  */
-export declare type RankedTester = (viewElement: ViewElement, schema: JsonSchema7) => number;
+export declare type RankedTester = (viewKindElement: IViewKindElement, schema: JsonSchema7) => number;
 
 export const hasType = (jsonSchema: JsonSchema7, expected: string): boolean => {
   return includes(deriveTypes(jsonSchema), expected);
@@ -142,8 +143,8 @@ const deriveTypes = (jsonSchema: JsonSchema7): string[] => {
  */
 export const schemaMatches =
   (predicate: (schema: JsonSchema7) => boolean): Tester =>
-  (viewElement: ViewElement, schema: JsonSchema7): boolean => {
-    if (isEmpty(viewElement) /*|| !isControl(uischema)*/) {
+  (viewKindElement: IViewKindElement, schema: JsonSchema7): boolean => {
+    if (isEmpty(viewKindElement) /*|| !isControl(uischema)*/) {
       return false;
     }
     if (isEmpty(schema)) {
@@ -193,24 +194,24 @@ export const formatIs = (expectedFormat: string): Tester =>
  * has a 'date' format.
  * @type {Tester}
  */
-export const isDateControl = /*and(uiTypeIs('Control'),*/ formatIs('date' /*)*/);
+export const isDateControl = /*and(uiTypeIs('aldkg:Control'),*/ formatIs('date' /*)*/);
 
 /**
  * Tests whether the given UI schema is of type Control and if the schema
  * has a 'date-time' format.
  * @type {Tester}
  */
-export const isDateTimeControl = /*and(uiTypeIs('Control'),*/ formatIs('date-time' /*)*/);
+export const isDateTimeControl = /*and(uiTypeIs('aldkg:Control'),*/ formatIs('date-time' /*)*/);
 
 /**
  * Default tester for boolean.
  * @type {RankedTester}
  */
-export const isBooleanControl = /*and(uiTypeIs('Control'),*/ schemaTypeIs('boolean' /*)*/);
+export const isBooleanControl = /*and(uiTypeIs('aldkg:Control'),*/ schemaTypeIs('boolean' /*)*/);
 
 export const isEnumControl =
   /*and(
-  uiTypeIs('Control'),*/
+  uiTypeIs('aldkg:Control'),*/
   or(
     schemaMatches((schema) => schema.enum !== undefined),
     schemaMatches((schema) => schema.const !== undefined),
@@ -222,21 +223,21 @@ export const isEnumControl =
  * is of type integer
  * @type {Tester}
  */
-export const isIntegerControl = /*and(uiTypeIs('Control'),*/ schemaTypeIs('integer' /*)*/);
+export const isIntegerControl = /*and(uiTypeIs('aldkg:Control'),*/ schemaTypeIs('integer' /*)*/);
 
 /**
  * Tests whether the given UI schema is of type Control and if the schema
  * is of type number
  * @type {Tester}
  */
-export const isNumberControl = /*and(uiTypeIs('Control'),*/ schemaTypeIs('number' /*)*/);
+export const isNumberControl = /*and(uiTypeIs('aldkg:Control'),*/ schemaTypeIs('number' /*)*/);
 
 /**
  * Tests whether the given UI schema is of type Control and if the schema
  * is of type string
  * @type {Tester}
  */
-export const isStringControl = /*and(uiTypeIs('Control'),*/ schemaTypeIs('string' /*)*/);
+export const isStringControl = /*and(uiTypeIs('aldkg:Control'),*/ schemaTypeIs('string' /*)*/);
 
 /**
  * Tests whether a given UI schema is of type Control,
@@ -245,7 +246,7 @@ export const isStringControl = /*and(uiTypeIs('Control'),*/ schemaTypeIs('string
  * @type {Tester}
  */
 export const isRangeControl = and(
-  /*uiTypeIs('Control'),*/
+  /*uiTypeIs('aldkg:Control'),*/
   or(schemaTypeIs('number'), schemaTypeIs('integer')),
   schemaMatches(
     (schema) => schema.maximum !== undefined && schema.minimum !== undefined && schema.default !== undefined,

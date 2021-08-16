@@ -8,13 +8,12 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, createModelFromState, CollState } from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
 
 import {
   RendererRegistryEntry,
@@ -24,25 +23,26 @@ import {
   antdControlRenderers,
   antdLayoutRenderers,
 } from '../src';
+import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
-const viewDescrs = [
+const viewKinds = [
   {
-    '@id': 'rm:FormView',
-    '@type': 'rm:View',
-    //'viewKind': 'rm:FormViewClass',
+    '@id': 'rm:FormViewKind',
+    '@type': 'aldkg:ViewKind',
     title: 'Малая форма',
     description: 'Small form',
-    type: 'FormLayout',
+
     collsConstrs: [
       {
         '@id': 'rm:FormView_Artifacts_Coll',
-        '@type': 'rm:CollConstr',
+        '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
             '@id': 'rm:FormView_Artifacts_Coll_Ent0',
-            '@type': 'rm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
           },
         ],
@@ -51,54 +51,66 @@ const viewDescrs = [
     ],
     elements: [
       {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/creator',
-      },
-      {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/assetFolder',
-      },
-      {
-        type: 'Control',
-        resultsScope: 'rm:FormView_Artifacts_Coll/description',
-        options: {
-          validation: [
-            {
-              validator: 'RegExp',
-              propsToValidator: {
-                regExp: 'bo*',
-              },
-              validateStatus: 'error',
-              help: 'Работает',
+        '@id': 'rm:_83hd7f',
+        '@type': 'aldkg:FormLayout',
+        elements: [
+          {
+            '@id': 'rm:_17Gj78',
+            '@type': 'aldkg:Control',
+            resultsScope: 'rm:FormView_Artifacts_Coll/creator',
+          },
+          {
+            '@id': 'rm:_297Hgf56',
+            '@type': 'aldkg:Control',
+            resultsScope: 'rm:FormView_Artifacts_Coll/assetFolder',
+          },
+          {
+            '@id': 'rm:_934jHd67',
+            '@type': 'aldkg:Control',
+            resultsScope: 'rm:FormView_Artifacts_Coll/description',
+            options: {
+              validation: [
+                {
+                  validator: 'RegExp',
+                  propsToValidator: {
+                    regExp: 'bo*',
+                  },
+                  validateStatus: 'error',
+                  help: 'Работает',
+                },
+              ],
             },
-          ],
-        },
+          },
+        ],
       },
     ],
   },
 ];
 
-const viewDescrCollConstr = {
-  '@id': 'rm:Views_Coll',
-  entConstrs: [
-    {
-      '@id': 'rm:Views_EntConstr0',
-      schema: 'rm:ViewShape',
-    },
-  ],
-};
+const viewDescrs = [
+  {
+    '@id': 'rm:FormViewDescr',
+    '@type': 'aldkg:ViewDescr',
+    viewKind: 'rm:FormViewKind',
+    title: 'CardCellGrid',
+    description: 'CardCellGrid',
+    collsConstrs: [],
+    // child ui elements configs
+    elements: [],
+  },
+];
 
 const additionalColls: CollState[] = [
   // ViewKinds Collection
-  /*{
+  {
     constr: viewKindCollConstr,
     data: viewKinds,
     opt: {
       updPeriod: undefined,
       lastSynced: moment.now(),
-      resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
     },
-  },*/
+  },
   // ViewDescrs Collection
   {
     constr: viewDescrCollConstr,
@@ -113,7 +125,7 @@ const additionalColls: CollState[] = [
 ];
 
 const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
 const store: any = asReduxStore(rootStore);
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 connectReduxDevtools(require('remotedev'), rootStore);
@@ -130,7 +142,7 @@ const Template: Story<any> = (args: any) => (
   <Provider store={store}>
     <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
       <div style={{ height: '1000px' }}>
-        <Form viewIri={viewDescrs[0]['@id']} viewsResultsScope={viewDescrCollConstr['@id']} />
+        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
       </div>
     </MstContextProvider>
   </Provider>

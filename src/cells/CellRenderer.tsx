@@ -31,17 +31,17 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
   const [editing, setEditing] = useState(false);
   const [currentData, setCurrentData] = useState(props.data);
   const inputRef = useRef<any>(null);
-  const formaterId = uiOptions.formater || 'base';
+  const formatterId = uiOptions.formatter || 'base';
   const query = uiOptions.query;
   let width = 'auto';
   let editable = true;
   if (uiOptions.editable !== undefined) {
     editable = uiOptions.editable;
   }
-  if (uiOptions && formaterId === 'tinyMCE') {
+  if (uiOptions && formatterId === 'tinyMCE') {
     width = uiOptions.tinyWidth === 'emptySpace' ? '100%' : uiOptions.tinyWidth === 'content' ? 'auto' : 'auto';
   }
-  const Formater = formatters[formaterId] || formatters['base'];
+  const Formatter = formatters[formatterId] || formatters['base'];
   useEffect(() => {
     if (editing && inputRef && inputRef.current) {
       inputRef.current.focus();
@@ -58,10 +58,10 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
     toggleEdit();
   };
   const specialProps: any = {};
-  if (uiOptions.dataToFormater) {
-    const formaterProps = uiOptions.dataToFormater;
-    for (const key in formaterProps) {
-      specialProps[key] = rowData[formaterProps[key]];
+  if (uiOptions.dataToFormatter) {
+    const formatterProps = uiOptions.dataToFormatter;
+    for (const key in formatterProps) {
+      specialProps[key] = rowData[formatterProps[key]];
     }
   }
   //console.log('RENDER', props.data);
@@ -72,7 +72,7 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
           <Cell inputRef={inputRef} value={currentData} handleChange={save} {...props} />
         ) : (
           <div onClick={toggleEdit}>
-            <Formater
+            <Formatter
               myRef={myRef}
               query={query}
               propKey={uiOptions.key}
@@ -84,7 +84,7 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
           </div>
         )
       ) : (
-        <Formater
+        <Formatter
           value={props.data}
           query={query}
           propKey={uiOptions.key}

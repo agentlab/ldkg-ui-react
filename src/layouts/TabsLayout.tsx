@@ -15,20 +15,14 @@ import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
 
 export const TabsLayout: React.FC<any> = (props) => {
-  const { enabled, onSelect = () => {}, uischema, viewElement, view } = props;
-  const elements = viewElement.elements;
+  const { enabled, onSelect = () => {}, viewKindElement, viewKind } = props;
+  const elements = viewKindElement.elements;
   const viewTabs = elements
     ? elements.map((e: any, index: number) => {
         const title = e.options && e.options.title;
         return (
           <Tabs.TabPane tab={title} key={'' + index}>
-            <FormsDispatch
-              viewElement={e}
-              uischema={uischema}
-              enabled={enabled}
-              view={view}
-              parent={viewElement.resultsScope}
-            />
+            <FormsDispatch viewKindElement={e} enabled={enabled} viewKind={viewKind} />
           </Tabs.TabPane>
         );
       })
@@ -42,5 +36,5 @@ export const TabsLayout: React.FC<any> = (props) => {
   );
 };
 
-export const antdTabsLayoutTester: RankedTester = rankWith(2, uiTypeIs('TabsLayout'));
+export const antdTabsLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:TabsLayout'));
 export const AntdTabsLayoutWithStore = withLayoutProps(TabsLayout);

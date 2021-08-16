@@ -37,16 +37,16 @@ export const AntdInputControl: React.FC<ControlComponent & WithInput> = (props) 
   const appliedUiSchemaOptions: any = {};
   const InnerComponent = input;
 
-  const formaterId = uiOptions.formater || 'base';
+  const formatterId = uiOptions.formatter || 'base';
   const query = uiOptions.query;
   const specialProps: any = {};
-  if (uiOptions.dataToFormater) {
-    const formaterProps = uiOptions.dataToFormater;
-    for (const key in formaterProps) {
-      specialProps[key] = formData[formaterProps[key]];
+  if (uiOptions.dataToFormatter) {
+    const formatterProps = uiOptions.dataToFormatter;
+    for (const key in formatterProps) {
+      specialProps[key] = formData[formatterProps[key]];
     }
   }
-  const Formater = formatters[formaterId] || formatters['base'];
+  const Formatter = formatters[formatterId] || formatters['base'];
 
   return form ? (
     <Form.Item
@@ -71,7 +71,7 @@ export const AntdInputControl: React.FC<ControlComponent & WithInput> = (props) 
           visible={visible}
         />
       ) : (
-        <Formater query={query} propKey={uiOptions.key} value={props.data} {...specialProps} {...props} />
+        <Formatter query={query} propKey={uiOptions.key} value={props.data} {...specialProps} {...props} />
       )}
     </Form.Item>
   ) : (

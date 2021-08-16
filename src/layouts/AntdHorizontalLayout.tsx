@@ -19,40 +19,32 @@ import { Idx } from '../util/layout';
 import { LayoutComponent } from './LayoutComponent';
 
 export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
-  uischema,
-  viewElement,
-  view,
+  viewKindElement,
+  viewKind,
   enabled,
   visible,
-  parent,
 }) => {
-  //const layout = viewElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, uischema, viewElement, view, enabled, parent, form }) => {
-    const options = viewElement.options || {};
+  //const layout = viewKindElement as Layout;
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKindElement, viewKind, enabled, form }) => {
+    const options = viewKindElement.options || {};
     const style: any = options.style;
-    const span = options.contentSize || !viewElement.elements ? undefined : Math.ceil(24 / viewElement.elements.length);
+    const span =
+      options.contentSize || !viewKindElement.elements ? undefined : Math.ceil(24 / viewKindElement.elements.length);
     return (
       <Col key={idx} style={style} span={span}>
-        <FormsDispatch
-          viewElement={viewElement}
-          view={view}
-          uischema={uischema}
-          enabled={enabled}
-          parent={parent}
-          form={form}
-        />
+        <FormsDispatch viewKindElement={viewKindElement} viewKind={viewKind} enabled={enabled} form={form} />
       </Col>
     );
   };
-  const justify: any = viewElement.options ? viewElement.options.justify : 'center';
+  const justify: any = viewKindElement.options ? viewKindElement.options.justify : 'center';
   const rowStyle: any = { flexWrap: 'nowrap' };
-  if (viewElement.options && viewElement.options.width === 'all-empty-space') rowStyle.width = '100%';
+  if (viewKindElement.options && viewKindElement.options.width === 'all-empty-space') rowStyle.width = '100%';
   return (
     <Row justify={justify} style={rowStyle} align={'middle'}>
-      {renderLayoutElements({ uischema, viewElement, view, enabled, Render, parent })}
+      {renderLayoutElements({ viewKindElement, viewKind, enabled, Render })}
     </Row>
   );
 };
 
-export const antdHorizontalLayoutTester: RankedTester = rankWith(2, uiTypeIs('HorizontalLayout'));
+export const antdHorizontalLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:HorizontalLayout'));
 export const AntdHorizontalLayoutWithStore = withLayoutProps(AntdHorizontalLayoutRenderer);

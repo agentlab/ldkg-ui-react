@@ -12,27 +12,26 @@ import React from 'react';
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { get } from 'lodash-es';
 
-import { ViewElement } from '../models/uischema';
+import { IViewKindElement } from '../models/uischema';
 import { Card } from 'antd';
 import { DispatchCell } from '../DispatchCell';
 import './cell.css';
 
 export const AntdCellCardLayout = (props: any) => {
-  const { viewElement, view, schema, uischema, data, id } = props;
+  const { viewKindElement, viewKind, schema, data, id } = props;
   const createCardChilds = () =>
-    viewElement.elements
-      ? viewElement.elements.map((e: ViewElement, idx: number) => {
+    viewKindElement.elements
+      ? viewKindElement.elements.map((e: IViewKindElement, idx: number) => {
           const newSchema = e.scope ? get(schema, 'properties.' + e.scope.replace(/\//, '.properties.')) : schema;
           return (
             <DispatchCell
               id={id + String(idx)}
               key={id + String(idx)}
-              view={view}
+              viewKind={viewKind}
               data={data}
               rowData={data}
               schema={newSchema || schema}
-              viewElement={e}
-              uischema={uischema}
+              viewKindElement={e}
             />
           );
         })
@@ -44,4 +43,4 @@ export const AntdCellCardLayout = (props: any) => {
  * Default tester for text-based/string controls.
  * @type {RankedTester}
  */
-export const antdCellCardLayoutTester: RankedTester = rankWith(2, uiTypeIs('CardLayout'));
+export const antdCellCardLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:CardLayout'));

@@ -14,8 +14,8 @@ import { Select } from 'antd';
 import { areEqual } from '../util/ContextToProps';
 
 export const AntdSelect = React.memo((props: any /*EnumCellProps & WithClassname*/) => {
-  const { data, className, id, enabled, uischema, path, handleChange, options = [], config } = props;
-  const appliedUiSchemaOptions = merge({}, config, uischema.options);
+  const { data, className, id, enabled, path, handleChange, options = [], config } = props;
+  const appliedUiSchemaOptions = merge({}, config);
   console.log('OPTIONS', options);
 
   return (

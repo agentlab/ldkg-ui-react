@@ -16,7 +16,7 @@ import { observer } from 'mobx-react-lite';
 
 import { createLabelDescriptionFrom } from './label';
 import { LayoutComponent } from '../layouts/LayoutComponent';
-import { UISchema, View, ViewElement, ViewClassElement } from '../models/uischema';
+import { IViewKindElement, IViewKind } from '../models/uischema';
 import { ControlComponent, RenderProps } from '../Form';
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
@@ -25,9 +25,6 @@ import { MstContext } from '../MstContext';
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
 
-export interface Control extends ViewClassElement {
-  resultsScope: string;
-}
 export type ToControlProps = RenderProps;
 
 export interface SaveDialogProps {
@@ -52,20 +49,20 @@ export interface ButtonComponent {
 
 export const withStoreToControlProps = (Component: React.FC<ControlComponent>): React.FC<ToControlProps> =>
   observer<ToControlProps>((props) => {
-    const succesValidation = {
-      validateStatus: 'succes',
+    const successValidation = {
+      validateStatus: 'success',
     };
-    const { form, viewElement } = props;
-    const id = viewElement.resultsScope;
+    const { form, viewKindElement } = props;
+    const id = viewKindElement.resultsScope;
     const [validateObj, setValidateObj] = useState<{
       validateStatus: string;
       help?: string;
-    }>(succesValidation);
+    }>(successValidation);
     const [req] = id?.split('/') || [];
-    const [testReq, testUri] = viewElement.resultsScope?.split('/') || [];
+    const [testReq, testUri] = viewKindElement.resultsScope?.split('/') || [];
     const { store } = useContext(MstContext);
     const controlProps = mapStateToControlProps(props);
-    //const custom = view.properties && view.properties[req] ? view.properties[req].customReq : undefined;
+    //const custom = viewKind.properties && viewKind.properties[req] ? viewKind.properties[req].customReq : undefined;
     //custom ? store.loadData(req, custom.req) : store.loadData(testReq);
     const coll = store.getColl(testReq);
     let data = coll?.data;
@@ -75,19 +72,19 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     data = getSnapshot(data);
     data = data[0];
     const onValidate = (data: any) => {
-      if (viewElement.options && Array.isArray(viewElement.options.validation)) {
-        const validation = viewElement.options.validation;
+      if (viewKindElement.options && Array.isArray(viewKindElement.options.validation)) {
+        const validation = viewKindElement.options.validation;
         const idx = validation.findIndex((el: any) => !validators[el.validator](data, el.propsToValidator));
         if (idx !== -1) {
           const { validateStatus, help } = validation[idx];
-          store.setOnValidate(form, viewElement.resultsScope, false);
+          store.setOnValidate(form, viewKindElement.resultsScope, false);
           setValidateObj({
             validateStatus,
             help,
           });
         } else {
-          setValidateObj(succesValidation);
-          store.setOnValidate(form, viewElement.resultsScope, true);
+          setValidateObj(successValidation);
+          store.setOnValidate(form, viewKindElement.resultsScope, true);
         }
       }
     };
@@ -103,32 +100,31 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
         {...controlProps}
         handleChange={(data: any) => {
           form
-            ? store.onChangeFormData(form, viewElement.resultsScope, data)
-            : store.onChangeData(viewElement.resultsScope, data);
+            ? store.onChangeFormData(form, viewKindElement.resultsScope, data)
+            : store.onChangeData(viewKindElement.resultsScope, data);
         }}
       />
     );
   });
+
 export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, enabled, parent, form }) => {
-    if (!view['@id']) {
+  observer<RenderProps>(({ viewKindElement, viewKind, enabled, form }) => {
+    if (!viewKind['@id']) {
       return null;
     }
-    const title = viewElement.options ? viewElement.options.title : '';
-    const id = viewElement['@id'];
-    const enabledLayout = enabled && checkProperty('editable', id, uischema, viewElement, view);
-    const visible = checkProperty('visible', id, uischema, viewElement, view);
+    const title = viewKindElement.options ? viewKindElement.options.title : '';
+    const id = viewKindElement['@id'];
+    const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
+    const visible = checkProperty('visible', id, viewKindElement, viewKind);
     const { store } = useContext(MstContext);
     return (
       <Component
         formId={id}
         title={title}
-        uischema={uischema}
-        viewElement={viewElement}
-        view={view}
+        viewKindElement={viewKindElement}
+        viewKind={viewKind}
         enabled={enabledLayout}
         visible={visible}
-        parent={parent}
         onSave={() => store.onSaveFormData(id)}
         editing={store.editingData.get(id)}
         onEdit={() => store.setEditing(id, true)}
@@ -138,23 +134,24 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
       />
     );
   });
+
 export const withStoreToViewClassProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, viewElement, view } = props;
+    const { viewKindElement, viewKind } = props;
     const { store } = useContext(MstContext);
-    const scope = viewElement.resultsScope;
+    const scope = viewKindElement.resultsScope;
     if (!store.getSelectedDataJs(scope)) {
       return <Spin />;
     }
     //const id = store.getSelectedDataJs(scope).type;
-    return <Component uischema={uischema} viewElement={viewElement} view={view} />;
+    return <Component viewKindElement={viewKindElement} viewKind={viewKind} />;
   });
 
 export const withStoreToViewProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, view, viewElement, parent } = props;
+    const { viewKind, viewKindElement } = props;
     const { store } = useContext(MstContext);
-    const scope = viewElement.resultsScope;
+    const scope = viewKindElement.resultsScope;
     const coll = store.getColl(scope);
     let data = coll?.data;
     if (!data) {
@@ -164,8 +161,8 @@ export const withStoreToViewProps = (Component: any): any =>
       return <Spin />;
     }
     data = getSnapshot(data);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+    //  store.setSaveLogic(viewKindElement.resultsScope);
     //}
     //const id = store.getSelectedDataJs(scope)['@type'];
     //const selection = getSnapshot(store.selectedData);
@@ -174,14 +171,13 @@ export const withStoreToViewProps = (Component: any): any =>
       return <Spin />;
     }
     const newViewElement = newView;
-    console.log('withStoreToViewProps', { view, viewElement, newView, newViewElement });
+    console.log('withStoreToViewProps', { viewKind, viewKindElement, newView, newViewElement });
     return (
       <Component
         id={scope}
-        uischema={uischema}
-        viewElement={newViewElement}
-        view={newView}
-        onChange={(state: boolean) => store.setEditing(viewElement.resultsScope, state)}
+        viewKindElement={newViewElement}
+        viewKind={newView}
+        onChange={(state: boolean) => store.setEditing(viewKindElement.resultsScope, state)}
       />
     );
   });
@@ -190,21 +186,23 @@ export const withStoreToModalProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
     return <Component {...props} />;
   });
+
 export const withStoreToButtonProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, parent } = props;
+    const { schema, viewKindElement } = props;
     const { store } = useContext(MstContext);
-    if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-      store.setSaveLogic(parent, viewElement.resultsScope);
+    if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+      store.setSaveLogic(viewKindElement.resultsScope);
     }
-    const options = viewElement.options || {};
+    const options = viewKindElement.options || {};
 
     return <Component schema={schema} handleChange={() => {}} options={options} />;
   });
+
 export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>((props: any) => {
-    const { data, onMeasureChange, height, uri, CKey, rowData, viewElement } = props;
-    const path = viewElement.scope ? viewElement.scope.split('/').join('.') : null;
+    const { data, onMeasureChange, height, uri, CKey, rowData, viewKindElement } = props;
+    const path = viewKindElement.scope ? viewKindElement.scope.split('/').join('.') : null;
     const controlProps = mapStateToControlProps(props);
     /*const { store } = useRootCtx();
     const onSave = (data: any) => {
@@ -229,15 +227,15 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
 
 export const withStoreToDataControlProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { viewElement, view, parent } = props;
+    const { viewKindElement, viewKind } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+    //  store.setSaveLogic(viewKindElement.resultsScope);
     //}
-    const custom = view[viewElement.resultsScope.split('/')[0]]
-      ? view[view.resultsScope.split('/')[0]].customReq
+    const custom = viewKind[viewKindElement.resultsScope.split('/')[0]]
+      ? viewKind[viewKind.resultsScope.split('/')[0]].customReq
       : undefined;
-    const scope = custom ? custom : viewElement.resultsScope;
+    const scope = custom ? custom : viewKindElement.resultsScope;
     const coll = store.getColl(scope);
     let data = coll?.data;
     if (!data || data.length === 0) {
@@ -246,7 +244,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
       return <Spin />;
     }
     data = cloneDeep(getSnapshot(data));
-    const options = viewElement.options || {};
+    const options = viewKindElement.options || {};
     const withConnections = options.connections;
     const onChange = (data: any) => {
       /*if (data) {
@@ -284,7 +282,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
         uri={scope}
         dataSource={data}
         editing={store.editingData.get(scope)}
-        viewElement={viewElement}
+        viewKindElement={viewKindElement}
         handleChange={onChange}
         onCreateFolder={onCreateFolder}
         getData={getData}
@@ -298,17 +296,17 @@ export const withStoreToDataControlProps = (Component: any): any =>
 
 export const withStoreToSelectControlProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { viewElement, view } = props;
+    const { viewKindElement, viewKind } = props;
     const { store } = useContext(MstContext);
-    const id = view['@id'];
-    const scope = viewElement.resultsScope;
+    const id = viewKind['@id'];
+    const scope = viewKindElement.resultsScope;
     const coll = store.getColl(scope);
     let data = coll?.data;
     if (!data) {
       return <Spin />;
     }
     data = getSnapshot(data);
-    const options = viewElement.options || {};
+    const options = viewKindElement.options || {};
     const withConnections = options.connections;
     const onChange = (data: any) => {
       console.log('withStoreToSelectControlProps onChange', data);
@@ -323,8 +321,8 @@ export const withStoreToSelectControlProps = (Component: any): any =>
     return (
       <Component
         dataSource={data}
-        viewElement={viewElement}
-        options={viewElement.options}
+        viewKindElement={viewKindElement}
+        options={viewKindElement.options}
         handleChange={onChange}
         {...props}
       />
@@ -333,16 +331,16 @@ export const withStoreToSelectControlProps = (Component: any): any =>
 
 export const withStoreToTabProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, view, parent } = props;
+    const { schema, viewKindElement, viewKind } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+    //  store.setSaveLogic(viewKindElement.resultsScope);
     //}
-    const options = viewElement.options || {};
-    const custom = view[viewElement.resultsScope.split('/')[0]]
-      ? view[viewElement.resultsScope.split('/')[0]].customReq
+    const options = viewKindElement.options || {};
+    const custom = viewKind[viewKindElement.resultsScope.split('/')[0]]
+      ? viewKind[viewKindElement.resultsScope.split('/')[0]].customReq
       : undefined;
-    const scope = custom ? custom : viewElement.resultsScope;
+    const scope = custom ? custom : viewKindElement.resultsScope;
     const coll = store.getColl(scope);
     let data = coll?.data;
     if (!data) {
@@ -366,16 +364,16 @@ export const withStoreToTabProps = (Component: any): any =>
 
 export const withStoreToMenuProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, uischema, viewElement, view, parent } = props;
+    const { schema, viewKindElement, viewKind } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+    //  store.setSaveLogic(viewKindElement.resultsScope);
     //}
-    const options = viewElement.options || {};
-    const custom = view[viewElement.resultsScope.split('/')[0]]
-      ? view[viewElement.resultsScope.split('/')[0]].customReq
+    const options = viewKindElement.options || {};
+    const custom = viewKind[viewKindElement.resultsScope.split('/')[0]]
+      ? viewKind[viewKindElement.resultsScope.split('/')[0]].customReq
       : undefined;
-    const scope = custom ? custom : viewElement.resultsScope;
+    const scope = custom ? custom : viewKindElement.resultsScope;
     const coll = store.getColl(scope);
     let data = coll?.data;
     if (!data) {
@@ -384,10 +382,11 @@ export const withStoreToMenuProps = (Component: any): any =>
     data = getSnapshot(data);
     return (
       <Component
-        modals={viewElement.elements ? viewElement.elements.filter((e: any) => e.options && e.options.modal) : []}
+        modals={
+          viewKindElement.elements ? viewKindElement.elements.filter((e: any) => e.options && e.options.modal) : []
+        }
         schema={schema}
-        view={view}
-        uischema={uischema}
+        viewKind={viewKind}
         uri={scope}
         tabs={data}
         handleChange={(data: JsObject) => store.setSelectedData(scope, data)}
@@ -399,24 +398,24 @@ export const withStoreToMenuProps = (Component: any): any =>
 
 export const withStoreToCollapseProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { uischema, viewElement, view } = props;
-    const options = viewElement.options || {};
+    const { viewKindElement, viewKind } = props;
+    const options = viewKindElement.options || {};
 
-    return <Component options={options} uischema={uischema} viewElement={viewElement} view={view} />;
+    return <Component options={options} viewKindElement={viewKindElement} viewKind={viewKind} />;
   });
 
 export const withStoreToArrayProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewElement, view, parent } = props;
+    const { schema, viewKindElement, viewKind } = props;
     const { store } = useContext(MstContext);
-    //if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-    //  store.setSaveLogic(parent, viewElement.resultsScope);
+    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+    //  store.setSaveLogic(viewKindElement.resultsScope);
     //}
-    const options = viewElement.options || {};
-    const custom = view[viewElement.resultsScope.split('/')[0]]
-      ? view[viewElement.resultsScope.split('/')[0]].customReq
+    const options = viewKindElement.options || {};
+    const custom = viewKind[viewKindElement.resultsScope.split('/')[0]]
+      ? viewKind[viewKindElement.resultsScope.split('/')[0]].customReq
       : undefined;
-    const scope = custom ? custom : viewElement.resultsScope;
+    const scope = custom ? custom : viewKindElement.resultsScope;
     const coll = store.getColl(scope);
     let data = coll?.data;
     if (!data) {
@@ -437,14 +436,14 @@ export const withStoreToArrayProps = (Component: any): any =>
         });*/
     };
     const loadExpandedData = (subject: string) => {
-      //const newQuery = store.queries[viewElement.resultsScope];
+      //const newQuery = store.queries[viewKindElement.resultsScope];
       //newQuery.shapes[0].conditions = { ...newQuery.shapes[0].conditions, parentBinding: subject };
       return data; //store.getDataByQuery(newQuery);
     };
     return (
       <Component
         schema={schema}
-        limit={10 /*store.queries[viewElement.resultsScope].limit*/}
+        limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}
         sortDir={{} /*store.queries[scope].orderBy*/}
         uri={scope}
@@ -460,34 +459,32 @@ export const withStoreToArrayProps = (Component: any): any =>
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, enabled, form, parent }) => {
-    const id = viewElement['@id'] || '';
-    const enabledLayout = enabled && checkProperty('editable', id, uischema, viewElement, view);
-    const visible = checkProperty('visible', id, uischema, viewElement, view);
+  observer<RenderProps>(({ viewKindElement, viewKind, enabled, form }) => {
+    const id = viewKindElement['@id'] || '';
+    const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
+    const visible = checkProperty('visible', id, viewKindElement, viewKind);
     const { store } = useContext(MstContext);
-    if (viewElement.options && viewElement.options.connections) {
-      viewElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
+    if (viewKindElement.options && viewKindElement.options.connections) {
+      viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
     }
     return (
       <Component
-        uischema={uischema}
-        viewElement={viewElement}
-        view={view}
+        viewKindElement={viewKindElement}
+        viewKind={viewKind}
         enabled={enabledLayout}
         visible={visible}
-        parent={parent}
         form={form}
       />
     );
   });
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ uischema, viewElement, view, enabled, parent }) => {
+  observer<RenderProps>(({ viewKindElement, enabled }) => {
     const { store } = useContext(MstContext);
-    if (parent && viewElement.resultsScope && !store.saveLogicTree[viewElement.resultsScope]) {
-      store.setSaveLogic(parent, viewElement.resultsScope);
+    if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+      store.setSaveLogic(viewKindElement.resultsScope);
     }
-    const key = (viewElement as Control).resultsScope;
+    const key = viewKindElement.resultsScope;
     return (
       <Component
         editing={store.editingData.get(key)}
@@ -509,15 +506,16 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
     return <Component visible={visible} onOk={onSave} onCancel={onCancel} />;
   });
 
-const mapStateToControlProps = ({ id, uischema, schema, viewElement, view, enabled }: ToControlProps) => {
+const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, enabled }: ToControlProps) => {
   const pathSegments = id.split('/');
   const path = pathSegments.join('.properties.');
-  const visible = checkProperty('visible', path, uischema, viewElement, view);
-  const editable = viewElement.options && 'editable' in viewElement.options ? viewElement.options.editable : true;
+  const visible = checkProperty('visible', path, viewKindElement, viewKind);
+  const editable =
+    viewKindElement.options && 'editable' in viewKindElement.options ? viewKindElement.options.editable : true;
   const required = true;
-  const uiOptions = viewElement.options;
+  const uiOptions = viewKindElement.options;
   const description = schema.description || '';
-  const labelDesc = createLabelDescriptionFrom(viewElement as any, schema);
+  const labelDesc = createLabelDescriptionFrom(viewKindElement as any, schema);
   const label = labelDesc.show ? (labelDesc.text as string) : '';
   const key = pathSegments[1];
   return {
@@ -533,13 +531,10 @@ const mapStateToControlProps = ({ id, uischema, schema, viewElement, view, enabl
   };
 };
 
-const checkProperty = (property: Property, path: string, uischema: UISchema, viewElement: ViewElement, view: View) => {
-  const uiProp = get(uischema, path);
-  const viewClassProp = viewElement.options;
-  const viewProp = get(view, path);
-  if (uiProp && uiProp[property]) {
-    return uiProp[property];
-  } else if (viewClassProp && viewClassProp[property]) {
+const checkProperty = (property: Property, path: string, viewKindElement: IViewKindElement, viewKind: IViewKind) => {
+  const viewClassProp = viewKindElement.options;
+  const viewProp = get(viewKind, path);
+  if (viewClassProp && viewClassProp[property]) {
     return viewClassProp[property];
   } else if (viewProp && viewProp[property]) {
     return viewProp[property];
@@ -638,7 +633,7 @@ export const withContextFormsSaveControlProps =
 //type FormsPropTypes = ControlProps | CombinatorProps | LayoutProps | CellProps | ArrayLayoutProps | StatePropsOfControlWithDetail | OwnPropsOfRenderer;
 
 export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/) => {
-  const prev = omit(prevProps, ['handleChange', 'uischemas']);
-  const next = omit(nextProps, ['handleChange', 'uischemas']);
-  return isEqual(prev, next) && get(prevProps, 'uischemas.length') === get(nextProps, 'uischemas.length');
+  const prev = omit(prevProps, ['handleChange']);
+  const next = omit(nextProps, ['handleChange']);
+  return isEqual(prev, next);
 };
