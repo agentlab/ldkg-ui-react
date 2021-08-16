@@ -23,8 +23,8 @@ import {
   arrDiff,
   CollState,
   createModelFromState,
-  JsObject,
   MstCollConstr,
+  MstJsObject,
   MstModels,
   registerMstCollSchema,
   SparqlClient,
@@ -38,14 +38,14 @@ export const MstViewKindElement = types.model('MstViewKindElement', {
   '@id': types.identifier, // JSON-LD object id
   '@type': types.string, //types.union(types.literal('aldkg:ViewElement'), types.literal('aldkg:DiagramEditor')), // JSON-LD class id of a View
 
-  title: types.maybe(types.union(types.string, types.frozen<JsObject>())),
-  description: types.maybe(types.union(types.string, types.frozen<JsObject>())),
+  title: types.maybe(types.union(types.string, MstJsObject)),
+  description: types.maybe(types.union(types.string, MstJsObject)),
 
   scope: types.maybe(types.string),
   resultsScope: types.maybe(types.string),
-  options: types.maybe(types.frozen<JsObject>()),
+  options: types.maybe(MstJsObject),
 
-  style: types.maybe(types.frozen<JsObject>()),
+  style: types.maybe(MstJsObject),
 
   // Container-specific (e.g. Layout, type: 'xxxLayout')
   elements: types.maybe(types.array(types.late((): IAnyType => MstViewKindDataType))),
@@ -92,7 +92,7 @@ export const MstViewKind = types
     title: types.maybe(types.string), // mandatory title
     description: types.maybe(types.string),
 
-    options: types.maybe(types.frozen<JsObject>()),
+    options: types.maybe(MstJsObject),
 
     // Container-specific (e.g. Layout, type: 'xxxLayout')
     elements: types.array(MstViewKindDataType),
@@ -145,14 +145,14 @@ export const MstViewDescrElement = types.model('MstViewDescrElement', {
   '@type': types.string, //types.union(types.literal('aldkg:ViewElement'), types.literal('aldkg:DiagramEditor')), // JSON-LD class id of a View
   '@parent': types.safeReference(types.late((): IAnyModelType => MstViewKindElement)),
 
-  title: types.maybe(types.union(types.string, types.frozen<JsObject>())),
-  description: types.maybe(types.union(types.string, types.frozen<JsObject>())),
+  title: types.maybe(types.union(types.string, MstJsObject)),
+  description: types.maybe(types.union(types.string, MstJsObject)),
 
   scope: types.maybe(types.string),
   resultsScope: types.maybe(types.string),
-  options: types.maybe(types.frozen<JsObject>()),
+  options: types.maybe(MstJsObject),
 
-  style: types.maybe(types.frozen<JsObject>()),
+  style: types.maybe(MstJsObject),
 
   // Container-specific (e.g. Layout, type: 'xxxLayout')
   elements: types.maybe(types.array(types.late((): IAnyType => MstViewDescrDataType))),
@@ -200,7 +200,7 @@ export const MstViewDescr = types
     title: types.maybe(types.string), // mandatory title
     description: types.maybe(types.string),
 
-    options: types.maybe(types.frozen<JsObject>()),
+    options: types.maybe(MstJsObject),
 
     // Container-specific (e.g. Layout, type: 'xxxLayout')
     elements: types.array(MstViewDescrDataType),

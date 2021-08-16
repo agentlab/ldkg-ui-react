@@ -7,17 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { reaction } from 'mobx';
-import {
-  getParent,
-  getRoot,
-  IAnyComplexType,
-  IAnyModelType,
-  IAnyStateTreeNode,
-  IAnyType,
-  SnapshotIn,
-  types,
-} from 'mobx-state-tree';
+import { types } from 'mobx-state-tree';
 
 import { MstViewKindElement } from './MstViewDescr';
 

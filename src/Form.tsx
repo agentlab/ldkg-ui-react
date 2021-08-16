@@ -185,7 +185,7 @@ export const Form: React.FC<FormsInitStateProps> = observer<FormsInitStateProps>
   //}
   const viewKindObs = viewDescrObs.viewKind;
   if (!viewKindObs) {
-    console.log('!viewKindObs', viewKindObs);
+    console.log('!viewKindObs for viewDescr', getSnapshot(viewDescrObs));
     return <Spin />;
   }
   const viewKind: any = getSnapshot(viewKindObs);

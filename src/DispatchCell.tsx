@@ -25,7 +25,11 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
     if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
       return (
         <td>
-          <UnknownRenderer type={'renderer'} />
+          <UnknownRenderer
+            type={'renderer'}
+            elementId={viewKindElement['@id']}
+            elementType={viewKindElement['@type']}
+          />
         </td>
       );
     } else {
