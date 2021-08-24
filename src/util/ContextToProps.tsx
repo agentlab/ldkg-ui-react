@@ -459,7 +459,7 @@ export const withStoreToArrayProps = (Component: any): any =>
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewKindElement, viewKind, enabled, form }) => {
+  observer<RenderProps>(({ viewKindElement, viewKind, viewDescr, viewDescrElement, enabled, form }) => {
     const id = viewKindElement['@id'] || '';
     const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
     const visible = checkProperty('visible', id, viewKindElement, viewKind);
@@ -471,6 +471,8 @@ export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<
       <Component
         viewKindElement={viewKindElement}
         viewKind={viewKind}
+        viewDescr={viewDescr}
+        viewDescrElement={viewDescrElement}
         enabled={enabledLayout}
         visible={visible}
         form={form}

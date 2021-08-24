@@ -26,7 +26,7 @@ const divStyle: React.CSSProperties = {
   margin: '1px',
 };
 
-const renderSplitElements = ({ viewKindElement, viewKind, enabled, Render, form }: RenderLayoutProps) => {
+const renderSplitElements = ({ viewDescr, viewKindElement, viewKind, enabled, Render, form }: RenderLayoutProps) => {
   const elements = viewKindElement.elements;
   const defaultSize = viewKindElement.options && viewKindElement.options.defaultSize;
   return elements ? (
@@ -36,7 +36,7 @@ const renderSplitElements = ({ viewKindElement, viewKind, enabled, Render, form 
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
           <div style={{ height: '100%', ...style }}>
-            <FormsDispatch viewKindElement={el} viewKind={viewKind} enabled={enabled} />
+            <FormsDispatch viewDescr={viewDescr} viewKindElement={el} viewKind={viewKind} enabled={enabled} />
           </div>
         </Pane>
       );
@@ -46,19 +46,26 @@ const renderSplitElements = ({ viewKindElement, viewKind, enabled, Render, form 
   );
 };
 
-export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({ viewKindElement, viewKind, enabled, visible }) => {
+export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
+  viewKindElement,
+  viewKind,
+  viewDescr,
+  viewDescrElement,
+  enabled,
+  visible,
+}) => {
   //const layout = viewKindElement as Layout;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKindElement, viewKind, enabled }) => {
     return (
       <div>
-        <FormsDispatch viewKindElement={viewKindElement} viewKind={viewKind} enabled={enabled} />
+        <FormsDispatch viewDescr={viewDescr} viewKindElement={viewKindElement} viewKind={viewKind} enabled={enabled} />
       </div>
     );
   };
   return (
     <React.Fragment>
       <SplitPane split='vertical' style={divStyle} minSize={300}>
-        {renderSplitElements({ viewKindElement, viewKind, enabled, Render })}
+        {renderSplitElements({ viewDescr, viewKindElement, viewKind, enabled, Render })}
       </SplitPane>
     </React.Fragment>
   );
