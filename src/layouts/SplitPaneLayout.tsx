@@ -26,7 +26,7 @@ const divStyle: React.CSSProperties = {
   margin: '1px',
 };
 
-const renderSplitElements = ({ viewDescr, viewKindElement, viewKind, enabled, Render, form }: RenderLayoutProps) => {
+const renderSplitElements = ({ viewKind, viewKindElement, viewDescr, enabled, Render, form }: RenderLayoutProps) => {
   const elements = viewKindElement.elements;
   const defaultSize = viewKindElement.options && viewKindElement.options.defaultSize;
   return elements ? (
@@ -36,7 +36,7 @@ const renderSplitElements = ({ viewDescr, viewKindElement, viewKind, enabled, Re
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
           <div style={{ height: '100%', ...style }}>
-            <FormsDispatch viewDescr={viewDescr} viewKindElement={el} viewKind={viewKind} enabled={enabled} />
+            <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
           </div>
         </Pane>
       );
@@ -55,17 +55,17 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   visible,
 }) => {
   //const layout = viewKindElement as Layout;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKindElement, viewKind, enabled }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
     return (
       <div>
-        <FormsDispatch viewDescr={viewDescr} viewKindElement={viewKindElement} viewKind={viewKind} enabled={enabled} />
+        <FormsDispatch viewKind={viewKind} viewKindElement={viewKindElement} viewDescr={viewDescr} enabled={enabled} />
       </div>
     );
   };
   return (
     <React.Fragment>
       <SplitPane split='vertical' style={divStyle} minSize={300}>
-        {renderSplitElements({ viewDescr, viewKindElement, viewKind, enabled, Render })}
+        {renderSplitElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
       </SplitPane>
     </React.Fragment>
   );

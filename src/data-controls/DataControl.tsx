@@ -23,11 +23,13 @@ const renderType: any = {
 
 export const AntdDataLayout: React.FC<any> = (props) => {
   const {
+    viewKind,
     viewKindElement,
+    viewDescr,
+    viewDescrElement,
     enabled,
     handleChange = () => {},
     dataSource,
-    viewKind,
     schema,
     editing,
     getData,
@@ -50,8 +52,10 @@ export const AntdDataLayout: React.FC<any> = (props) => {
       child={data}
       editing={editing}
       onDnD={onDnD}
-      viewKindElement={viewKindElement}
       viewKind={viewKind}
+      viewKindElement={viewKindElement}
+      viewDescr={viewDescr}
+      viewDescrElement={viewDescrElement}
       onCreateFolder={onCreateFolder}
       onDeleteFolder={onDeleteFolder}
       onRename={onRename}

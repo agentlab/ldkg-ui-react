@@ -19,8 +19,10 @@ import { get } from 'lodash-es';
 import { Idx } from '../util/layout';
 
 export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
-  viewKindElement,
   viewKind,
+  viewKindElement,
+  viewDescr,
+  viewDescrElement,
   data,
   schema,
 }) => {
@@ -28,8 +30,10 @@ export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
   const Render: React.FC<DispatchCellProps & Idx> = ({
     idx,
     schema,
-    viewKindElement,
     viewKind,
+    viewKindElement,
+    viewDescr,
+    viewDescrElement,
     data,
     enabled,
     form,
@@ -46,8 +50,10 @@ export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
         <DispatchCell
           id={String(idx)}
           data={data}
-          viewKindElement={viewKindElement}
           viewKind={viewKind}
+          viewKindElement={viewKindElement}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
           rowData={data}
           schema={newSchema || schema}
           enabled={enabled}
@@ -62,7 +68,16 @@ export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
   return (
     <Row justify={justify} style={rowStyle} align={'middle'}>
       {(viewKindElement.elements || []).map((e: IViewKindElement, idx: number) => (
-        <Render viewKindElement={e} schema={schema} idx={idx} data={data} id={String(idx)} viewKind={viewKind} />
+        <Render
+          viewKind={viewKind}
+          viewKindElement={e}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
+          schema={schema}
+          idx={idx}
+          data={data}
+          id={String(idx)}
+        />
       ))}
     </Row>
   );

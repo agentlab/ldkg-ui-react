@@ -16,7 +16,7 @@ import { DispatchCell } from '../DispatchCell';
 import './styles.css';
 
 export const GridRenderer: React.FC<any> = (props) => {
-  const { child, viewKindElement, viewKind, schema } = props;
+  const { viewKind, viewKindElement, viewDescr, viewDescrElement, child, schema } = props;
   const grid = viewKindElement?.options?.grid || { gutter: 16, column: 4 };
   const template = viewKindElement?.options?.elementTemplate || null;
   const createCell = (data: any, id: string | number) =>
@@ -25,8 +25,10 @@ export const GridRenderer: React.FC<any> = (props) => {
         <DispatchCell
           id={String(id) + String(idx)}
           key={String(id) + String(idx)}
-          viewKindElement={e}
           viewKind={viewKind}
+          viewKindElement={e}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
           schema={schema}
           data={data}
           rowData={data}

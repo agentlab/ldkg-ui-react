@@ -18,7 +18,7 @@ import { DispatchCell } from '../DispatchCell';
 import './cell.css';
 
 export const AntdCellCardLayout = (props: any) => {
-  const { viewKindElement, viewKind, schema, data, id } = props;
+  const { viewKind, viewKindElement, viewDescr, viewDescrElement, schema, data, id } = props;
   const createCardChilds = () =>
     viewKindElement.elements
       ? viewKindElement.elements.map((e: IViewKindElement, idx: number) => {
@@ -28,10 +28,12 @@ export const AntdCellCardLayout = (props: any) => {
               id={id + String(idx)}
               key={id + String(idx)}
               viewKind={viewKind}
+              viewKindElement={e}
+              viewDescr={viewDescr}
+              viewDescrElement={viewDescrElement}
               data={data}
               rowData={data}
               schema={newSchema || schema}
-              viewKindElement={e}
             />
           );
         })
