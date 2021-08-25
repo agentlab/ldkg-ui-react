@@ -11,7 +11,7 @@ import { cloneDeep, get, isEqual, omit } from 'lodash-es';
 
 import React, { useContext, useState } from 'react';
 import { Spin } from 'antd';
-import { getSnapshot } from 'mobx-state-tree';
+import { getSnapshot, applySnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
 
 import { createLabelDescriptionFrom } from './label';
@@ -258,19 +258,15 @@ export const withStoreToDataControlProps = (Component: any): any =>
       //store.loadData(scope);
       return <Spin />;
     }
+    const scope = viewKindElement.resultsScope;
     data = cloneDeep(getSnapshot(data));
     const options = viewKindElement?.options || {};
     const withConnections = options.connections;
     const onChange = (data: any) => {
-      /*if (data) {
+      if (data) {
         store.setSelectedData(scope, data);
-        withConnections &&
-          options.connections.forEach((e: any) => {
-            const condition: any = {};
-            condition[e.by] = data['@id'];
-            //store.editCondition(e.to, condition, scope, e.by, data);
-          });
-      }*/
+        withConnections && store.editConn(withConnections, data);
+      }
     };
     const getData = (parentId: string) => {
       const conditions = { ...store.queries[collIriOverride].shapes[0].conditions, parent: parentId };
@@ -327,7 +323,6 @@ export const withStoreToSelectControlProps = (Component: any): any =>
     const options = viewKindElement.options || {};
     const withConnections = options.connections;
     const onChange = (data: any) => {
-      console.log('withStoreToSelectControlProps onChange', data);
       store.setSelectedData(/*id || */ scope, data);
       withConnections &&
         options.connections.forEach((e: any) => {
@@ -465,7 +460,18 @@ export const withStoreToArrayProps = (Component: any): any =>
       store,
     );
     const options = viewKindElement.options || {};
-
+    let targetIri = options?.target?.iri;
+    let targetData: any = null;
+    if (targetIri) {
+      if (viewDescr.collsConstrs) {
+        const extCollConstr = viewDescr.collsConstrs?.find((el) => el['@parent'] === targetIri);
+        if (extCollConstr) {
+          targetIri = extCollConstr['@id'] || '';
+        }
+      }
+      const targetColl = store.getColl(targetIri);
+      targetData = targetColl?.data;
+    }
     const coll = store.getColl(collIriOverride);
     let data = coll?.data;
     if (!data) {
@@ -476,6 +482,19 @@ export const withStoreToArrayProps = (Component: any): any =>
       return data; //store.loadDataByUri(scope, offset);
     };
     const withConnections = options.connections;
+    const addDataToTarget = (data: any) => {
+      if (targetData) {
+        const snapData = getSnapshot(targetData) as any;
+        const newData = [...snapData, ...data];
+        applySnapshot(targetData, newData);
+      }
+    };
+    const onDeleteRows = (del: any) => {
+      if (data) {
+        const newData = data.filter((el) => del.filter((e) => e['@id'] === el['@id']).length === 0);
+        applySnapshot(coll?.data, newData);
+      }
+    };
     const onChange = (data: any) => {
       /*store.setSelectedData(scope, data);
       withConnections &&
@@ -496,11 +515,13 @@ export const withStoreToArrayProps = (Component: any): any =>
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
+        addDataToTarget={addDataToTarget}
         schema={schema}
         limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}
         sortDir={{} /*store.queries[scope].orderBy*/}
         uri={id}
+        onDeleteRows={onDeleteRows}
         loadMoreData={loadMoreData}
         onSort={(property: string, sortDir: any) => {
           /*store.onSort(scope, property, sortDir)*/

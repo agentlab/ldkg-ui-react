@@ -205,12 +205,10 @@ export const Form = observer<FormsInitStateProps>((props) => {
     console.log('!viewKindObs for viewDescr', getSnapshot(viewDescrObs));
     return <Spin />;
   }
-  const viewKind: any = getSnapshot(viewKindObs);
-  const viewDescr: any = getSnapshot(viewDescrObs);
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-      {viewKind.elements.map((el: IViewKindElement) => (
-        <FormsDispatch {...props} viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} />
+      {viewKindObs.elements.map((el: IViewKindElement) => (
+        <FormsDispatch {...props} viewKind={viewKindObs} viewKindElement={el} viewDescr={viewDescrObs} />
       ))}
     </ErrorBoundary>
   );
