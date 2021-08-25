@@ -20,14 +20,14 @@ import { MstContext } from './MstContext';
  */
 export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
   ({
-    data,
-    onMeasureChange,
-    uri,
-    schema,
     viewKind,
     viewKindElement,
     viewDescr,
     viewDescrElement,
+    schema,
+    data,
+    onMeasureChange,
+    uri,
     enabled,
     id,
     CKey,
@@ -51,15 +51,15 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
       return (
         <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
           <Render
-            CKey={CKey}
-            data={data}
-            rowData={rowData}
-            onMeasureChange={onMeasureChange}
-            schema={schema}
             viewKind={viewKind}
             viewKindElement={viewKindElement}
             viewDescr={viewDescr}
             viewDescrElement={viewDescrElement}
+            schema={schema}
+            CKey={CKey}
+            data={data}
+            rowData={rowData}
+            onMeasureChange={onMeasureChange}
             uri={uri}
             enabled={enabled}
             id={id}

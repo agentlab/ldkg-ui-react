@@ -297,6 +297,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
         uri={id}
         dataSource={data}
         editing={store.editingData.get(collIriOverride)}
+        viewKind={viewKind}
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
@@ -338,6 +339,7 @@ export const withStoreToSelectControlProps = (Component: any): any =>
     return (
       <Component
         dataSource={data}
+        viewKind={viewKind}
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
@@ -350,7 +352,7 @@ export const withStoreToSelectControlProps = (Component: any): any =>
 
 export const withStoreToTabProps = (Component: any): any =>
   observer<any>(({ ...props }: any) => {
-    const { schema, viewKind } = props;
+    const { schema, viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
     //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
     //  store.setSaveLogic(viewKindElement.resultsScope);
@@ -380,7 +382,19 @@ export const withStoreToTabProps = (Component: any): any =>
         //        });
       }
     };
-    return <Component schema={schema} uri={id} tabs={data} handleChange={onChange} options={options} />;
+    return (
+      <Component
+        viewKind={viewKind}
+        viewKindElement={viewKindElement}
+        viewDescr={viewDescr}
+        viewDescrElement={viewDescrElement}
+        schema={schema}
+        uri={id}
+        tabs={data}
+        handleChange={onChange}
+        options={options}
+      />
+    );
   });
 
 export const withStoreToMenuProps = (Component: any): any =>
@@ -410,6 +424,7 @@ export const withStoreToMenuProps = (Component: any): any =>
         }
         schema={schema}
         viewKind={viewKind}
+        viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
         uri={id}
@@ -477,6 +492,10 @@ export const withStoreToArrayProps = (Component: any): any =>
     };
     return (
       <Component
+        viewKind={viewKind}
+        viewKindElement={viewKindElement}
+        viewDescr={viewDescr}
+        viewDescrElement={viewDescrElement}
         schema={schema}
         limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}

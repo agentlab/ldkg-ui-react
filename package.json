@@ -69,7 +69,8 @@
     "rc-util": ">=5.13.2",
     "react-split-pane": ">=2.0.3",
     "tinymce": ">=5.5.1",
-    "uri-js": ">=4.4.1"
+    "uri-js": ">=4.4.1",
+    "uuid62": ">=1.0.1"
   },
   "dependencies": {
     "@agentlab/sparql-jsld-client": "^5.0.0-rc.10",
