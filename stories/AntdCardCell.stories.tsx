@@ -9,7 +9,7 @@
  ********************************************************************************/
 import moment from 'moment';
 import React from 'react';
-import { Story, Meta } from '@storybook/react/types-6-0';
+import { Story, Meta } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
@@ -293,15 +293,6 @@ const additionalColls: CollState[] = [
   },
 ];
 
-registerMstViewKindSchema('aldkg:VerticalLayout', MstVerticalLayout);
-
-const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-console.log('rootStore', rootStore);
-const store: any = asReduxStore(rootStore);
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-connectReduxDevtools(require('remotedev'), rootStore);
-
 export default {
   title: 'Several Controls/TreeAndForm Cards',
   component: Form,
@@ -310,19 +301,29 @@ export default {
   },
 } as Meta;
 
-export const Empty: Story<{}> = () => (
-  <Provider store={store}>
-    <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-      <div
-        style={{
-          //height: '1000px',
-          width: '100%',
-          backgroundColor: 'rgba(230, 235, 242, 0.5)',
-          margin: '0 auto',
-          padding: '5px',
-        }}>
-        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-      </div>
-    </MstContextProvider>
-  </Provider>
-);
+export const Empty: Story<{}> = () => {
+  registerMstViewKindSchema('aldkg:VerticalLayout', MstVerticalLayout);
+
+  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
+  console.log('rootStore', rootStore);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <Provider store={store}>
+      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+        <div
+          style={{
+            //height: '1000px',
+            width: '100%',
+            backgroundColor: 'rgba(230, 235, 242, 0.5)',
+            margin: '0 auto',
+            padding: '5px',
+          }}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </div>
+      </MstContextProvider>
+    </Provider>
+  );
+};

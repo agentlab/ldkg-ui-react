@@ -9,11 +9,18 @@
  ********************************************************************************/
 import moment from 'moment';
 import React from 'react';
-import { Story, Meta } from '@storybook/react/types-6-0';
+import { Story, Meta } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
+import {
+  CollState,
+  JsStrObj,
+  Results,
+  rootModelInitialState,
+  sendGet,
+  SparqlClientImpl,
+} from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -357,12 +364,6 @@ const additionalColls: CollState[] = [
   },
 ];
 
-const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-const store: any = asReduxStore(rootStore);
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-connectReduxDevtools(require('remotedev'), rootStore);
-
 export default {
   title: 'Several Controls/TreeAndForm Mktp',
   component: Form,
@@ -371,12 +372,44 @@ export default {
   },
 } as Meta;
 
-export const Empty: Story<{}> = () => (
-  <Provider store={store}>
-    <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-      <div style={{ height: '1000px', width: '100%' }}>
-        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-      </div>
-    </MstContextProvider>
-  </Provider>
-);
+class SparqlClientImpl2 extends SparqlClientImpl {
+  async loadNs() {
+    const url = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces';
+    const response = await sendGet(url);
+    if (response.status < 200 && response.status > 204) return Promise.reject('Cannot get namespaces');
+    const ns: JsStrObj = {};
+    //console.debug('response.data', response.data);
+    if (response.data && response.data.results) {
+      let results: Results = { bindings: [] };
+      results = response.data.results;
+      if (results) {
+        results.bindings.forEach((b) => {
+          if (b.prefix && b.namespace && b.prefix.value && b.namespace.value) {
+            ns[b.prefix.value] = b.namespace.value;
+          }
+        });
+      }
+    }
+    ns['sesame'] = 'http://www.openrdf.org/schema/sesame#';
+    return ns;
+  }
+}
+
+export const Empty: Story<{}> = () => {
+  //const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
+  const client = new SparqlClientImpl2('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <Provider store={store}>
+      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+        <div style={{ height: '1000px', width: '100%' }}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </div>
+      </MstContextProvider>
+    </Provider>
+  );
+};

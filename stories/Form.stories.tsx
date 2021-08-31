@@ -124,12 +124,6 @@ const additionalColls: CollState[] = [
   },
 ];
 
-const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
-const store: any = asReduxStore(rootStore);
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-connectReduxDevtools(require('remotedev'), rootStore);
-
 export default {
   title: 'Form/ArtifactForm',
   component: Form,
@@ -138,15 +132,22 @@ export default {
   },
 } as Meta;
 
-const Template: Story<any> = (args: any) => (
-  <Provider store={store}>
-    <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-      <div style={{ height: '1000px' }}>
-        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-      </div>
-    </MstContextProvider>
-  </Provider>
-);
+const Template: Story<any> = (args: any) => {
+  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <Provider store={store}>
+      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+        <div style={{ height: '1000px' }}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </div>
+      </MstContextProvider>
+    </Provider>
+  );
+};
 
 export const RemoteData = Template.bind({});
 RemoteData.args = {};
