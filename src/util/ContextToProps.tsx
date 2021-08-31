@@ -17,7 +17,7 @@ import { observer } from 'mobx-react-lite';
 import { createLabelDescriptionFrom } from './label';
 import { LayoutComponent } from '../layouts/LayoutComponent';
 import { IViewKindElement, IViewKind } from '../models/uischema';
-import { ControlComponent, processViewKindOverride, RenderProps } from '../Form';
+import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } from '../Form';
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
 import { MstContext } from '../MstContext';
@@ -464,7 +464,7 @@ export const withStoreToArrayProps = (Component: any): any =>
     let targetData: any = null;
     if (targetIri) {
       if (viewDescr.collsConstrs) {
-        const extCollConstr = viewDescr.collsConstrs?.find((el) => el['@parent'] === targetIri);
+        const extCollConstr = viewDescr.collsConstrs?.find((el: any) => compareByIri(el['@parent'], targetIri));
         if (extCollConstr) {
           targetIri = extCollConstr['@id'] || '';
         }
@@ -491,7 +491,7 @@ export const withStoreToArrayProps = (Component: any): any =>
     };
     const onDeleteRows = (del: any) => {
       if (data) {
-        const newData = data.filter((el) => del.filter((e) => e['@id'] === el['@id']).length === 0);
+        const newData = data.filter((el: any) => del.filter((e: any) => e['@id'] === el['@id']).length === 0);
         applySnapshot(coll?.data, newData);
       }
     };

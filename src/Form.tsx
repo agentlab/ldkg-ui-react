@@ -87,13 +87,19 @@ export function createViewDescrElementIri(viewKindElementIri: string): string {
   return viewKindElementIri + '_' + uuid62.v4();
 }
 
+export function compareByIri(iri1: string | any, iri2: string | any): boolean {
+  if (typeof iri1 === 'object') iri1 = iri1['@id'];
+  if (typeof iri2 === 'object') iri2 = iri2['@id'];
+  return iri1 === iri2;
+}
+
 export const processViewKindOverride = (
   props: { viewKindElement: IViewKindElement; viewDescr: IViewDescr },
   store: any,
 ): [string, string, string, string, IViewKindElement, IViewDescrElement | undefined] => {
   const { viewKindElement, viewDescr } = props;
   // if ViewElement extend-override exists
-  const viewDescrElement = viewDescr.elements?.find((el) => el['@parent'] === viewKindElement['@id']);
+  const viewDescrElement = viewDescr.elements?.find((el) => compareByIri(el['@parent'], viewKindElement['@id']));
   const id = viewDescrElement ? viewDescrElement['@id'] : createViewDescrElementIri(viewKindElement['@id']);
 
   const [collIri, inCollPath] = viewKindElement.resultsScope?.split('/') || [];
@@ -102,7 +108,7 @@ export const processViewKindOverride = (
   if (collIriOverride) {
     // if CollConstr extend-override exists switch to extCollConstr
     if (viewDescr.collsConstrs) {
-      const extCollConstr = viewDescr.collsConstrs?.find((el) => el['@parent'] === collIri);
+      const extCollConstr = viewDescr.collsConstrs?.find((el) => compareByIri(el['@parent'], collIri));
       if (extCollConstr) {
         collIriOverride = extCollConstr['@id'] || '';
       }
