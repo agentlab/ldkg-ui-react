@@ -83,13 +83,20 @@ export interface DispatchCellProps extends RenderProps {
   [key: string]: any;
 }
 
+export function mstJsonLdIds(o: any) {
+  if (o) return { '@id': o['@id'], '@type': o['@type'] };
+  else return undefined;
+}
+
 export function createViewDescrElementIri(viewKindElementIri: string): string {
   return viewKindElementIri + '_' + uuid62.v4();
 }
 
 export function compareByIri(iri1: string | any, iri2: string | any): boolean {
+  console.log('compareByIri - raw', { iri1, iri2 });
   if (typeof iri1 === 'object') iri1 = iri1['@id'];
   if (typeof iri2 === 'object') iri2 = iri2['@id'];
+  console.log('compareByIri - norm', { iri1, iri2 });
   return iri1 === iri2;
 }
 
@@ -99,7 +106,14 @@ export const processViewKindOverride = (
 ): [string, string, string, string, IViewKindElement, IViewDescrElement | undefined] => {
   const { viewKindElement, viewDescr } = props;
   // if ViewElement extend-override exists
-  const viewDescrElement = viewDescr.elements?.find((el) => compareByIri(el['@parent'], viewKindElement['@id']));
+  const viewDescrElement = viewDescr.elements?.find((el) => {
+    console.log('processViewKindOverride', {
+      el: mstJsonLdIds(el),
+      el_parent: mstJsonLdIds(el['@parent']),
+      viewKindElement: mstJsonLdIds(viewKindElement),
+    });
+    return compareByIri(el['@parent'], viewKindElement['@id']);
+  });
   const id = viewDescrElement ? viewDescrElement['@id'] : createViewDescrElementIri(viewKindElement['@id']);
 
   const [collIri, inCollPath] = viewKindElement.resultsScope?.split('/') || [];
@@ -188,6 +202,7 @@ export const Form = observer<FormsInitStateProps>((props) => {
   }
 
   const { viewDescrId, viewDescrCollId } = props;
+  console.log('Form', { viewDescrId, viewDescrCollId });
 
   const collWithViewDescrsObs = store.getColl(viewDescrCollId);
   if (!collWithViewDescrsObs) {

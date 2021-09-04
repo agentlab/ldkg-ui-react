@@ -372,33 +372,13 @@ export default {
   },
 } as Meta;
 
-class SparqlClientImpl2 extends SparqlClientImpl {
-  async loadNs() {
-    const url = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces';
-    const response = await sendGet(url);
-    if (response.status < 200 && response.status > 204) return Promise.reject('Cannot get namespaces');
-    const ns: JsStrObj = {};
-    //console.debug('response.data', response.data);
-    if (response.data && response.data.results) {
-      let results: Results = { bindings: [] };
-      results = response.data.results;
-      if (results) {
-        results.bindings.forEach((b) => {
-          if (b.prefix && b.namespace && b.prefix.value && b.namespace.value) {
-            ns[b.prefix.value] = b.namespace.value;
-          }
-        });
-      }
-    }
-    ns['sesame'] = 'http://www.openrdf.org/schema/sesame#';
-    return ns;
-  }
-}
-
 export const Empty: Story<{}> = () => {
   //const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
   //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  const client = new SparqlClientImpl2('https://rdf4j.agentlab.ru/rdf4j-server');
+  const client = new SparqlClientImpl(
+    'https://rdf4j.agentlab.ru/rdf4j-server',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+  );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires

@@ -302,7 +302,7 @@ export default {
 } as Meta;
 
 export const Empty: Story<{}> = () => {
-  registerMstViewKindSchema('aldkg:VerticalLayout', MstVerticalLayout);
+  registerMstViewKindSchema(MstVerticalLayout);
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
   const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
