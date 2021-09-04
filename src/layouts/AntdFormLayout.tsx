@@ -74,12 +74,14 @@ export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onS
 });
 
 export const AntdFormLayout: React.FC<any> = ({
-  viewKindElement,
   viewKind,
+  viewKindElement,
+  viewDescr,
+  viewDescrElement,
   enabled,
   title,
   visible,
-  formId,
+  id,
   validation,
   editable,
   onSave,
@@ -92,15 +94,17 @@ export const AntdFormLayout: React.FC<any> = ({
       {({ width, height }: any) => (
         <div style={{ width, height, overflow: 'auto' }} onClick={() => onEdit()}>
           <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>
-          <LogicalButton form={formId} onSave={onSave} onCancel={onCancel} />
+          <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />
           <Form {...formItemLayout}>
             <AntdVerticalLayoutWithStore
-              id={`${formId}Layout`}
-              schema={{}}
-              viewKindElement={viewKindElement}
-              enabled={enabled}
+              id={`${id}Layout`}
               viewKind={viewKind}
-              form={formId}
+              viewKindElement={viewKindElement}
+              viewDescr={viewDescr}
+              viewDescrElement={viewDescrElement}
+              schema={{}}
+              enabled={enabled}
+              form={id}
             />
           </Form>
         </div>

@@ -9,11 +9,11 @@
  ********************************************************************************/
 import moment from 'moment';
 import React from 'react';
-import { Story, Meta } from '@storybook/react/types-6-0';
+import { Story, Meta } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
+import { CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -166,12 +166,6 @@ const additionalColls: CollState[] = [
   },
 ];
 
-const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
-const store: any = asReduxStore(rootStore);
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-connectReduxDevtools(require('remotedev'), rootStore);
-
 export default {
   title: 'Several Controls/TreeAndForm Artifacts',
   component: Form,
@@ -180,12 +174,19 @@ export default {
   },
 } as Meta;
 
-export const Empty: Story<{}> = () => (
-  <Provider store={store}>
-    <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-      <div style={{ height: '1000px', width: '100%' }}>
-        <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-      </div>
-    </MstContextProvider>
-  </Provider>
-);
+export const Empty: Story<{}> = () => {
+  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <Provider store={store}>
+      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+        <div style={{ height: '1000px', width: '100%' }}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </div>
+      </MstContextProvider>
+    </Provider>
+  );
+};

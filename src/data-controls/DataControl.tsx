@@ -21,46 +21,56 @@ const renderType: any = {
   grid: GridRenderer,
 };
 
-export const AntdDataLayout: React.FC<any> = (props) => {
-  const {
-    viewKindElement,
-    enabled,
-    handleChange = () => {},
-    dataSource,
-    viewKind,
-    schema,
-    editing,
-    getData,
-    onDnD,
-    onCreateFolder,
-    onDeleteFolder,
-    onRename,
-  } = props;
-  const data = treeify(dataSource, '@id', viewKindElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
-  const onSelect = (selected: { [key: string]: any }) => {
-    handleChange(selected);
-  };
-  const Render = renderType[viewKindElement?.options.renderType];
+export const AntdDataLayout: React.FC<any> = React.memo(
+  (props) => {
+    const {
+      viewKind,
+      viewKindElement,
+      viewDescr,
+      viewDescrElement,
+      enabled,
+      handleChange = () => {},
+      dataSource,
+      schema,
+      editing,
+      getData,
+      onDnD,
+      onCreateFolder,
+      onDeleteFolder,
+      onRename,
+    } = props;
+    const data = treeify(dataSource, '@id', viewKindElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
+    const onSelect = (selected: { [key: string]: any }) => {
+      handleChange(selected);
+    };
+    const Render = renderType[viewKindElement?.options.renderType];
 
-  return (
-    <Render
-      uri={props.uri}
-      enabled={enabled}
-      onSelect={onSelect}
-      child={data}
-      editing={editing}
-      onDnD={onDnD}
-      viewKindElement={viewKindElement}
-      viewKind={viewKind}
-      onCreateFolder={onCreateFolder}
-      onDeleteFolder={onDeleteFolder}
-      onRename={onRename}
-      schema={schema}
-      getData={getData}
-      dataSource={dataSource}
-    />
-  );
-};
+    return (
+      <Render
+        uri={props.uri}
+        enabled={enabled}
+        onSelect={onSelect}
+        child={data}
+        editing={editing}
+        onDnD={onDnD}
+        viewKind={viewKind}
+        viewKindElement={viewKindElement}
+        viewDescr={viewDescr}
+        viewDescrElement={viewDescrElement}
+        onCreateFolder={onCreateFolder}
+        onDeleteFolder={onDeleteFolder}
+        onRename={onRename}
+        schema={schema}
+        getData={getData}
+        dataSource={dataSource}
+      />
+    );
+  },
+  (prev, next) => {
+    console.log('PREV', prev, 'NEXT', next, prev === next);
+    return true;
+  },
+);
 
 export const antdDataControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:DataControl'));
 export const AntdDataControlWithStore = withStoreToDataControlProps(AntdDataLayout);

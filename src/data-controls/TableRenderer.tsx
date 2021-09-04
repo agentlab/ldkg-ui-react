@@ -22,7 +22,7 @@ const divStyle: React.CSSProperties = {
 
 export const TableRenderer: React.FC<any> = React.memo(
   (props) => {
-    const { schema, enabled, child, onSelect, viewKindElement, viewKind, editing } = props;
+    const { viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, child, onSelect, editing } = props;
     const [selected, setSelected] = useState(child[0]);
     const [cacheSelect, setCacheSelect] = useState();
     const [dataSource, setDataSource] = useState(child);
@@ -80,9 +80,10 @@ export const TableRenderer: React.FC<any> = React.memo(
           {selected.viewKindElement || viewKindElement.elements ? (
             <div style={divStyle}>
               <FormsDispatch
-                viewKindElement={selected.viewKindElement || viewKindElement.elements[0]}
-                enabled={enabled}
                 viewKind={viewKind}
+                viewKindElement={selected.viewKindElement || viewKindElement.elements[0]}
+                viewDescr={viewDescr}
+                enabled={enabled}
               />
             </div>
           ) : null}

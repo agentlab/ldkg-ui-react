@@ -94,7 +94,25 @@ const viewDescrs = [
     viewKind: 'rm:FormViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
-    collsConstrs: [],
+    collsConstrs: [
+      {
+        '@id': 'rm:FormView_Artifacts_Coll_ViewDescr',
+        '@type': 'aldkg:CollConstr',
+        '@parent': 'rm:FormView_Artifacts_Coll',
+        entConstrs: [
+          {
+            '@id': 'rm:FormView_Artifacts_Coll_Ent0_ViewDescr',
+            '@type': 'aldkg:EntConstr',
+            '@parent': 'rm:FormView_Artifacts_Coll_Ent0',
+            conditions: {
+              '@id': 'rm:_2Yud6',
+              '@type': 'aldkg:EntConstrCondition',
+              assetFolder: 'folders:samples_collection',
+            },
+          },
+        ],
+      },
+    ],
     // child ui elements configs
     elements: [],
   },
@@ -125,7 +143,7 @@ const additionalColls: CollState[] = [
 ];
 
 export default {
-  title: 'Form/ArtifactForm',
+  title: 'Form/ArtifactFormOverride',
   component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },

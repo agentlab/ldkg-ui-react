@@ -8,21 +8,13 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { reaction } from 'mobx';
-import {
-  getParent,
-  getRoot,
-  IAnyComplexType,
-  IAnyModelType,
-  IAnyStateTreeNode,
-  IAnyType,
-  SnapshotIn,
-  types,
-} from 'mobx-state-tree';
+import { getParent, getRoot, IAnyComplexType, IAnyStateTreeNode, IAnyType, SnapshotIn, types } from 'mobx-state-tree';
 
 import {
   arrDiff,
   CollState,
   createModelFromState,
+  getMstLiteralPropValue,
   MstCollConstr,
   MstJsObject,
   MstModels,
@@ -53,9 +45,14 @@ export const MstViewKindElement = types.model('MstViewKindElement', {
 
 const mstViewKindSchemas: MstModels = {};
 
-export function registerMstViewKindSchema(id: string, t: IAnyComplexType): void {
-  console.log('register mstViewKindSchema', { id, t });
-  mstViewKindSchemas[id] = t;
+export function registerMstViewKindSchema(mstModel: IAnyComplexType): void {
+  const id = getMstLiteralPropValue(mstModel as any, '@type');
+  if (id) {
+    console.log('register mstViewKindSchema', { id, mstModel });
+    mstViewKindSchemas[id] = mstModel;
+  } else {
+    console.log('cannot register mstViewKindSchema', { mstModel });
+  }
 }
 
 export function unregisterMstViewKindSchema(id: string): IAnyComplexType {
@@ -70,11 +67,14 @@ export const MstViewKindDataType = types.union(
       if (snapshot) {
         const mstModel = mstViewKindSchemas[snapshot['@type']];
         if (mstModel) {
-          //console.log('ViewKindDataType, create mstModel for', snapshot['@id'], mstModel.name);
+          console.log('ViewKindDataType, create mstModel for', {
+            snapshotId: snapshot['@id'],
+            mstModelName: mstModel.name,
+          });
           return mstModel;
         }
       }
-      //console.log('ViewKindDataType, create ViewKindElement for', snapshot['@id']);
+      console.log('ViewKindDataType, create ViewKindElement for', snapshot['@id']);
       return MstViewKindElement;
     },
   },
@@ -85,9 +85,9 @@ export const MstViewKindDataType = types.union(
  * View Kind, which could be persisted in DB
  */
 export const MstViewKind = types
-  .model('MstViewKind', {
+  .model('aldkg:ViewKind', {
     '@id': types.identifier, // JSON-LD object id of a viewKind
-    '@type': types.string, // JSON-LD class id of a View
+    '@type': types.literal('aldkg:ViewKind'), // JSON-LD class id of a View
 
     title: types.maybe(types.string), // mandatory title
     description: types.maybe(types.string),
@@ -143,7 +143,8 @@ export type IViewKindSnapshotIn = SnapshotIn<typeof MstViewKind>;
 export const MstViewDescrElement = types.model('MstViewDescrElement', {
   '@id': types.identifier, // JSON-LD object id
   '@type': types.string, //types.union(types.literal('aldkg:ViewElement'), types.literal('aldkg:DiagramEditor')), // JSON-LD class id of a View
-  '@parent': types.safeReference(types.late((): IAnyModelType => MstViewKindElement)),
+  '@parent': types.maybe(types.string),
+  //'@parent': types.union(types.reference(types.late((): IAnyType => MstViewKindDataType)), types.undefined),
 
   title: types.maybe(types.union(types.string, MstJsObject)),
   description: types.maybe(types.union(types.string, MstJsObject)),
@@ -160,9 +161,14 @@ export const MstViewDescrElement = types.model('MstViewDescrElement', {
 
 const mstViewDescrSchemas: MstModels = {};
 
-export function registerMstViewDescrSchema(id: string, t: IAnyComplexType): void {
-  console.log('register mstViewDescrSchema', { id, t });
-  mstViewDescrSchemas[id] = t;
+export function registerMstViewDescrSchema(mstModel: IAnyComplexType): void {
+  const id = getMstLiteralPropValue(mstModel as any, '@type');
+  if (id) {
+    console.log('register mstViewDescrSchema', { id, mstModel });
+    mstViewDescrSchemas[id] = mstModel;
+  } else {
+    console.log('cannot register mstViewDescrSchema', { mstModel });
+  }
 }
 
 export function unregisterMstViewDescrSchema(id: string): IAnyComplexType {
@@ -177,11 +183,14 @@ export const MstViewDescrDataType = types.union(
       if (snapshot) {
         const mstModel = mstViewDescrSchemas[snapshot['@type']];
         if (mstModel) {
-          //console.log('ViewDescrDataType, create mstModel for', snapshot['@id'], mstModel.name);
+          console.log('ViewDescrDataType, create mstModel for', {
+            snapshotId: snapshot['@id'],
+            mstModelName: mstModel.name,
+          });
           return mstModel;
         }
       }
-      //console.log('ViewDescrDataType, create ViewDescrElement for', snapshot['@id']);
+      console.log('ViewDescrDataType, create ViewDescrElement for', snapshot['@id']);
       return MstViewDescrElement;
     },
   },
@@ -192,9 +201,9 @@ export const MstViewDescrDataType = types.union(
  * View Description, which could be persisted in DB
  */
 export const MstViewDescr = types
-  .model('MstViewDescr', {
+  .model('aldkg:ViewDescr', {
     '@id': types.identifier, // JSON-LD object id of a viewKind
-    '@type': types.string, // JSON-LD class id of a View
+    '@type': types.literal('aldkg:ViewDescr'), // JSON-LD class id of a View
     viewKind: types.safeReference(MstViewKind),
 
     title: types.maybe(types.string), // mandatory title
@@ -250,7 +259,7 @@ export const createUiModelFromState = (
   initialState: any,
   additionalColls: CollState[] | undefined = undefined,
 ): any => {
-  registerMstCollSchema('aldkg:ViewKind', MstViewKind);
-  registerMstCollSchema('aldkg:ViewDescr', MstViewDescr);
+  registerMstCollSchema(MstViewKind);
+  registerMstCollSchema(MstViewDescr);
   return createModelFromState(repId, client, initialState, additionalColls);
 };

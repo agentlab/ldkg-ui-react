@@ -7,8 +7,8 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { FormsDispatchProps } from '../Form';
+import { RenderProps } from '../Form';
 
-export interface LayoutComponent extends FormsDispatchProps {
+export interface LayoutComponent extends RenderProps {
   visible: boolean;
 }
