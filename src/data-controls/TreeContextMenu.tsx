@@ -13,7 +13,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { JsObject } from '@agentlab/sparql-jsld-client';
 
-//import './BaseTableMenu.css';
+import './TreeContextMenu.css';
 
 interface TreeContextMenuProps {
   node: JsObject;
@@ -39,17 +39,17 @@ export const TreeContextMenu: React.FC<TreeContextMenuProps> = ({
       <ul className='popup' style={{ left: `${x}px`, top: `${y}px`, position: 'fixed', zIndex: 1000 }}>
         <li onClick={() => onCreateDirectory(node.otherProps['@id'])}>
           <PlusOutlined />
-          Создать
+          <span> Создать</span>
         </li>
         <Divider style={{ margin: '2px' }} />
         <li onClick={() => onDeleteDirectory(node.otherProps['@id'])}>
           <DeleteOutlined />
-          Удалить
+          <span> Удалить</span>
         </li>
         <Divider style={{ margin: '2px' }} />
         <li onClick={() => node.onRename()}>
           <EditOutlined />
-          Переименовать
+          <span> Переименовать</span>
         </li>
       </ul>
     );
