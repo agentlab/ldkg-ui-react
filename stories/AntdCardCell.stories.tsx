@@ -28,12 +28,6 @@ import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollC
 import { createUiModelFromState, registerMstViewKindSchema } from '../src/models/MstViewDescr';
 import { MstVerticalLayout } from '../src/models/MstViewSchemas';
 
-const antdRenderers: RendererRegistryEntry[] = [
-  ...antdControlRenderers,
-  ...antdLayoutRenderers,
-  ...antdDataControlRenderers,
-];
-
 const viewKinds = [
   {
     '@id': 'mktp:CardCellGridViewKind',
@@ -294,14 +288,19 @@ const additionalColls: CollState[] = [
 ];
 
 export default {
-  title: 'Several Controls/TreeAndForm Cards',
+  title: 'Complex Control/Cards List',
   component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
 } as Meta;
 
-export const Empty: Story<{}> = () => {
+export const Full: Story<{}> = () => {
+  const antdRenderers: RendererRegistryEntry[] = [
+    ...antdControlRenderers,
+    ...antdLayoutRenderers,
+    ...antdDataControlRenderers,
+  ];
   registerMstViewKindSchema(MstVerticalLayout);
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');

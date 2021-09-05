@@ -27,12 +27,6 @@ import {
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState } from '../src/models/MstViewDescr';
 
-const antdRenderers: RendererRegistryEntry[] = [
-  ...antdControlRenderers,
-  ...antdLayoutRenderers,
-  ...antdDataControlRenderers,
-];
-
 const viewKinds = [
   {
     '@id': 'mktp:TreeAndFormViewKind',
@@ -297,6 +291,12 @@ export default {
 } as Meta;
 
 export const Empty: Story<{}> = () => {
+  const antdRenderers: RendererRegistryEntry[] = [
+    ...antdControlRenderers,
+    ...antdLayoutRenderers,
+    ...antdDataControlRenderers,
+  ];
+
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
   const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
