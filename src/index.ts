@@ -34,3 +34,5 @@ export * from './MstContext';
 export * from './renderers';
 export * from './testers';
 export * from './UnknownRenderer';
+
+export * from './table';
