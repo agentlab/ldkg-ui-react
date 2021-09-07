@@ -86,6 +86,10 @@ const viewKinds = [
         '@id': 'mktp:_934Jfg7',
         '@type': 'aldkg:SplitPaneLayout',
         options: {
+          style: {
+            width: '100%',
+            height: '100%',
+          },
           defaultSize: {
             'mktp:_85dfg67': '17%',
             'mktp:_83jdv8': '40%',
