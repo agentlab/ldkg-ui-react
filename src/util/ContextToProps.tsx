@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { cloneDeep, get, isEqual, omit } from 'lodash-es';
+import { cloneDeep, get, isArray, isEqual, omit } from 'lodash-es';
 
 import React, { useContext, useState } from 'react';
 import { Spin } from 'antd';
@@ -258,13 +258,13 @@ export const withStoreToDataControlProps = (Component: any): any =>
       //store.loadData(scope);
       return <Spin />;
     }
-    const scope = viewKindElement.resultsScope;
+    //const scope = viewKindElement.resultsScope;
     data = cloneDeep(getSnapshot(data));
     const options = viewKindElement?.options || {};
     const withConnections = options.connections;
-    const onChange = (data: any) => {
+    const onSelect = (data: any) => {
       if (data) {
-        store.setSelectedData(scope, data);
+        store.setSelectedData(collIriOverride, data);
         withConnections && store.editConn(withConnections, data);
       }
     };
@@ -297,7 +297,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
-        handleChange={onChange}
+        handleChange={onSelect}
         onCreateFolder={onCreateFolder}
         getData={getData}
         onDnD={onDnD}
@@ -478,7 +478,7 @@ export const withStoreToArrayProps = (Component: any): any =>
       return <Spin />;
     }
     data = getSnapshot(data);
-    const loadMoreData = (offset: number) => {
+    const loadMoreData = async (offset: number) => {
       return data; //store.loadDataByUri(scope, offset);
     };
     const withConnections = options.connections;
@@ -495,14 +495,17 @@ export const withStoreToArrayProps = (Component: any): any =>
         applySnapshot(coll?.data, newData);
       }
     };
-    const onChange = (data: any) => {
-      /*store.setSelectedData(scope, data);
-      withConnections &&
-        options.connections.forEach((e: any) => {
-          const condition: any = {};
-          condition[e.by] = data['@id'];
-          store.editCondition(e.to, condition, scope, e.by, data);
-        });*/
+    const onSelect = (data: any) => {
+      console.log('onChange', data);
+      if (data && isArray(data)) {
+        if (data.length === 1) {
+          store.setSelectedData(collIriOverride, data[0]);
+          withConnections && store.editConn(withConnections, data[0]);
+        } else {
+          store.setSelectedData(collIriOverride, undefined);
+          withConnections && store.editConn(withConnections, undefined);
+        }
+      }
     };
     const loadExpandedData = (subject: string) => {
       //const newQuery = store.queries[viewKindElement.resultsScope];
@@ -528,7 +531,7 @@ export const withStoreToArrayProps = (Component: any): any =>
         }}
         data={data}
         options={options}
-        onSelect={onChange}
+        onSelect={onSelect}
       />
     );
   });

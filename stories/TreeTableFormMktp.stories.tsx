@@ -30,42 +30,66 @@ import {
   Form,
   MstContextProvider,
   RendererRegistryEntry,
+  tableRenderers,
 } from '../src';
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const viewKinds = [
   {
-    '@id': 'mktp:TreeAndFormViewKind',
+    '@id': 'mktp:TreeTableFormMktpCategoriesViewKind',
     '@type': 'aldkg:ViewKind',
-    title: 'TreeAndForm',
-    description: 'TreeAndForm',
+    title: 'Tree-Table-Form Mktp Categories',
+    description: 'Tree-Table-Form Mktp Categories',
     collsConstrs: [
       {
-        '@id': 'mktp:Categories_Coll',
+        '@id': 'mktp:HSCategories_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'mktp:Categories_Coll_Shape0',
+            '@id': 'mktp:HSCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
           },
         ],
       },
       {
-        '@id': 'mktp:Category_Coll',
+        '@id': 'mktp:KPCategories_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'mktp:Cards_Coll_Ent0',
+            '@id': 'mktp:KPCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:CategoryShape',
+            schema: 'kp:CategoryShape',
+          },
+        ],
+      },
+      {
+        '@id': 'mktp:TBCategories_Coll',
+        '@type': 'aldkg:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'mktp:TBCategories_Coll_Shape0',
+            '@type': 'aldkg:EntConstr',
+            schema: 'tb:CategoryShape',
+          },
+        ],
+      },
+      {
+        '@id': 'mktp:ProductCards_in_Category_Coll',
+        '@type': 'aldkg:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'mktp:ProductCards_in_Category_Coll_Ent0',
+            '@type': 'aldkg:EntConstr',
+            schema: 'hs:ProductCardShape',
             conditions: {
-              '_@id': 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie',
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
+              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
             },
           },
         ],
-        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+        limit: 1000,
       },
       {
         '@id': 'mktp:Cards_Coll',
@@ -75,6 +99,10 @@ const viewKinds = [
             '@id': 'mktp:Cards_Coll_Ent0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
+            conditions: {
+              '@id': 'mktp:Cards_Coll_Ent0_con',
+              '@_id': undefined,
+            },
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
@@ -87,33 +115,34 @@ const viewKinds = [
         '@type': 'aldkg:SplitPaneLayout',
         options: {
           defaultSize: {
-            'mktp:_85dfg67': '17%',
-            'mktp:_83jdv8': '40%',
-            'mktp:_933ndh8': '43%',
+            'mktp:MarketplacesTabs': '17%',
+            'mktp:CategoryCardsTable': '43%',
+            'mktp:CategoryCardForm': '43%',
           },
           height: 'all-empty-space',
           //width: 'all-empty-space',
         },
         elements: [
           {
-            '@id': 'mktp:_85dfg67',
+            '@id': 'mktp:MarketplacesTabs',
             '@type': 'aldkg:TabsLayout',
             elements: [
               {
                 '@id': 'mktp:_k345jh',
                 '@type': 'aldkg:DataControl',
-                resultsScope: 'mktp:Categories_Coll',
+                resultsScope: 'mktp:HSCategories_Coll',
                 options: {
                   renderType: 'tree',
                   title: 'WildBerries',
                   treeNodeTitleKey: 'name',
                   treeNodeParentKey: 'SubcatInCatLink',
+                  connections: [{ to: 'mktp:ProductCards_in_Category_Coll_Ent0_con', by: 'CardInCatLink' }],
                 },
               },
               {
                 '@id': 'mktp:_876df86',
                 '@type': 'aldkg:DataControl',
-                resultsScope: 'mktp:Categories_Coll',
+                resultsScope: 'mktp:KPCategories_Coll',
                 options: {
                   renderType: 'tree',
                   title: 'Amazon',
@@ -124,7 +153,7 @@ const viewKinds = [
               {
                 '@id': 'mktp:_13hF67',
                 '@type': 'aldkg:DataControl',
-                resultsScope: 'mktp:Categories_Coll',
+                resultsScope: 'mktp:HSCategories_Coll',
                 options: {
                   renderType: 'tree',
                   title: '1688',
@@ -135,25 +164,60 @@ const viewKinds = [
             ],
           },
           {
-            '@id': 'mktp:_83jdv8',
-            '@type': 'aldkg:VerticalLayout',
+            '@id': 'mktp:CategoryCardsTable',
+            '@type': 'aldkg:Array',
+            resultsScope: 'mktp:ProductCards_in_Category_Coll',
             options: {
-              style: {
-                margin: '5px',
+              connections: [{ to: 'mktp:Cards_Coll_Ent0_con', by: '@_id' }],
+              draggable: true,
+              resizeableHeader: true,
+              height: 'all-empty-space',
+              style: { height: '100%' },
+              order: ['imageUrl', 'name', 'price', 'saleValue', 'country', 'brand', 'seller', 'identifier'],
+              imageUrl: {
+                width: 60,
+                formatter: 'image',
+                editable: false,
+              },
+              identifier: {
+                formatter: 'link',
+                //dataToFormatter: { link: 'identifier' },
+                sortable: true,
+                editable: false,
+              },
+              name: {
+                width: 340,
+                formatter: 'link',
+                dataToFormatter: { link: '@id' },
+                sortable: true,
+                editable: false,
+              },
+              country: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              brand: {
+                formatter: 'link',
+                sortable: true,
+                editable: false,
+              },
+              price: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              saleValue: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              seller: {
+                formatter: 'link',
+                sortable: true,
+                editable: false,
               },
             },
-            elements: [
-              {
-                '@id': 'mktp:_986hAty',
-                '@type': 'aldkg:Control',
-                resultsScope: 'mktp:Category_Coll/name',
-              },
-              {
-                '@id': 'mktp:_23jGj2',
-                '@type': 'aldkg:Control',
-                resultsScope: 'mktp:Category_Coll/description',
-              },
-            ],
           },
           {
             '@id': 'mktp:_933ndh8',
@@ -324,7 +388,7 @@ const viewDescrs = [
   {
     '@id': 'mktp:TreeAndFormViewDescr',
     '@type': 'aldkg:ViewDescr',
-    viewKind: 'mktp:TreeAndFormViewKind',
+    viewKind: 'mktp:TreeTableFormMktpCategoriesViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
@@ -359,18 +423,19 @@ const additionalColls: CollState[] = [
 ];
 
 export default {
-  title: 'Several Controls/TreeAndForm Mktp',
+  title: 'Several Controls/Tree-Table-Form',
   component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },
   },
 } as Meta;
 
-export const Empty: Story<{}> = () => {
+export const MktpCategories: Story<{}> = () => {
   const antdRenderers: RendererRegistryEntry[] = [
     ...antdControlRenderers,
     ...antdLayoutRenderers,
     ...antdDataControlRenderers,
+    ...tableRenderers,
   ];
 
   //const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');

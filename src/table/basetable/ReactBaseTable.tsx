@@ -227,13 +227,14 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       onClick: ({ rowData, event }: any) => {
         const idx = selection.indexOf(rowData);
         let newSelection = [...selection];
-        if (idx != -1) {
-          newSelection = newSelection.splice(idx, 1);
+        if (idx !== -1) {
+          if (newSelection.length === 1) newSelection = [];
+          else newSelection.splice(idx, 1);
         } else {
           newSelection.push(rowData);
         }
         setSelection(newSelection);
-        onSelect(rowData);
+        onSelect(newSelection);
       },
     };
 
@@ -287,19 +288,20 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       });
     };
     const setExpanded = (expanded: boolean, id: string) => {
-      const newExpandedRowKeys = [...expandedRowKeys];
+      let newExpandedRowKeys = [...expandedRowKeys];
       if (expanded) {
         newExpandedRowKeys.push(id);
       } else {
         const idx = newExpandedRowKeys.findIndex((e: string) => e === id);
-        newExpandedRowKeys.splice(idx, 1);
+        if (newExpandedRowKeys.length === 1) newExpandedRowKeys = [];
+        else newExpandedRowKeys.splice(idx, 1);
       }
       setExpandedRowKeys(newExpandedRowKeys);
     };
     const loadMore = () => {
-      if (!limit) {
-        setLoadedAll(true);
-      } else {
+      //if (!limit) {
+      setLoadedAll(true);
+      /*} else {
         setLoadingMore(true);
         loadMoreData(data.length).then((d: any) => {
           if (d.length < limit) {
@@ -309,7 +311,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
           setData(newData);
           setLoadingMore(false);
         });
-      }
+      }*/
     };
     const renderOverlay = () => {
       if (loadingMore)
@@ -331,6 +333,10 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       setData(newData);
     };
     useEffect(() => {
+      setSelectedRowKeys([]);
+      setExpandedRowKeys([]);
+      setSelection([]);
+      onSelect([]);
       const newData = checkChildren(dataSource);
       if (newData.length < limit) {
         setLoadedAll(true);
