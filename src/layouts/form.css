@@ -27,3 +27,7 @@
   color: rgb(255, 255, 255);
   background-color: rgba(145, 145, 145, 0.616);
 }
+
+.ant-form-item {
+  margin-bottom: 2px;
+}
