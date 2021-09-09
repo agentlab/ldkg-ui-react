@@ -16,7 +16,7 @@
             "request": "launch",
             "name": "Launch Storybook in Chrome",
             "breakOnLoad": true,
-            "url": "http://localhost:6006/?path=/story/form-artifactformoverride--remote-data",
+            "url": "http://localhost:6006/?path=/story/several-controls-tree-table-form--mktp-categories",
             "sourceMaps": true,
             "webRoot": "${workspaceFolder}",
             "sourceMapPathOverrides": {

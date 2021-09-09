@@ -95,7 +95,7 @@ export const AntdFormLayout: React.FC<any> = ({
         <div style={{ width, height, overflow: 'auto' }} onClick={() => onEdit()}>
           <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>
           <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />
-          <Form {...formItemLayout}>
+          <Form labelAlign={'left'}>
             <AntdVerticalLayoutWithStore
               id={`${id}Layout`}
               viewKind={viewKind}

@@ -11,10 +11,10 @@ import React from 'react';
 import { RankedTester, rankWith, uiTypeIs } from '../testers';
 import { withStoreToArrayProps } from '../util/ContextToProps';
 
-import { JsonSchemaTable } from './BaseTableControl';
+import { BaseTableControl } from './BaseTableControl';
 
 export const BaseTableArrayControlRenderer = (props: any) => {
-  return <JsonSchemaTable {...props} />;
+  return <BaseTableControl {...props} />;
 };
 
 export const tableArrayControlTester: RankedTester = rankWith(3, uiTypeIs('aldkg:Array'));

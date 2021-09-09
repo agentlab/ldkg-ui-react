@@ -16,7 +16,7 @@ import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import { SparqlClientImpl, MstRepository, rootModelInitialState } from '@agentlab/sparql-jsld-client';
 
 import { artifactSchema } from '../test/schema/TestSchemas';
-import { JsonSchemaTable } from '../src/table/BaseTableControl';
+import { BaseTableControl } from '../src/table/BaseTableControl';
 
 import {
   antdCells,
@@ -924,7 +924,7 @@ const fakeData = [
 
 export default {
   title: 'Table/LocalArtifacts',
-  component: JsonSchemaTable,
+  component: BaseTableControl,
 } as Meta;
 
 const Template: Story = (args: any) => {
@@ -940,7 +940,7 @@ const Template: Story = (args: any) => {
     <div style={{ height: 'calc(100vh - 32px)' }}>
       <Provider store={store}>
         <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <JsonSchemaTable
+          <BaseTableControl
             schema={artifactSchema}
             path=''
             data={fakeData}

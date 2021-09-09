@@ -108,7 +108,7 @@ const viewKinds = [
               },
               defaultSize: {
                 'mktp:MarketplacesTabs': '17%',
-                'mktp:CategoryCardsTable': '43',
+                'mktp:CategoryCardsTable': '43%',
                 'mktp:ProductCardsTable': '26%',
                 'mktp:ProductTree': '17%',
               },

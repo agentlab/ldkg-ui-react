@@ -38,7 +38,7 @@ const createTableData = (data: any) => {
   });
 };
 
-export const JsonSchemaTable: React.FC<JsonSchemaTableProps> = React.memo(
+export const BaseTableControl: React.FC<JsonSchemaTableProps> = React.memo(
   ({
     viewKind,
     viewKindElement,
@@ -52,7 +52,7 @@ export const JsonSchemaTable: React.FC<JsonSchemaTableProps> = React.memo(
     loadMoreData,
     onSwap = () => {},
     onChangeData = () => {},
-    onSelect,
+    onSelect = () => {},
     onDeleteRows,
     onSort,
     loadExpandedData,
