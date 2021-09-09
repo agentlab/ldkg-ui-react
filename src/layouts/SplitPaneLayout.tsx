@@ -12,19 +12,12 @@ import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 
 import { FormsDispatchProps, FormsDispatch } from '../Form';
-import { rankWith, uiTypeIs, RankedTester } from '../testers';
+import { rankWith, uiTypeIs, RankedTester, optionIs } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
 
 import { LayoutComponent } from './LayoutComponent';
 import { Idx, RenderLayoutProps } from '../util/layout';
 import { IViewKindElement } from '../models/uischema';
-
-const divStyle: React.CSSProperties = {
-  position: 'relative',
-  width: '300px',
-  flex: '1 1 auto',
-  margin: '1px',
-};
 
 const renderSplitElements = ({ viewKind, viewKindElement, viewDescr, enabled, Render, form }: RenderLayoutProps) => {
   const elements = viewKindElement.elements;
@@ -35,7 +28,7 @@ const renderSplitElements = ({ viewKind, viewKindElement, viewDescr, enabled, Re
       const style = el.options && el.options.style;
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
-          <div style={{ height: '100%', ...style }}>
+          <div>
             <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
           </div>
         </Pane>
@@ -55,6 +48,7 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   visible,
 }) => {
   //const layout = viewKindElement as Layout;
+  const options = viewKindElement.options || {};
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
     return (
       <div>
@@ -64,9 +58,11 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   };
   return (
     <React.Fragment>
-      <SplitPane split='vertical' style={divStyle} minSize={300}>
-        {renderSplitElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
-      </SplitPane>
+      <div style={{ position: 'relative', ...options.style }}>
+        <SplitPane split='vertical' minSize={300}>
+          {renderSplitElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
+        </SplitPane>
+      </div>
     </React.Fragment>
   );
 };

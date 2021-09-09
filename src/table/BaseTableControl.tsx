@@ -52,7 +52,7 @@ export const BaseTableControl: React.FC<JsonSchemaTableProps> = React.memo(
     loadMoreData,
     onSwap = () => {},
     onChangeData = () => {},
-    onSelect,
+    onSelect = () => {},
     onDeleteRows,
     onSort,
     loadExpandedData,
