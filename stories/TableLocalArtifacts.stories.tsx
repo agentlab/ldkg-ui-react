@@ -937,9 +937,9 @@ const Template: Story = (args: any) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
   return (
-    <Provider store={store}>
-      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-        <div style={{ height: '1000px' }}>
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
           <JsonSchemaTable
             schema={artifactSchema}
             path=''
@@ -1011,9 +1011,9 @@ const Template: Story = (args: any) => {
               },
             }}
           />
-        </div>
-      </MstContextProvider>
-    </Provider>
+        </MstContextProvider>
+      </Provider>
+    </div>
   );
 };
 

@@ -102,6 +102,10 @@ const viewKinds = [
             '@id': 'mktp:_97hFH67',
             '@type': 'aldkg:SplitPaneLayout',
             options: {
+              style: {
+                width: '100%',
+                height: '100%',
+              },
               defaultSize: {
                 'mktp:MarketplacesTabs': '17%',
                 'mktp:CategoryCardsTable': '43',
@@ -599,13 +603,13 @@ const Template: Story = (args: any) => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
   return (
-    <Provider store={store}>
-      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-        <div style={{ height: '1080px' }}>
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
           <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </div>
-      </MstContextProvider>
-    </Provider>
+        </MstContextProvider>
+      </Provider>
+    </div>
   );
 };
 
