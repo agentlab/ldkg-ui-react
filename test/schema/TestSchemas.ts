@@ -64,6 +64,10 @@ export const artifactSchema: JSONSchema6forRdf = {
       '@id': 'rm:artifactFormat',
       '@type': 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow',
     },
+    xhtmlText: {
+      '@id': 'rm:xhtmlText',
+      '@type': 'rdf:HTML',
+    },
   },
   properties: {
     '@id': {
@@ -150,6 +154,14 @@ export const artifactSchema: JSONSchema6forRdf = {
       description: 'Формат заполнения/отображения',
       type: 'string',
       format: 'iri',
+      shapeModifiability: 'system',
+      //valueModifiability: 'user',
+    },
+    xhtmlText: {
+      title: 'Форматированный текст',
+      description: 'Форматированный текст',
+      type: 'string',
+      contentMediaType: 'text/html',
       shapeModifiability: 'system',
       //valueModifiability: 'user',
     },
