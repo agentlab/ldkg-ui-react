@@ -93,10 +93,10 @@ export function createViewDescrElementIri(viewKindElementIri: string): string {
 }
 
 export function compareByIri(iri1: string | any, iri2: string | any): boolean {
-  console.log('compareByIri - raw', { iri1, iri2 });
+  //console.log('compareByIri - raw', { iri1, iri2 });
   if (typeof iri1 === 'object') iri1 = iri1['@id'];
   if (typeof iri2 === 'object') iri2 = iri2['@id'];
-  console.log('compareByIri - norm', { iri1, iri2 });
+  //console.log('compareByIri - norm', { iri1, iri2 });
   return iri1 === iri2;
 }
 
@@ -107,11 +107,11 @@ export const processViewKindOverride = (
   const { viewKindElement, viewDescr } = props;
   // if ViewElement extend-override exists
   const viewDescrElement = viewDescr.elements?.find((el) => {
-    console.log('processViewKindOverride', {
-      el: mstJsonLdIds(el),
-      el_parent: mstJsonLdIds(el['@parent']),
-      viewKindElement: mstJsonLdIds(viewKindElement),
-    });
+    //console.log('processViewKindOverride', {
+    //  el: mstJsonLdIds(el),
+    //  el_parent: mstJsonLdIds(el['@parent']),
+    //  viewKindElement: mstJsonLdIds(viewKindElement),
+    //});
     return compareByIri(el['@parent'], viewKindElement['@id']);
   });
   const id = viewDescrElement ? viewDescrElement['@id'] : createViewDescrElementIri(viewKindElement['@id']);
