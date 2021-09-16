@@ -51,6 +51,9 @@ const viewKinds = [
       {
         '@id': 'rm:_83hd7f',
         '@type': 'aldkg:FormLayout',
+        options: {
+          readOnly: true,
+        },
         elements: [
           {
             '@id': 'rm:_17Gj78',
