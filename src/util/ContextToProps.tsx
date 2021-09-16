@@ -21,6 +21,7 @@ import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } 
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
 import { MstContext } from '../MstContext';
+import { FilterType } from '../controls/query/type';
 
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
@@ -586,6 +587,32 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
       onOk();
     };
     return <Component visible={visible} onOk={onSave} onCancel={onCancel} />;
+  });
+
+export const withStoreToQueryProps = (Component: any): any =>
+  observer<any>(({ ...props }: any) => {
+    const { schema } = props;
+    const { store } = useContext(MstContext);
+    const [collIriOverride] = processViewKindOverride(props, store);
+    return (
+      <Component
+        schema={schema}
+        uri={collIriOverride}
+        tags={[]}
+        options={{}}
+        addFilter={(data: FilterType) => {
+          //return store.selectData('nav:folder', { '@id': 'folders:samples_module',  title: ''});
+          /*store.queryFilter(uri, data);*/
+        }}
+        removeFilter={(data: FilterType) => {
+          /*store.removeFilter(uri, data.property);*/
+        }}
+        fullTextSearchString={store.fullTextSearchString}
+        setFullTextSearchString={(newValue: string) => {
+          store.fullTextSearchString = newValue;
+        }}
+      />
+    );
   });
 
 const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, enabled }: ToControlProps) => {
