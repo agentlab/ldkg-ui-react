@@ -17,6 +17,7 @@ import { observer } from 'mobx-react-lite';
 import { createLabelDescriptionFrom } from './label';
 import { LayoutComponent } from '../layouts/LayoutComponent';
 import { IViewKindElement, IViewKind } from '../models/uischema';
+import { values } from 'mobx';
 import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } from '../Form';
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
@@ -512,6 +513,48 @@ export const withStoreToArrayProps = (Component: any): any =>
       //newQuery.shapes[0].conditions = { ...newQuery.shapes[0].conditions, parentBinding: subject };
       return data; //store.getDataByQuery(newQuery);
     };
+
+    const onSort = (property: string, sortDir: any) => {
+      const coll = store.getColl(collIriOverride);
+      const collCnstr: any = getSnapshot(coll.collConstr);
+      const orderBy = collCnstr.orderBy;
+      let newOrder = orderBy;
+      if (sortDir === 'noSort') {
+        if (Array.isArray(orderBy)) {
+          const idx = orderBy.findIndex((e: any) => e.includes(property));
+          if (idx !== -1) {
+            orderBy.splice(idx, 1);
+            if (orderBy.length === 1) {
+              newOrder = orderBy[0];
+            }
+          }
+        } else {
+          if (orderBy.includes(property)) {
+            newOrder = undefined;
+          }
+        }
+      } else {
+        const sortQuery = sortDir + '(' + property + ')';
+        if (Array.isArray(orderBy)) {
+          const idx = orderBy.findIndex((e: any) => e.includes(property));
+          if (idx !== -1) {
+            newOrder[idx] = +sortQuery;
+          } else {
+            newOrder.push(sortQuery);
+          }
+        } else if (typeof orderBy === 'string') {
+          if (orderBy.includes(property)) {
+            newOrder = sortQuery;
+          } else {
+            newOrder = [orderBy, sortQuery];
+          }
+        } else {
+          newOrder = sortQuery;
+        }
+      }
+      const newCollCnstr = { ...collCnstr, orderBy: [newOrder] };
+      applySnapshot(coll.collConstr, newCollCnstr);
+    };
     return (
       <Component
         viewKind={viewKind}
@@ -522,13 +565,11 @@ export const withStoreToArrayProps = (Component: any): any =>
         schema={schema}
         limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}
-        sortDir={{} /*store.queries[scope].orderBy*/}
+        sortDir={store.getColl(collIriOverride).collConstr.orderBy}
         uri={id}
         onDeleteRows={onDeleteRows}
         loadMoreData={loadMoreData}
-        onSort={(property: string, sortDir: any) => {
-          /*store.onSort(scope, property, sortDir)*/
-        }}
+        onSort={onSort}
         data={data}
         options={options}
         onSelect={onSelect}
