@@ -28,9 +28,7 @@ const renderSplitElements = ({ viewKind, viewKindElement, viewDescr, enabled, Re
       const style = el.options && el.options.style;
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
-          <div>
-            <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
-          </div>
+          <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
         </Pane>
       );
     })
