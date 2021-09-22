@@ -98,7 +98,7 @@ const viewDescrs = [
   },
 ];
 
-const additionalColls: CollState[] = [
+const createAdditionalColls = (viewKinds: any, colls: CollState[]): CollState[] => [
   // ViewKinds Collection
   {
     constr: viewKindCollConstr,
@@ -120,6 +120,7 @@ const additionalColls: CollState[] = [
       // for viewDescrs.collConstrs (it loads lazily -- after the first access)
     },
   },
+  ...colls,
 ];
 
 export default {
@@ -134,7 +135,12 @@ const Template: Story<any> = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+  const rootStore = createUiModelFromState(
+    'reqs2',
+    client,
+    rootModelInitialState,
+    createAdditionalColls(args.viewKinds || viewKinds, args.colls || []),
+  );
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
@@ -151,3 +157,41 @@ const Template: Story<any> = (args: any) => {
 
 export const RemoteData = Template.bind({});
 RemoteData.args = {};
+
+export const FormWithNullProperty = Template.bind({});
+FormWithNullProperty.args = {
+  colls: [
+    {
+      constr: viewKinds[0].collsConstrs[0],
+      data: [
+        {
+          creator: null,
+          assetFolder: null,
+          description: 'TestDescr',
+        },
+      ],
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
+    },
+  ],
+};
+
+export const FormWithUndefinedProperty = Template.bind({});
+FormWithUndefinedProperty.args = {
+  colls: [
+    {
+      constr: viewKinds[0].collsConstrs[0],
+      data: [{}],
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
+    },
+  ],
+};
