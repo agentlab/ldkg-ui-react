@@ -5,13 +5,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-chrome",
-            "request": "launch",
-            "name": "Launch App in Chrome",
-            "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}",
-        },
-        {
             "type": "chrome",
             "request": "launch",
             "name": "Launch Storybook in Chrome",
