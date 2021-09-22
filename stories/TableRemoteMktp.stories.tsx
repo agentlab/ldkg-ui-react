@@ -72,6 +72,7 @@ const viewKinds = [
               resizeableHeader: true,
               height: 'all-empty-space',
               style: { height: '100%' },
+              multiSelect: true,
               order: [
                 'imageUrl',
                 'name',

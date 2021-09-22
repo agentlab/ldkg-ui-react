@@ -10,7 +10,7 @@
 import isEqual from 'lodash-es/isEqual';
 import React from 'react';
 import styled from 'styled-components';
-import { Checkbox } from 'antd';
+import { Checkbox, Radio } from 'antd';
 import { SortableElement } from 'react-sortable-hoc';
 
 const DraggableElement = SortableElement(({ children }: any) => children);
@@ -42,11 +42,16 @@ export const rowProps = ({ rowData, ...rest }: any) => ({
 
 export const SelectionCell: React.FC<any> = (props: any) => {
   const { rowData, rowIndex, column } = props;
-  const { rowKey, onChange, selectedRowKeys } = column;
+  const { rowKey, onChange, selectedRowKeys, multiSelect } = column;
+  //console.log('SELECTED ROQ KEYS', selectedRowKeys);
   const checked = rowData ? selectedRowKeys.includes(rowData[rowKey]) : false;
   const handleChange = (e: any) => onChange({ selected: e.target.checked, rowData, rowIndex });
 
-  return <Checkbox checked={checked} onChange={handleChange} />;
+  return multiSelect ? (
+    <Checkbox checked={checked} onChange={handleChange} />
+  ) : (
+    <Radio checked={checked} onChange={handleChange} />
+  );
 };
 
 export const Handle = styled.div`

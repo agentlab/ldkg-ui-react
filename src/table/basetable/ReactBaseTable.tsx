@@ -110,6 +110,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
     options = {},
     addDataToTarget,
     onSelect,
+    multiSelect,
     ...props
   }) => {
     const [data, setData] = useState<any[]>([]);
@@ -137,15 +138,24 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
     };
 
     const handleSelectChange = ({ selected, rowData, rowIndex }: any) => {
-      const newSelectedRowKeys = [...selectedRowKeys];
+      let newSelectedRowKeys = [...selectedRowKeys];
       const key = rowData[rowKey];
-
-      if (selected) {
-        if (!newSelectedRowKeys.includes(key)) newSelectedRowKeys.push(key);
+      const index = newSelectedRowKeys.indexOf(key);
+      if (multiSelect) {
+        if (selected) {
+          if (!newSelectedRowKeys.includes(key)) newSelectedRowKeys.push(key);
+        } else {
+          if (index > -1) {
+            newSelectedRowKeys.splice(index, 1);
+          }
+        }
       } else {
-        const index = newSelectedRowKeys.indexOf(key);
-        if (index > -1) {
-          newSelectedRowKeys.splice(index, 1);
+        if (selected) {
+          newSelectedRowKeys = [key];
+        } else {
+          if (index !== -1) {
+            newSelectedRowKeys = [];
+          }
         }
       }
       setSelectedRowKeys(newSelectedRowKeys);
@@ -171,6 +181,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       cellRenderer: SelectionCell,
       headerRenderer: SelectionHeaderCell,
       dataSize: dataSource.length,
+      multiSelect,
       selectedRowKeys: selectedRowKeys,
       onChange: handleSelectChange,
       onHeaderChange: handleSelectHeaderChange,
@@ -224,17 +235,10 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
         setPopupRecord(rowData);
         setPopupCoords({ x: event.clientX, y: event.clientY });
       },
-      onClick: ({ rowData, event }: any) => {
-        const idx = selection.indexOf(rowData);
-        let newSelection = [...selection];
-        if (idx !== -1) {
-          if (newSelection.length === 1) newSelection = [];
-          else newSelection.splice(idx, 1);
-        } else {
-          newSelection.push(rowData);
-        }
-        setSelection(newSelection);
-        onSelect(newSelection);
+      onClick: ({ rowData, event, ...props }: any) => {
+        const key = rowData[rowKey];
+        const idx = selectedRowKeys.indexOf(key);
+        handleSelectChange({ selected: idx === -1, rowData, rowIndex: null });
       },
     };
 
@@ -313,6 +317,13 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
         });
       }*/
     };
+
+    const rowClassName = ({ rowData, rowIndex }: any): string => {
+      const key = rowData[rowKey];
+
+      return selectedRowKeys.includes(key) && 'row-selected';
+    };
+
     const renderOverlay = () => {
       if (loadingMore)
         return (
@@ -359,6 +370,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
                 fixed
                 useIsScrolling
                 rowRenderer={rowRenderer}
+                rowClassName={rowClassName}
                 width={width}
                 height={height}
                 sortColumns={sortColumns}

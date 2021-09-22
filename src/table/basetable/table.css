@@ -27,3 +27,6 @@
 .handler:hover {
   color: #1890ff;
 }
+.row-selected {
+  background-color: #e6f7ff;
+}

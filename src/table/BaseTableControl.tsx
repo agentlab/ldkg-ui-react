@@ -99,6 +99,7 @@ export const BaseTableControl: React.FC<JsonSchemaTableProps> = React.memo(
         dataSource={dataSource}
         loadExpandedData={loadExpandedData}
         tableMenu={tableMenu}
+        multiSelect={uiSchemaOptions['multiSelect']}
         isMenu={uiSchemaOptions['columnMenu']}
         parsedSchema={parsedSchema}
         onSelect={onSelect}

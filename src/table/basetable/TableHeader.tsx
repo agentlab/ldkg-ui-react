@@ -14,11 +14,11 @@ import './TableHeader.css';
 
 export const SelectionHeaderCell: React.FC<any> = (props: any) => {
   const { column } = props;
-  const { dataSize, onHeaderChange, selectedRowKeys } = column;
+  const { dataSize, onHeaderChange, selectedRowKeys, multiSelect } = column;
   const checked = selectedRowKeys.length === dataSize && dataSize !== 0;
   const handleChange = (e: any) => onHeaderChange({ selected: e.target.checked });
 
-  return <Checkbox checked={checked} onChange={handleChange} />;
+  return multiSelect ? <Checkbox checked={checked} onChange={handleChange} /> : null;
 };
 
 export const HeaderCell = ({ column, onSort, container }: any) => {
