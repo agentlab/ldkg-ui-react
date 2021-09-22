@@ -14,6 +14,7 @@ import { Meta, Story } from '@storybook/react';
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
+import { cloneDeep } from 'lodash';
 
 import {
   RendererRegistryEntry,
@@ -52,7 +53,7 @@ const viewKinds = [
         '@id': 'rm:_83hd7f',
         '@type': 'aldkg:FormLayout',
         options: {
-          readOnly: true,
+          readOnly: false,
         },
         elements: [
           {
@@ -101,7 +102,7 @@ const viewDescrs = [
   },
 ];
 
-const additionalColls: CollState[] = [
+const createAdditionalColls = (viewKinds: any): CollState[] => [
   // ViewKinds Collection
   {
     constr: viewKindCollConstr,
@@ -137,7 +138,12 @@ const Template: Story<any> = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+  const rootStore = createUiModelFromState(
+    'reqs2',
+    client,
+    rootModelInitialState,
+    createAdditionalColls(args.viewKinds),
+  );
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
@@ -153,4 +159,14 @@ const Template: Story<any> = (args: any) => {
 };
 
 export const RemoteData = Template.bind({});
-RemoteData.args = {};
+RemoteData.args = {
+  viewKinds,
+};
+
+export const ReadOnlyForm = Template.bind({});
+
+const readOnlyFormViewKinds = cloneDeep(viewKinds);
+readOnlyFormViewKinds[0].elements[0].options.readOnly = true;
+ReadOnlyForm.args = {
+  viewKinds: readOnlyFormViewKinds,
+};
