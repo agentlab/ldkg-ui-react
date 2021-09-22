@@ -7,14 +7,14 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
+import { cloneDeep } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
-import { cloneDeep } from 'lodash';
+import { SparqlClientImpl, rootModelInitialState, CollState, JsObject } from '@agentlab/sparql-jsld-client';
 
 import {
   RendererRegistryEntry,
@@ -102,29 +102,44 @@ const viewDescrs = [
   },
 ];
 
-const createAdditionalColls = (viewKinds: any): CollState[] => [
-  // ViewKinds Collection
-  {
-    constr: viewKindCollConstr,
-    data: viewKinds,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): CollState[] => {
+  const additionalColls = [
+    // ViewKinds Collection
+    {
+      constr: viewKindCollConstr,
+      data: viewKinds,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      },
     },
-  },
-  // ViewDescrs Collection
-  {
-    constr: viewDescrCollConstr,
-    data: viewDescrs,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
-      // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+    // ViewDescrs Collection
+    {
+      constr: viewDescrCollConstr,
+      data: viewDescrs,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
     },
-  },
-];
+  ];
+  if (data) {
+    additionalColls.push({
+      constr: viewKinds[0].collsConstrs[0],
+      data,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
+    });
+  }
+  return additionalColls;
+};
 
 export default {
   title: 'Form/ArtifactForm',
@@ -142,7 +157,7 @@ const Template: Story<any> = (args: any) => {
     'reqs2',
     client,
     rootModelInitialState,
-    createAdditionalColls(args.viewKinds),
+    createAdditionalColls(args.viewKinds, args.data),
   );
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -164,9 +179,32 @@ RemoteData.args = {
 };
 
 export const ReadOnlyForm = Template.bind({});
-
 const readOnlyFormViewKinds = cloneDeep(viewKinds);
 readOnlyFormViewKinds[0].elements[0].options.readOnly = true;
 ReadOnlyForm.args = {
   viewKinds: readOnlyFormViewKinds,
+};
+
+export const ObjectWithNullProperty = Template.bind({});
+ObjectWithNullProperty.args = {
+  viewKinds,
+  data: [
+    {
+      creator: null,
+      assetFolder: null,
+      description: 'TestDescr',
+    },
+  ],
+};
+
+export const EmptyObject = Template.bind({});
+EmptyObject.args = {
+  viewKinds,
+  data: [{}],
+};
+
+export const NoObject = Template.bind({});
+NoObject.args = {
+  viewKinds,
+  data: [],
 };
