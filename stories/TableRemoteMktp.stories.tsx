@@ -31,17 +31,17 @@ import { tableRenderers } from '../src';
 
 const viewKinds = [
   {
-    '@id': 'rm:TableViewKind',
+    '@id': 'mktp:TableViewKind',
     '@type': 'aldkg:ViewKind',
     title: 'Карточки',
     description: 'Big table View with form',
     collsConstrs: [
       {
-        '@id': 'rm:ProductCard_Coll',
+        '@id': 'mktp:ProductCard_Coll',
         '@type': 'aldkg:CollConst',
         entConstrs: [
           {
-            '@id': 'rm:ProductCard_Coll_Shape0',
+            '@id': 'mktp:ProductCard_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
             /*conditions: {
@@ -57,7 +57,7 @@ const viewKinds = [
     ],
     elements: [
       {
-        '@id': 'rm:_934jHd67',
+        '@id': 'mktp:_934jHd67',
         '@type': 'aldkg:VerticalLayout',
         options: {
           height: 'all-empty-space',
@@ -66,7 +66,7 @@ const viewKinds = [
           {
             '@id': 'ProductCardTable',
             '@type': 'aldkg:Array',
-            resultsScope: 'rm:ProductCard_Coll',
+            resultsScope: 'mktp:ProductCard_Coll',
             options: {
               draggable: true,
               resizeableHeader: true,
@@ -257,7 +257,7 @@ const viewDescrs = [
   {
     '@id': 'rm:TableViewDescr',
     '@type': 'aldkg:ViewDescr',
-    viewKind: 'rm:TableViewKind',
+    viewKind: 'mktp:TableViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
