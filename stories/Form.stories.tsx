@@ -173,20 +173,20 @@ const Template: Story<any> = (args: any) => {
   );
 };
 
-export const RemoteData = Template.bind({});
-RemoteData.args = {
+export const EditableRemoteData = Template.bind({});
+EditableRemoteData.args = {
   viewKinds,
 };
 
-export const ReadOnlyForm = Template.bind({});
+export const ReadOnlyRemoteData = Template.bind({});
 const readOnlyFormViewKinds = cloneDeep(viewKinds);
 readOnlyFormViewKinds[0].elements[0].options.readOnly = true;
-ReadOnlyForm.args = {
+ReadOnlyRemoteData.args = {
   viewKinds: readOnlyFormViewKinds,
 };
 
-export const ObjectWithNullProperty = Template.bind({});
-ObjectWithNullProperty.args = {
+export const EditableObjectWithNullProperty = Template.bind({});
+EditableObjectWithNullProperty.args = {
   viewKinds,
   data: [
     {
@@ -197,14 +197,32 @@ ObjectWithNullProperty.args = {
   ],
 };
 
-export const EmptyObject = Template.bind({});
-EmptyObject.args = {
+export const ReadOnlyObjectWithNullProperty = Template.bind({});
+ReadOnlyObjectWithNullProperty.args = {
+  viewKinds: readOnlyFormViewKinds,
+  data: [
+    {
+      creator: null,
+      assetFolder: null,
+      description: 'TestDescr',
+    },
+  ],
+};
+
+export const EditableEmptyObject = Template.bind({});
+EditableEmptyObject.args = {
   viewKinds,
   data: [{}],
 };
 
-export const NoObject = Template.bind({});
-NoObject.args = {
-  viewKinds,
+export const ReadOnlyEmptyObject = Template.bind({});
+ReadOnlyEmptyObject.args = {
+  readOnlyFormViewKinds,
+  data: [{}],
+};
+
+export const ReadOnlyNoObject = Template.bind({});
+ReadOnlyNoObject.args = {
+  viewKinds, // form should be read-only even if viewKind is not read-only
   data: [],
 };
