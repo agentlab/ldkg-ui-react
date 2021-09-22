@@ -13,7 +13,7 @@ import { Meta, Story } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState, JsObject } from '@agentlab/sparql-jsld-client';
 
 import {
   RendererRegistryEntry,
@@ -98,29 +98,44 @@ const viewDescrs = [
   },
 ];
 
-const additionalColls: CollState[] = [
-  // ViewKinds Collection
-  {
-    constr: viewKindCollConstr,
-    data: viewKinds,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): CollState[] => {
+  const additionalColls = [
+    // ViewKinds Collection
+    {
+      constr: viewKindCollConstr,
+      data: viewKinds,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      },
     },
-  },
-  // ViewDescrs Collection
-  {
-    constr: viewDescrCollConstr,
-    data: viewDescrs,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
-      // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+    // ViewDescrs Collection
+    {
+      constr: viewDescrCollConstr,
+      data: viewDescrs,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
     },
-  },
-];
+  ];
+  if (data) {
+    additionalColls.push({
+      constr: viewKinds[0].collsConstrs[0],
+      data,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
+    });
+  }
+  return additionalColls;
+};
 
 export default {
   title: 'Form/ArtifactForm',
@@ -134,7 +149,12 @@ const Template: Story<any> = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+  const rootStore = createUiModelFromState(
+    'reqs2',
+    client,
+    rootModelInitialState,
+    createAdditionalColls(args.viewKinds || viewKinds, args.data),
+  );
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
@@ -151,3 +171,24 @@ const Template: Story<any> = (args: any) => {
 
 export const RemoteData = Template.bind({});
 RemoteData.args = {};
+
+export const ObjectWithNullProperty = Template.bind({});
+ObjectWithNullProperty.args = {
+  data: [
+    {
+      creator: null,
+      assetFolder: null,
+      description: 'TestDescr',
+    },
+  ],
+};
+
+export const EmptyObject = Template.bind({});
+EmptyObject.args = {
+  data: [{}],
+};
+
+export const NoObject = Template.bind({});
+NoObject.args = {
+  data: [{}],
+};
