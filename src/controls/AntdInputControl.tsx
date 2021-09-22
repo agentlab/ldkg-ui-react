@@ -38,6 +38,7 @@ export const AntdInputControl: React.FC<ControlComponent & WithInput> = (props) 
   const InnerComponent = input;
 
   const formatterId = uiOptions.formatter || 'base';
+  const readOnly = uiOptions.readOnly;
   const query = uiOptions.query;
   const specialProps: any = {};
   if (uiOptions.dataToFormatter) {
@@ -61,7 +62,7 @@ export const AntdInputControl: React.FC<ControlComponent & WithInput> = (props) 
       }
       validateStatus={validateObj.validateStatus}
       help={validateObj.help}>
-      {editing ? (
+      {editing && !readOnly ? (
         <InnerComponent
           {...props}
           onValidation={onValidation}

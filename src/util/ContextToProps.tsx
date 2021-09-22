@@ -59,7 +59,6 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     }>(successValidation);
 
     const { form } = props;
-    const controlProps = mapStateToControlProps(props);
 
     const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
       props,
@@ -69,12 +68,9 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     const coll = collIriOverride ? store.getColl(collIriOverride) : undefined;
     let collData = coll?.data;
     if (collData) collData = getSnapshot(collData);
+    const controlProps = mapStateToControlProps({ ...props, data: collData });
 
-    if (!collData || collData.length === 0) {
-      return <Spin />;
-    }
-
-    const data = collData[0];
+    const data = collData.length !== 0 ? collData[0] : {};
     const onValidate = (data: any) => {
       if (viewKindElement.options && Array.isArray(viewKindElement.options.validation)) {
         const validation = viewKindElement.options.validation;
@@ -221,16 +217,17 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>((props: any) => {
     const { data, onMeasureChange, height, uri, CKey, rowData, viewKindElement } = props;
     const path = viewKindElement.scope ? viewKindElement.scope.split('/').join('.') : null;
-    const controlProps = mapStateToControlProps(props);
     /*const { store } = useRootCtx();
     const onSave = (data: any) => {
       let newData: any = {};
       newData[CKey] = data;
       store.saveCellData(newData, uri, rowData['@id']);
     };*/
+    const cellData = path ? get(data, path) : data;
+    const controlProps = mapStateToControlProps({ ...props, data: cellData });
     return (
       <Component
-        data={path ? get(data, path) : data}
+        data={cellData}
         height={height}
         rowData={rowData}
         onMeasureChange={onMeasureChange}
@@ -537,28 +534,31 @@ export const withStoreToArrayProps = (Component: any): any =>
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, form }) => {
-    const id = viewKindElement['@id'] || '';
-    const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
-    const visible = checkProperty('visible', id, viewKindElement, viewKind);
-    const { store } = useContext(MstContext);
-    if (viewKindElement.options && viewKindElement.options.connections) {
-      viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
-    }
-    return (
-      <Component
-        viewKind={viewKind}
-        viewKindElement={viewKindElement}
-        viewDescr={viewDescr}
-        viewDescrElement={viewDescrElement}
-        id={id}
-        schema={schema}
-        enabled={enabledLayout}
-        visible={visible}
-        form={form}
-      />
-    );
-  });
+  observer<RenderProps>(
+    ({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, form, readOnly }) => {
+      const id = viewKindElement['@id'] || '';
+      const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
+      const visible = checkProperty('visible', id, viewKindElement, viewKind);
+      const { store } = useContext(MstContext);
+      if (viewKindElement.options && viewKindElement.options.connections) {
+        viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
+      }
+      return (
+        <Component
+          viewKind={viewKind}
+          viewKindElement={viewKindElement}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
+          id={id}
+          schema={schema}
+          enabled={enabledLayout}
+          visible={visible}
+          form={form}
+          readOnly={readOnly}
+        />
+      );
+    },
+  );
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
   observer<RenderProps>(({ viewKindElement, enabled }) => {
@@ -588,7 +588,7 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
     return <Component visible={visible} onOk={onSave} onCancel={onCancel} />;
   });
 
-const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, enabled }: ToControlProps) => {
+const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }: ToControlProps & { data: any }) => {
   const pathSegments = id.split('/');
   const path = pathSegments.join('.properties.');
   const visible = checkProperty('visible', path, viewKindElement, viewKind);
@@ -600,11 +600,12 @@ const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, enabled
   const labelDesc = createLabelDescriptionFrom(viewKindElement as any, schema);
   const label = labelDesc.show ? (labelDesc.text as string) : '';
   const key = pathSegments[1];
+  const enabled = data && (editable ?? true);
   return {
     description,
     label,
     visible,
-    enabled: editable === 'undefined' ? true : editable,
+    enabled,
     required,
     uiOptions,
     key,
