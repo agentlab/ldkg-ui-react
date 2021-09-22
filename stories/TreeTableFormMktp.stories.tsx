@@ -85,11 +85,11 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              CardInCatLink: 'https://www.wildberries.ru/catalog/igrushki/antistress',
             },
           },
         ],
-        limit: 1000,
+        limit: 100,
       },
       {
         '@id': 'mktp:Cards_Coll',
