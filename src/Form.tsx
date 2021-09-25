@@ -228,8 +228,8 @@ export const Form = observer<FormsInitStateProps>((props) => {
   }
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-      {viewKindObs.elements.map((el: IViewKindElement) => (
-        <FormsDispatch {...props} viewKind={viewKindObs} viewKindElement={el} viewDescr={viewDescrObs} />
+      {viewKindObs.elements.map((el: IViewKindElement, idx: number) => (
+        <FormsDispatch key={idx} {...props} viewKind={viewKindObs} viewKindElement={el} viewDescr={viewDescrObs} />
       ))}
     </ErrorBoundary>
   );
