@@ -12,7 +12,7 @@ import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 
 import { FormsDispatchProps, FormsDispatch } from '../Form';
-import { rankWith, uiTypeIs, RankedTester, optionIs } from '../testers';
+import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
 
 import { LayoutComponent } from './LayoutComponent';

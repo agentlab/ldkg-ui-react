@@ -53,7 +53,7 @@ export const TabControl: React.FC<TabControlProps> = ({ tabs = [], handleChange 
   );
 };
 
-export const TabControlRenderer = (props: any) => {
+export const TabControlRenderer = (props: any): JSX.Element => {
   return <TabControl {...props} />;
 };
 
