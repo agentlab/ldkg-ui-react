@@ -30,7 +30,14 @@ export const MenuItem: React.FC<any> = ({ title, onClick, colState }) => {
   );
 };
 
-export const ExtendedTableMenu = ({ dataSource, sortKey, leftColumns, rightColumns, onChange, ...restProps }: any) => {
+export const ExtendedTableMenu = ({
+  dataSource,
+  sortKey,
+  leftColumns,
+  rightColumns,
+  onChange,
+  ...restProps
+}: any): JSX.Element => {
   const [transferVisisble, setTransferVisisble] = useState(false);
   const [targetKeys, setTargetKeys] = useState<any>([]);
   const onSave = () => {

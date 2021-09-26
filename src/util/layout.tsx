@@ -21,7 +21,13 @@ export interface RenderLayoutProps extends FormsDispatchProps {
   Render: React.FC<FormsDispatchProps & Idx>;
 }
 
-export const renderLayoutElements = ({ viewKind, viewKindElement, viewDescr, enabled, Render }: RenderLayoutProps) => {
+export const renderLayoutElements = ({
+  viewKind,
+  viewKindElement,
+  viewDescr,
+  enabled,
+  Render,
+}: RenderLayoutProps): JSX.Element | JSX.Element[] => {
   const elements = viewKindElement.elements;
   //const id = viewKind['@id'];
   //const sort = id ? viewKind.properties && viewKind.properties[id] && viewKind.properties[id].order : undefined;

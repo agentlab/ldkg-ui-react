@@ -21,6 +21,7 @@ import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
 import { RankedTester } from './testers';
 import { IViewDescr, IViewDescrElement, IViewKind, IViewKindElement } from './models/uischema';
+import { JsObject } from '@agentlab/sparql-jsld-client';
 
 export interface ControlComponent {
   data: any;
@@ -83,7 +84,7 @@ export interface DispatchCellProps extends RenderProps {
   [key: string]: any;
 }
 
-export function mstJsonLdIds(o: any) {
+export function mstJsonLdIds(o: JsObject): JsObject | undefined {
   if (o) return { '@id': o['@id'], '@type': o['@type'] };
   else return undefined;
 }
@@ -180,7 +181,7 @@ export const FormsDispatch = observer<FormsDispatchProps>((props) => {
   }
 });
 
-export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps): JSX.Element {
   return (
     <div role='alert'>
       <p>Something went wrong:</p>

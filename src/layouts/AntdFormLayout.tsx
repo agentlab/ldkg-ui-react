@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { useContext } from 'react';
-//import { AutoResizer } from 'react-base-table';
 import { Row, Button, Form } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { AutoSizer } from 'react-virtualized';
@@ -27,19 +26,9 @@ const divStyle: React.CSSProperties = {
   padding: '5px',
 };
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
 export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onSave }) => {
   const { store } = useContext(MstContext);
-  const onValidate = Symbol.for('onValidate');
+  //const onValidate = Symbol.for('onValidate');
   const activeSave = false;
   //if (store.onSaveData[form] && store.onSaveData[form][onValidate]) {
   //  activeSave = store.onSaveData[form][onValidate].length !== 0;
