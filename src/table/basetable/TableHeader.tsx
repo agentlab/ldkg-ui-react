@@ -13,10 +13,10 @@ import { Checkbox } from 'antd';
 import './TableHeader.css';
 
 export const SelectionHeaderCell: React.FC<any> = (props: any) => {
-  const { column } = props;
-  const { dataSize, onHeaderChange, selectedRowKeys, multiSelect } = column;
-  const checked = selectedRowKeys.length === dataSize && dataSize !== 0;
-  const handleChange = (e: any) => onHeaderChange({ selected: e.target.checked });
+  const { column, container } = props;
+  const { dataSize, onHeaderChange, selection, multiSelect } = column;
+  const checked = selection.length === dataSize && dataSize !== 0;
+  const handleChange = (e: any) => onHeaderChange({ selected: e.target.checked, data: container._data });
 
   return multiSelect ? <Checkbox checked={checked} onChange={handleChange} /> : null;
 };

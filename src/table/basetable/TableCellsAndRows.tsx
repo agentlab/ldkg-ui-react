@@ -42,9 +42,8 @@ export const rowProps = ({ rowData, ...rest }: any) => ({
 
 export const SelectionCell: React.FC<any> = (props: any) => {
   const { rowData, rowIndex, column } = props;
-  const { rowKey, onChange, selectedRowKeys, multiSelect } = column;
-  //console.log('SELECTED ROQ KEYS', selectedRowKeys);
-  const checked = rowData ? selectedRowKeys.includes(rowData[rowKey]) : false;
+  const { onChange, selection, multiSelect } = column;
+  const checked = rowData ? selection.includes(rowData) : false;
   const handleChange = (e: any) => onChange({ selected: e.target.checked, rowData, rowIndex });
 
   return multiSelect ? (
