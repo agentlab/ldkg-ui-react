@@ -14,11 +14,13 @@ import { withStoreToDataControlProps, treeify, strcmp } from '../util/ContextToP
 import { TableRenderer } from './TableRenderer';
 import { TreeRenderer } from './TreeRenderer';
 import { GridRenderer } from './GridRenderer';
+import { HorizontalScrollRenderer } from './HorizontalScroll';
 
 const renderType: any = {
   tree: TreeRenderer,
   table: TableRenderer,
   grid: GridRenderer,
+  horizontalScroll: HorizontalScrollRenderer,
 };
 
 export const AntdDataLayout: React.FC<any> = React.memo(
