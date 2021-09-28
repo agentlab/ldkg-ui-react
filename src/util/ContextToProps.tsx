@@ -68,9 +68,8 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     const coll = collIriOverride ? store.getColl(collIriOverride) : undefined;
     let collData = coll?.data;
     if (collData) collData = getSnapshot(collData);
-    const controlProps = mapStateToControlProps({ ...props, data: collData });
-
     const data = collData.length !== 0 ? collData[0] : {};
+    const controlProps = mapStateToControlProps({ ...props, data: data || {} });
     const onValidate = (data: any) => {
       if (viewKindElement.options && Array.isArray(viewKindElement.options.validation)) {
         const validation = viewKindElement.options.validation;
@@ -589,7 +588,7 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
   });
 
 const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }: ToControlProps & { data: any }) => {
-  const pathSegments = id.split('/');
+  const pathSegments = viewKindElement?.resultsScope?.split('/') || [];
   const path = pathSegments.join('.properties.');
   const visible = checkProperty('visible', path, viewKindElement, viewKind);
   const editable =
@@ -600,7 +599,7 @@ const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }:
   const labelDesc = createLabelDescriptionFrom(viewKindElement as any, schema);
   const label = labelDesc.show ? (labelDesc.text as string) : '';
   const key = pathSegments[1];
-  const enabled = data && (editable ?? true);
+  const enabled = data[key] && (editable ?? true);
   return {
     description,
     label,
