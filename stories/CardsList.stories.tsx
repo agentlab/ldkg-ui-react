@@ -305,7 +305,6 @@ export const Full: Story<{}> = () => {
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
   const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  console.log('rootStore', rootStore);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
