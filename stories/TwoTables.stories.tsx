@@ -205,6 +205,7 @@ const viewKinds = [
                 name: 'правую таблицу',
                 iri: 'mktp:ProductCards_in_Product_Coll',
               },
+              multiSelect: true,
               draggable: true,
               resizeableHeader: true,
               height: 'all-empty-space',

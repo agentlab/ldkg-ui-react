@@ -96,7 +96,7 @@ export const BaseTableMenu: React.FC<BaseTablrMenu> = ({
             ? t('table.menu.linkArtifacts')
             : t('table.menu.linkArtifacts', { count: selection.length })}
         </li>
-        {selection.length != 0 && target ? (
+        {selection.length !== 0 && target ? (
           <React.Fragment>
             <Divider style={{ margin: '2px' }} />
             <li onClick={() => addDataToTarget(selection)}>

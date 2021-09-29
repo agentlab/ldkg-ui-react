@@ -14,7 +14,7 @@ import { withStoreToControlProps } from '../util/ContextToProps';
 import { AntdSelect } from '../antd-controls/AntdSelect';
 import { AntdInputControl } from './AntdInputControl';
 
-export const AntdEnumControl = (props: any) => <AntdInputControl {...props} input={AntdSelect} />;
+export const AntdEnumControl = (props: any): JSX.Element => <AntdInputControl {...props} input={AntdSelect} />;
 
 export const antdEnumControlTester: RankedTester = rankWith(2, isEnumControl);
 export const AntdEnumControlWithStore = withStoreToControlProps(AntdEnumControl);

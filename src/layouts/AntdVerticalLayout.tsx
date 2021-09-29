@@ -26,6 +26,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   enabled,
   visible,
   form,
+  readOnly,
 }) => {
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
     const options = viewKindElement.options || {};
@@ -51,7 +52,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   return (
     <React.Fragment>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-        {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
+        {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render, readOnly })}
       </div>
     </React.Fragment>
   );
