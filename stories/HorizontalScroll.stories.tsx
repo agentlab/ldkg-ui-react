@@ -27,6 +27,7 @@ import {
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState, registerMstViewKindSchema } from '../src/models/MstViewDescr';
 import { MstVerticalLayout } from '../src/models/MstViewSchemas';
+import { variable } from '@rdfjs/data-model';
 
 const viewKinds = [
   {
@@ -46,6 +47,8 @@ const viewKinds = [
             },
           },
         ],
+        orderBy: [{ expression: variable('lastMonthSalesValue0'), descending: true }],
+        //limit: 20,
       },
     ],
     // child ui elements configs
@@ -300,7 +303,7 @@ export const Full: Story<{}> = () => {
     'https://rdf4j.agentlab.ru/rdf4j-server',
     'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
   );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+  const rootStore = createUiModelFromState('mktp-fed20', client, rootModelInitialState, additionalColls);
   console.log('rootStore', rootStore);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
