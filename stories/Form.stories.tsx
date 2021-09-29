@@ -217,7 +217,7 @@ EditableEmptyObject.args = {
 
 export const ReadOnlyEmptyObject = Template.bind({});
 ReadOnlyEmptyObject.args = {
-  readOnlyFormViewKinds,
+  viewKinds: readOnlyFormViewKinds,
   data: [{}],
 };
 
