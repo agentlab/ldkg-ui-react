@@ -151,7 +151,7 @@ const viewKinds = [
             'mktp:ProductCardsTable': '26%',
             'mktp:ProductTree': '17%',
           },
-          height: 'all-empty-space',
+          //height: 'all-empty-space',
           //width: 'all-empty-space',
         },
         // child ui elements configs

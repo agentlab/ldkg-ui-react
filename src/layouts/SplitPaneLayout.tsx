@@ -56,7 +56,7 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   };
   return (
     <React.Fragment>
-      <div style={{ position: 'relative', ...options.style }}>
+      <div style={{ position: 'relative', height: '100%', ...options.style }}>
         <SplitPane split='vertical' minSize={300}>
           {renderSplitElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
         </SplitPane>
