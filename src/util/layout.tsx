@@ -19,6 +19,7 @@ export declare type Idx = {
 export interface RenderLayoutProps extends FormsDispatchProps {
   viewKindElement: IViewKindElement;
   Render: React.FC<FormsDispatchProps & Idx>;
+  readOnly?: boolean;
 }
 
 export const renderLayoutElements = ({
@@ -27,12 +28,16 @@ export const renderLayoutElements = ({
   viewDescr,
   enabled,
   Render,
+  readOnly,
 }: RenderLayoutProps): JSX.Element | JSX.Element[] => {
   const elements = viewKindElement.elements;
   //const id = viewKind['@id'];
   //const sort = id ? viewKind.properties && viewKind.properties[id] && viewKind.properties[id].order : undefined;
   if (!elements || elements.length === 0) return <></>;
-  return elements.map((el: IViewKindElement, idx: number) => (
-    <Render key={idx} idx={idx} viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
-  ));
+  return elements.map((el: IViewKindElement, idx: number) => {
+    el = { ...el, options: { ...el.options, readOnly } };
+    return (
+      <Render key={idx} idx={idx} viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
+    );
+  });
 };

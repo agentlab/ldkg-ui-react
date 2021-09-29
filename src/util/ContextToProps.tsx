@@ -534,28 +534,31 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, form }) => {
-    const id = viewKindElement['@id'] || '';
-    const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
-    const visible = checkProperty('visible', id, viewKindElement, viewKind);
-    const { store } = useContext(MstContext);
-    if (viewKindElement.options && viewKindElement.options.connections) {
-      viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
-    }
-    return (
-      <Component
-        viewKind={viewKind}
-        viewKindElement={viewKindElement}
-        viewDescr={viewDescr}
-        viewDescrElement={viewDescrElement}
-        id={id}
-        schema={schema}
-        enabled={enabledLayout}
-        visible={visible}
-        form={form}
-      />
-    );
-  });
+  observer<RenderProps>(
+    ({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, form, readOnly }) => {
+      const id = viewKindElement['@id'] || '';
+      const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
+      const visible = checkProperty('visible', id, viewKindElement, viewKind);
+      const { store } = useContext(MstContext);
+      if (viewKindElement.options && viewKindElement.options.connections) {
+        viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
+      }
+      return (
+        <Component
+          viewKind={viewKind}
+          viewKindElement={viewKindElement}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
+          id={id}
+          schema={schema}
+          enabled={enabledLayout}
+          visible={visible}
+          form={form}
+          readOnly={readOnly}
+        />
+      );
+    },
+  );
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
   observer<RenderProps>(({ viewKindElement, enabled }) => {

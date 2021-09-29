@@ -70,6 +70,7 @@ export interface RenderProps extends FormsDispatchProps {
 
   id: string;
   schema: JsonSchema7;
+  readOnly?: boolean;
 }
 export interface RenderCellProps extends RenderProps {
   data: any;
