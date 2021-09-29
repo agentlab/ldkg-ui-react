@@ -137,7 +137,7 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
     );
   });
 
-export const withStoreToViewClassProps = (Component: any): any =>
+export const withStoreToViewClassProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewKindElement, viewDescr, viewDescrElement } = props;
     const { store } = useContext(MstContext);
@@ -156,7 +156,7 @@ export const withStoreToViewClassProps = (Component: any): any =>
     );
   });
 
-export const withStoreToViewProps = (Component: any): any =>
+export const withStoreToViewProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
@@ -196,12 +196,12 @@ export const withStoreToViewProps = (Component: any): any =>
     );
   });
 
-export const withStoreToModalProps = (Component: any): any =>
+export const withStoreToModalProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     return <Component {...props} />;
   });
 
-export const withStoreToButtonProps = (Component: any): any =>
+export const withStoreToButtonProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { schema, viewKindElement } = props;
     const { store } = useContext(MstContext);
@@ -240,7 +240,7 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
     );
   });
 
-export const withStoreToDataControlProps = (Component: any): any =>
+export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
@@ -305,7 +305,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
     );
   });
 
-export const withStoreToSelectControlProps = (Component: any): any =>
+export const withStoreToSelectControlProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewKindElement, viewDescr, viewDescrElement } = props;
     const { store } = useContext(MstContext);
@@ -342,7 +342,7 @@ export const withStoreToSelectControlProps = (Component: any): any =>
     );
   });
 
-export const withStoreToTabProps = (Component: any): any =>
+export const withStoreToTabProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { schema, viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
@@ -389,7 +389,7 @@ export const withStoreToTabProps = (Component: any): any =>
     );
   });
 
-export const withStoreToMenuProps = (Component: any): any =>
+export const withStoreToMenuProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { schema, viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
@@ -428,7 +428,7 @@ export const withStoreToMenuProps = (Component: any): any =>
     );
   });
 
-export const withStoreToCollapseProps = (Component: any): any =>
+export const withStoreToCollapseProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewKindElement, viewDescr, viewDescrElement } = props;
     const options = viewKindElement.options || {};
@@ -444,7 +444,7 @@ export const withStoreToCollapseProps = (Component: any): any =>
     );
   });
 
-export const withStoreToArrayProps = (Component: any): any =>
+export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewDescr, schema } = props;
     const { store } = useContext(MstContext);
@@ -715,7 +715,7 @@ export const withContextFormsSaveControlProps =
 
 //type FormsPropTypes = ControlProps | CombinatorProps | LayoutProps | CellProps | ArrayLayoutProps | StatePropsOfControlWithDetail | OwnPropsOfRenderer;
 
-export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/) => {
+export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/): boolean => {
   const prev = omit(prevProps, ['handleChange']);
   const next = omit(nextProps, ['handleChange']);
   return isEqual(prev, next);

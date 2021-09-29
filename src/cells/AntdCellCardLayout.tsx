@@ -17,7 +17,7 @@ import { Card } from 'antd';
 import { DispatchCell } from '../DispatchCell';
 import './cell.css';
 
-export const AntdCellCardLayout = (props: any) => {
+export const AntdCellCardLayout = (props: any): JSX.Element => {
   const { viewKind, viewKindElement, viewDescr, viewDescrElement, schema, data, id } = props;
   const createCardChilds = () =>
     viewKindElement.elements

@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 import * as allIcons from '@ant-design/icons/lib/icons';
-import AntdIcon, { createFromIconfontCN, getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
+import { createFromIconfontCN, getTwoToneColor, setTwoToneColor } from '@ant-design/icons';
 
 import { withThemeSuffix, removeTypeTheme, getThemeFromTypeName, alias } from './utils';
 import warning from './warning';

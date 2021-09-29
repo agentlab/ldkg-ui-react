@@ -35,8 +35,10 @@ export const AntdRadioGroupControl: React.FC<ControlComponent> = (props) => {
       </Col>
       <Col span={16}>
         <Radio.Group value={currentData} onChange={onChange}>
-          {(uiOptions as any[]).map((optionValue) => (
-            <Radio checked={data === optionValue}>{optionValue}</Radio>
+          {(uiOptions as any[]).map((optionValue, idx: number) => (
+            <Radio key={idx} checked={data === optionValue}>
+              {optionValue}
+            </Radio>
           ))}
         </Radio.Group>
       </Col>

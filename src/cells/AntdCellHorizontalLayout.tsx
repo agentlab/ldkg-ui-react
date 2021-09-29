@@ -69,6 +69,7 @@ export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
     <Row justify={justify} style={rowStyle} align={'middle'}>
       {(viewKindElement.elements || []).map((e: IViewKindElement, idx: number) => (
         <Render
+          key={idx}
           viewKind={viewKind}
           viewKindElement={e}
           viewDescr={viewDescr}

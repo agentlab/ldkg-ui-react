@@ -21,7 +21,7 @@ export const SelectionHeaderCell: React.FC<any> = (props: any) => {
   return multiSelect ? <Checkbox checked={checked} onChange={handleChange} /> : null;
 };
 
-export const HeaderCell = ({ column, onSort, container }: any) => {
+export const HeaderCell = ({ column, onSort, container }: any): JSX.Element => {
   const { sortColumns } = container.props;
   const sortDir: any = column.key in sortColumns ? sortColumns[column.key] : 'noSort';
   const onSortClick = () => {

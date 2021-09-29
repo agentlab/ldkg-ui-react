@@ -13,7 +13,7 @@ import { withStoreToArrayProps } from '../util/ContextToProps';
 
 import { BaseTableControl } from './BaseTableControl';
 
-export const BaseTableArrayControlRenderer = (props: any) => {
+export const BaseTableArrayControlRenderer = (props: any): JSX.Element => {
   return <BaseTableControl {...props} />;
 };
 

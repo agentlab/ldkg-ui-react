@@ -29,7 +29,7 @@ export const renderLayoutElements = ({
   enabled,
   Render,
   readOnly,
-}: RenderLayoutProps) => {
+}: RenderLayoutProps): JSX.Element | JSX.Element[] => {
   const elements = viewKindElement.elements;
   //const id = viewKind['@id'];
   //const sort = id ? viewKind.properties && viewKind.properties[id] && viewKind.properties[id].order : undefined;
