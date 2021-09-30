@@ -161,6 +161,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
         }
       }
       setSelection(newSelection);
+      onSelect(newSelection);
     };
 
     const handleSelectHeaderChange = ({ selected, data }: any) => {
@@ -171,6 +172,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
         newSelection = [];
       }
       setSelection(newSelection);
+      onSelect(newSelection);
     };
     const selectionColumn = {
       key: '__selection__',
