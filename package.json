@@ -76,7 +76,7 @@
     "react-split-pane": ">=2.0.3",
     "react-virtualized": ">=9.22.3",
     "styled-components": ">=5.3.1",
-    "tinymce": ">=5.5.1",
+    "tinymce": ">=5.9.2",
     "uri-js": ">=4.4.1",
     "uuid62": ">=1.0.1"
   },
@@ -112,7 +112,7 @@
     "redux": "^4.1.1",
     "remotedev": "^0.2.9",
     "styled-components": ">=5.3.1",
-    "tinymce": ">=5.5.1",
+    "tinymce": "5.9.2",
     "uri-js": ">=4.4.1"
   },
   "devDependencies": {
