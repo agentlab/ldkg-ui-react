@@ -27,6 +27,7 @@ import {
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState, registerMstViewKindSchema } from '../src/models/MstViewDescr';
 import { MstVerticalLayout } from '../src/models/MstViewSchemas';
+import { variable } from '@rdfjs/data-model';
 
 const viewKinds = [
   {
@@ -34,15 +35,20 @@ const viewKinds = [
     '@type': 'aldkg:ViewKind',
     collsConstrs: [
       {
-        '@id': 'mktp:ViewKind_Cards_Coll',
+        '@id': 'mktp:ProductCards_in_Product_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'mktp:ViewKind_Cards_Coll_Shape0',
+            '@id': 'mktp:ProductCards_in_Product_Coll_Ent0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
+            conditions: {
+              '@id': 'mktp:ProductCards_in_Product_Coll_Ent0_Cond',
+            },
           },
         ],
+        orderBy: [{ expression: variable('lastMonthSalesValue0'), descending: true }],
+        //limit: 20,
       },
     ],
     // child ui elements configs
@@ -54,17 +60,11 @@ const viewKinds = [
           {
             '@id': 'mktp:_24Hdr78',
             '@type': 'aldkg:DataControl',
-            resultsScope: 'mktp:ViewKind_Cards_Coll',
+            resultsScope: 'mktp:ProductCards_in_Product_Coll',
             options: {
-              renderType: 'grid',
-              grid: {
-                gutter: 16,
-                xs: 2,
-                sm: 2,
-                md: 3,
-                lg: 3,
-                xl: 4,
-                xxl: 7,
+              renderType: 'horizontalScroll',
+              style: {
+                width: '260px',
               },
               elementTemplate: [
                 {
@@ -177,10 +177,6 @@ const viewKinds = [
                       },
                     },
                     {
-                      '@id': 'mktp:_385hgf67',
-                      '@type': 'aldkg:G2',
-                    },
-                    {
                       '@id': 'mktp:_jfg789df',
                       '@type': 'aldkg:CellHorizontalLayout',
                       options: {
@@ -288,7 +284,7 @@ const additionalColls: CollState[] = [
 ];
 
 export default {
-  title: 'Complex Control/Cards List',
+  title: 'Complex Control/Cards Horizontal Scroller',
   component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },
@@ -303,8 +299,12 @@ export const Full: Story<{}> = () => {
   ];
   registerMstViewKindSchema(MstVerticalLayout);
 
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
+  const client = new SparqlClientImpl(
+    'https://rdf4j.agentlab.ru/rdf4j-server',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema20/namespaces',
+  );
+  const rootStore = createUiModelFromState('mktp-fed20', client, rootModelInitialState, additionalColls);
+  console.log('rootStore', rootStore);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);

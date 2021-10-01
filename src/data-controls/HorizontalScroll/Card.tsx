@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Card = ({ itemId, onClick, children, style }: any) => {
+export const Card = ({ itemId, onClick, children, style }: any): JSX.Element => {
   return (
     <div
       onClick={() => onClick()}

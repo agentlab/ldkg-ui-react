@@ -30,7 +30,7 @@ export const HorizontalScrollRenderer: React.FC<any> = (props) => {
 
   const handleItemClick = (itemId: string) => () => {
     if (dragging) {
-      return false;
+      return;
     }
     if (selected !== itemId) {
       setSelected(itemId);
