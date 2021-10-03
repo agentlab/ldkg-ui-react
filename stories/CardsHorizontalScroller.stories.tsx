@@ -63,7 +63,7 @@ const viewKinds = [
             resultsScope: 'mktp:ProductCards_in_Product_Coll',
             options: {
               renderType: 'horizontalScroll',
-              style: {
+              templateStyle: {
                 width: '260px',
               },
               elementTemplate: [
