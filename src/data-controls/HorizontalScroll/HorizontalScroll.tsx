@@ -59,9 +59,9 @@ export const HorizontalScrollRenderer: React.FC<any> = (props) => {
 
   const onUpdate = ({ isLastItemVisible }: scrollVisibilityApiType) => {
     if (isLastItemVisible) {
-      const newDataSource = dataSource.concat(getData());
+      //const newDataSource = dataSource.concat(getData());
       console.log('push new items');
-      setDataSource(newDataSource);
+      //setDataSource(newDataSource);
     }
   };
 
@@ -84,7 +84,7 @@ export const HorizontalScrollRenderer: React.FC<any> = (props) => {
             key={data['@id']}
             itemId={data['@id']}
             onClick={handleItemClick(data['@id'])}
-            style={viewKindElement.options.style}>
+            style={viewKindElement.options.templateStyle}>
             {createCell(data, idx)}
           </Card>
         ))}
