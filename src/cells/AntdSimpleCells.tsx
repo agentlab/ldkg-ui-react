@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Image, Rate } from 'antd';
 
 import {
@@ -46,10 +46,25 @@ export const AntdBooleanCellWithStore = withStoreToCellProps(AntdBooleanCell);
  */
 export const AntdButtonCell = (props: any): JSX.Element => {
   const options = props.uiOptions;
+  const [fontSize, setFontSize] = useState<number>();
+  const cellRef = useRef<any>(null);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      setFontSize(entries[0].contentRect.width * options.relativeFont);
+    });
+
+    if (options.relativeFont) {
+      const antRow = cellRef.current.parentNode.parentNode;
+      resizeObserver.observe(antRow);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
   return (
-    <Button size={'small'} style={options.style}>
+    <button ref={cellRef} style={{ fontSize, verticalAlign: 'middle', ...options.style }}>
       {options.label}
-    </Button>
+    </button>
   );
 };
 export const antdButtonCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:Button'));
@@ -80,7 +95,7 @@ export const AntdNumberCellWithStore = withStoreToCellProps(AntdNumberCell);
  */
 export const AntdImageCell = (props: any): JSX.Element => {
   const { data } = props;
-  return <Image style={{ height: '100%', width: '100%' }} src={data[0]} />;
+  return <Image width={'100%'} src={data[0]} />;
 };
 export const antdImageCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:ImageCell'));
 export const AntdImageCellWithStore = withStoreToCellProps(AntdImageCell);
