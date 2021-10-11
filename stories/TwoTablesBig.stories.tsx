@@ -62,6 +62,9 @@ const Template: Story = (args: any) => {
   );
 };
 
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
+
 const viewKinds = [
   {
     '@id': 'mktp:TwoTablesViewKind',
@@ -77,6 +80,7 @@ const viewKinds = [
             '@id': 'mktp:Categories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -90,8 +94,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              CardInCatLink: undefined, //'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -105,8 +110,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Product_Coll_Ent0_Cond',
-              CardInProdLink: 'mktp_d:Massager',
+              CardInProdLink: undefined, //'mktp_d:Massager',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -118,6 +124,7 @@ const viewKinds = [
             '@id': 'mktp:Products_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'mktp:ProductShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },

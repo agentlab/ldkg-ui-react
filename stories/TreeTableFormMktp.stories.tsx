@@ -73,6 +73,9 @@ const Template: Story = (args: any) => {
   );
 };
 
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
+
 const viewKinds = [
   {
     '@id': 'mktp:TreeTableFormMktpCategoriesViewKind',
@@ -88,6 +91,7 @@ const viewKinds = [
             '@id': 'mktp:HSCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -99,6 +103,7 @@ const viewKinds = [
             '@id': 'mktp:KPCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'kp:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -110,6 +115,7 @@ const viewKinds = [
             '@id': 'mktp:TBCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'tb:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -123,8 +129,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/igrushki/antistress',
+              CardInCatLink: undefined, //'https://www.wildberries.ru/catalog/igrushki/antistress',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
         limit: 100,
@@ -141,6 +148,7 @@ const viewKinds = [
               '@id': 'mktp:Cards_Coll_Ent0_con',
               '@_id': undefined,
             },
+            service: mktpSchemaRepoIri,
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
