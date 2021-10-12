@@ -23,12 +23,13 @@ import {
   Form,
   MstContextProvider,
   RendererRegistryEntry,
+  tableRenderers,
 } from '../src';
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 export default {
-  title: 'Form/Form with Columns',
+  title: 'Several Controls/FormColumns and Table',
   component: Form,
   argTypes: {
     backgroundColor: { control: 'color' },
@@ -40,6 +41,7 @@ export const Empty: Story<{}> = () => {
     ...antdControlRenderers,
     ...antdLayoutRenderers,
     ...antdDataControlRenderers,
+    ...tableRenderers,
   ];
 
   const client = new SparqlClientImpl(
@@ -188,11 +190,6 @@ const viewKinds = [
                               width: 'all-empty-space',
                             },
                             elements: [
-                              /*{
-                        '@id': 'mktp:_92KdFj6',
-                        '@type': 'aldkg:Control',
-                        resultsScope: 'rm:Cards_Coll/identifier',
-                      },*/
                               {
                                 '@id': 'mktp:_Kjd7F7s8',
                                 '@type': 'aldkg:Control',
@@ -273,11 +270,6 @@ const viewKinds = [
                                 resultsScope: 'rm:Cards_Coll/lastMonthSalesValue',
                               },
                               {
-                                '@id': 'mktp:_8357KhfEm',
-                                '@type': 'aldkg:Control',
-                                resultsScope: 'rm:Cards_Coll/perMonthSalesAmount',
-                              },
-                              {
                                 '@id': 'mktp:_956jsnH',
                                 '@type': 'aldkg:Control',
                                 resultsScope: 'rm:Cards_Coll/perMonthSalesValue',
@@ -334,30 +326,6 @@ const viewKinds = [
                                 '@type': 'aldkg:Control',
                                 resultsScope: 'rm:Cards_Coll/stocksDiffReturns',
                               },
-                              /*{
-                      '@type': 'aldkg:Control',
-                      resultsScope: 'rm:Cards_Coll/rootId',
-                    },
-                    {
-                      '@type': 'aldkg:Control',
-                      resultsScope: 'rm:Cards_Coll/photosCount',
-                    },
-                    {
-                      '@type': 'aldkg:Control',
-                      resultsScope: 'rm:Cards_Coll/firstParsedAt',
-                    },
-                    {
-                      '@type': 'aldkg:Control',
-                      resultsScope: 'rm:Cards_Coll/lastMonthParsedAt',
-                    },
-                    {
-                      '@type': 'aldkg:Control',
-                      resultsScope: 'rm:Cards_Coll/parsedAt',
-                    },
-                    {
-                      '@type': 'aldkg:Control',
-                      resultsScope: 'rm:Cards_Coll/prevParsedAt',
-                    },*/
                             ],
                           },
                         ],
@@ -367,6 +335,201 @@ const viewKinds = [
                 ],
               },
             ],
+          },
+        ],
+      },
+      {
+        '@id': 'mktp:_8255hFsd',
+        '@type': 'aldkg:VerticalLayout',
+        options: {
+          style: {
+            height: '80%',
+          },
+          width: 'all-empty-space',
+        },
+        elements: [
+          {
+            '@id': 'mktp:CategoryCardsTable',
+            '@type': 'aldkg:Array',
+            resultsScope: 'rm:Cards_Coll',
+            options: {
+              draggable: true,
+              resizeableHeader: true,
+              height: 'all-empty-space',
+              style: { height: '100%' },
+              order: [
+                'imageUrl',
+                'name',
+                'price',
+                'saleValue',
+                'categoryPopularity',
+                'commentsCount',
+                'starsValue',
+                'questionsCount',
+                'lastMonthSalesAmount',
+                'lastMonthSalesValue',
+                'perMonthSalesAmount',
+                'perMonthSalesValue',
+                'prevMonthSalesAmount',
+                'prevMonthSalesValue',
+                'salesAmountDiff',
+                'totalSales',
+                'totalSalesDiff',
+                'stocks',
+                'stocksDiffOrders',
+                'stocksDiffReturns',
+                'country',
+                'brand',
+                'seller',
+                'identifier',
+                'rootId',
+                'photosCount',
+                'firstParsedAt',
+                'lastMonthParsedAt',
+                'parsedAt',
+                'prevParsedAt',
+              ],
+              imageUrl: {
+                width: 60,
+                formatter: 'image',
+                editable: false,
+              },
+              identifier: {
+                formatter: 'link',
+                //dataToFormatter: { link: 'identifier' },
+                sortable: true,
+                editable: false,
+              },
+              name: {
+                width: 340,
+                formatter: 'link',
+                dataToFormatter: { link: '@id' },
+                sortable: true,
+                editable: false,
+              },
+              country: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              brand: {
+                formatter: 'link',
+                sortable: true,
+                editable: false,
+              },
+              price: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              saleValue: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              seller: {
+                formatter: 'link',
+                sortable: true,
+                editable: false,
+              },
+              categoryPopularity: {
+                width: 100,
+                editable: false,
+              },
+              commentsCount: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              starsValue: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              questionsCount: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              lastMonthSalesAmount: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              lastMonthSalesValue: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              perMonthSalesAmount: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              perMonthSalesValue: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              prevMonthSalesAmount: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              prevMonthSalesValue: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              salesAmountDiff: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              totalSales: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              totalSalesDiff: {
+                width: 150,
+                sortable: true,
+                editable: false,
+              },
+              stocks: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              stocksDiffOrders: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              stocksDiffReturns: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              rootId: {
+                editable: false,
+              },
+              photosCount: {
+                editable: false,
+              },
+              firstParsedAt: {
+                editable: false,
+              },
+              lastMonthParsedAt: {
+                editable: false,
+              },
+              parsedAt: {
+                editable: false,
+              },
+              prevParsedAt: {
+                editable: false,
+              },
+            },
           },
         ],
       },
