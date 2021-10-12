@@ -83,7 +83,7 @@ export const AntdFormLayout: React.FC<any> = ({
     <AutoSizer>
       {({ width, height }: any) => (
         <div style={{ width, height, overflow: 'auto', position: 'relative', ...style }} onClick={() => onEdit()}>
-          <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>
+          {title && <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>}
           {readOnly ? null : <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />}
           <Form labelAlign={'left'}>
             <AntdVerticalLayoutWithStore

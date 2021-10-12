@@ -102,10 +102,13 @@ const viewKinds = [
         },
         elements: [
           {
-            '@id': 'rm:_83hd7f',
+            '@id': 'rm:_834hd7f',
             '@type': 'aldkg:FormLayout',
             options: {
-              readOnly: false,
+              style: {
+                height: '100%',
+              },
+              readOnly: true,
             },
             elements: [
               {

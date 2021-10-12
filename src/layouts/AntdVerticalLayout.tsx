@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 import { Row, Col } from 'antd';
-
+import { getSnapshot } from 'mobx-state-tree';
 import { FormsDispatchProps, FormsDispatch } from '../Form';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
@@ -30,7 +30,8 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
 }) => {
   const style = viewKindElement.options?.style;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
-    const options = viewKindElement.options || {};
+    const height = viewKindElement.options?.style?.height;
+    console.log('OPT', viewKindElement, height);
     const newViewKindElement = { ...viewKindElement };
     if (newViewKindElement.options) {
       newViewKindElement.options.style = {};
@@ -39,8 +40,8 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
       <Row
         style={{
           position: 'relative',
-          width: '100%',
-          height: '100%',
+          width: '100%', //
+          height,
           //flex: viewKindElement.options && viewKindElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
         }}>
         <Col span={24} style={{ position: 'relative' }}>
