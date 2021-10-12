@@ -28,10 +28,10 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   form,
   readOnly,
 }) => {
+  const style = viewKindElement.options?.style;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
     const options = viewKindElement.options || {};
     const newViewKindElement = { ...viewKindElement };
-    const style = viewKindElement.options?.style;
     if (newViewKindElement.options) {
       newViewKindElement.options.style = {};
     }
@@ -41,7 +41,6 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
           position: 'relative',
           width: '100%',
           //flex: viewKindElement.options && viewKindElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
-          ...style,
         }}>
         <Col span={24}>
           <FormsDispatch
@@ -57,7 +56,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   };
   return (
     <React.Fragment>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', height: '100%', ...style }}>
         {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render, readOnly })}
       </div>
     </React.Fragment>

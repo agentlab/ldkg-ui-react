@@ -27,11 +27,14 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   visible,
 }) => {
   //const layout = viewKindElement as Layout;
+  const parentViewKindElement = viewKindElement;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled, form }) => {
     const options = viewKindElement.options || {};
     const style: any = options.style;
     const span =
-      options.contentSize || !viewKindElement.elements ? undefined : Math.ceil(24 / viewKindElement.elements.length);
+      options.contentSize || !parentViewKindElement.elements
+        ? undefined
+        : Math.ceil(24 / parentViewKindElement.elements.length);
     return (
       <Col key={idx} style={style} span={span}>
         <FormsDispatch
