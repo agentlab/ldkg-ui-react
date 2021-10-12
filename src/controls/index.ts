@@ -17,6 +17,7 @@ import { antdRadioGroupControlTester, AntdRadioGroupControlWithStore } from './A
 import { antdSliderControlTester, AntdSliderControlWithStore } from './AntdSliderControl';
 import { antdTextControlTester, AntdTextControlWithStore } from './AntdTextControl';
 import { tinyMCEControlTester, TinyMCEControlWithStore } from './TinyMCEControl';
+import { antdImageControlTester, AntdImageControlWithStore } from './AntdImageControl';
 
 export const antdControlRenderers: RendererRegistryEntry[] = [
   { tester: antdBooleanControlTester, renderer: AntdBooleanControlWithStore },
@@ -27,6 +28,10 @@ export const antdControlRenderers: RendererRegistryEntry[] = [
   {
     tester: antdRadioGroupControlTester,
     renderer: AntdRadioGroupControlWithStore,
+  },
+  {
+    tester: antdImageControlTester,
+    renderer: AntdImageControlWithStore,
   },
   { tester: antdSliderControlTester, renderer: AntdSliderControlWithStore },
   { tester: antdTextControlTester, renderer: AntdTextControlWithStore },
@@ -44,3 +49,4 @@ export * from './AntdRadioGroupControl';
 export * from './AntdSliderControl';
 export * from './AntdTextControl';
 export * from './TinyMCEControl';
+export * from './AntdImageControl';

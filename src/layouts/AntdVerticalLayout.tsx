@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 import { Row, Col } from 'antd';
-
+import { getSnapshot } from 'mobx-state-tree';
 import { FormsDispatchProps, FormsDispatch } from '../Form';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
@@ -28,10 +28,11 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   form,
   readOnly,
 }) => {
+  const style = viewKindElement.options?.style;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
-    const options = viewKindElement.options || {};
+    const height = viewKindElement.options?.style?.height;
+    console.log('OPT', viewKindElement, height);
     const newViewKindElement = { ...viewKindElement };
-    const style = viewKindElement.options?.style;
     if (newViewKindElement.options) {
       newViewKindElement.options.style = {};
     }
@@ -39,11 +40,11 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
       <Row
         style={{
           position: 'relative',
-          width: '100%',
+          width: '100%', //
+          height,
           //flex: viewKindElement.options && viewKindElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
-          ...style,
         }}>
-        <Col span={24}>
+        <Col span={24} style={{ position: 'relative' }}>
           <FormsDispatch
             viewKind={viewKind}
             viewKindElement={newViewKindElement}
@@ -57,7 +58,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   };
   return (
     <React.Fragment>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', height: '100%', ...style }}>
         {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render, readOnly })}
       </div>
     </React.Fragment>

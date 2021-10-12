@@ -599,7 +599,7 @@ const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }:
   const labelDesc = createLabelDescriptionFrom(viewKindElement as any, schema);
   const label = labelDesc.show ? (labelDesc.text as string) : '';
   const key = pathSegments[1];
-  const enabled = data[key] && (editable ?? true);
+  const enabled = data[key] !== undefined && data[key] !== null ? editable ?? true : false;
   return {
     description,
     label,
