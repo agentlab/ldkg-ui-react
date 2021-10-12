@@ -5,7 +5,7 @@ import { withStoreToControlProps } from '../util/ContextToProps';
 
 export const AntdImageControl = (props: any): JSX.Element => {
   const { uiOptions, data } = props;
-  return <Image width={'100%'} src={data || ''} fallback={uiOptions.fallback} />;
+  return <Image width={'100%'} src={Array.isArray(data) ? data[0] || '' : ''} fallback={uiOptions.fallback} />;
 };
 
 export const antdImageControlTester: RankedTester = rankWith(3, uiTypeIs('aldkg:Image'));

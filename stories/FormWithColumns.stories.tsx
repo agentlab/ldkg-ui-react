@@ -80,6 +80,10 @@ const viewKinds = [
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
             service: mktpSchemaRepoIri,
+            conditions: {
+              '@id': 'mktp:Cards_Coll_Ent0_con',
+              identifier: 'https://huntersales.ru/catalog/products/18279449',
+            },
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
