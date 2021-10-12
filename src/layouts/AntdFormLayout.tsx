@@ -78,11 +78,11 @@ export const AntdFormLayout: React.FC<any> = ({
   onEdit,
   editing,
 }) => {
-  const { readOnly } = viewKindElement.options;
+  const { readOnly, style } = viewKindElement.options;
   return (
     <AutoSizer>
       {({ width, height }: any) => (
-        <div style={{ width, height, overflow: 'auto', position: 'relative' }} onClick={() => onEdit()}>
+        <div style={{ width, height, overflow: 'auto', position: 'relative', ...style }} onClick={() => onEdit()}>
           <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>
           {readOnly ? null : <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />}
           <Form labelAlign={'left'}>

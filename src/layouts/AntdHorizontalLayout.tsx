@@ -30,12 +30,16 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   //const layout = viewKindElement as Layout;
   const parentViewKindElement = viewKindElement;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
+    const defaultSize = parentViewKindElement.options?.defaultSize;
     const options = viewKindElement.options || {};
     const numberOfColumns = Math.ceil(24 / (parentViewKindElement.elements?.length || 1));
     const style: any = options.style;
-    const span = options.contentSize || numberOfColumns;
+    const span =
+      defaultSize && defaultSize[viewKindElement['@id']]
+        ? defaultSize && defaultSize[viewKindElement['@id']]
+        : options.contentSize || numberOfColumns;
     return (
-      <Col key={idx} style={style} span={numberOfColumns}>
+      <Col key={idx} style={style} span={span}>
         <FormsDispatch
           viewKind={viewKind}
           viewKindElement={viewKindElement}
