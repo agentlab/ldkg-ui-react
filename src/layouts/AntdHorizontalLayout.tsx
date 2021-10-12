@@ -25,18 +25,17 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
   viewDescrElement,
   enabled,
   visible,
+  form,
 }) => {
   //const layout = viewKindElement as Layout;
   const parentViewKindElement = viewKindElement;
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled, form }) => {
+  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
     const options = viewKindElement.options || {};
+    const numberOfColumns = Math.ceil(24 / (parentViewKindElement.elements?.length || 1));
     const style: any = options.style;
-    const span =
-      options.contentSize || !parentViewKindElement.elements
-        ? undefined
-        : Math.ceil(24 / parentViewKindElement.elements.length);
+    const span = options.contentSize || numberOfColumns;
     return (
-      <Col key={idx} style={style} span={span}>
+      <Col key={idx} style={style} span={numberOfColumns}>
         <FormsDispatch
           viewKind={viewKind}
           viewKindElement={viewKindElement}
@@ -47,7 +46,7 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
       </Col>
     );
   };
-  const justify: any = viewKindElement.options?.justify || 'center';
+  const justify: any = viewKindElement.options?.justify || 'space-between';
   const align: any = viewKindElement.options?.align || 'middle';
   const rowStyle: any = { flexWrap: 'nowrap' };
   if (viewKindElement.options && viewKindElement.options.width === 'all-empty-space') rowStyle.width = '100%';

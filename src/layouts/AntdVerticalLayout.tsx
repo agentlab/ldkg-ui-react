@@ -42,7 +42,7 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
           width: '100%',
           //flex: viewKindElement.options && viewKindElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
         }}>
-        <Col span={24}>
+        <Col span={24} style={{ position: 'relative' }}>
           <FormsDispatch
             viewKind={viewKind}
             viewKindElement={newViewKindElement}
