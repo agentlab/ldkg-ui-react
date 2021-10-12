@@ -47,11 +47,12 @@ export const AntdHorizontalLayoutRenderer: React.FC<LayoutComponent> = ({
       </Col>
     );
   };
-  const justify: any = viewKindElement.options ? viewKindElement.options.justify : 'center';
+  const justify: any = viewKindElement.options?.justify || 'center';
+  const align: any = viewKindElement.options?.align || 'middle';
   const rowStyle: any = { flexWrap: 'nowrap' };
   if (viewKindElement.options && viewKindElement.options.width === 'all-empty-space') rowStyle.width = '100%';
   return (
-    <Row justify={justify} style={rowStyle} align={'middle'}>
+    <Row justify={justify} style={rowStyle} align={align}>
       {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
     </Row>
   );

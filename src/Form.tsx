@@ -22,6 +22,7 @@ import { UnknownRenderer } from './UnknownRenderer';
 import { RankedTester } from './testers';
 import { IViewDescr, IViewDescrElement, IViewKind, IViewKindElement } from './models/uischema';
 import { JsObject } from '@agentlab/sparql-jsld-client';
+import './Form.css';
 
 export interface ControlComponent {
   data: any;

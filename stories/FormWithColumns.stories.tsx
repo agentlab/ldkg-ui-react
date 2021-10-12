@@ -96,6 +96,7 @@ const viewKinds = [
         '@type': 'aldkg:HorizontalLayout',
         options: {
           justify: 'start', // start end center space-between space-around
+          align: 'flex-start',
           //contentSize: true,
           style: {
             //flexGrow: '5',
