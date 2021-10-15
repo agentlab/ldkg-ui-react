@@ -9,11 +9,9 @@
  ********************************************************************************/
 import { sortBy } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
-import SplitPane from 'react-split-pane';
 import { Tree, Input } from 'antd';
 
 import { SaveReqDialoglWithStore } from '../util/OnSaveDialog';
-import { FormsDispatch } from '../Form';
 import { NodeRenderer } from './NodeRenderer';
 import { TreeContextMenu } from './TreeContextMenu';
 

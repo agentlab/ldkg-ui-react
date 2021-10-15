@@ -7,6 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
+import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
 import { Story, Meta } from '@storybook/react';
@@ -35,6 +36,46 @@ import {
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState } from '../src/models/MstViewDescr';
 
+export default {
+  title: 'Several Controls/Tree-Table-Form',
+  component: Form,
+  argTypes: {
+    backgroundColor: { control: 'color' },
+  },
+} as Meta;
+
+const Template: Story = (args: any) => {
+  const antdRenderers: RendererRegistryEntry[] = [
+    ...antdControlRenderers,
+    ...antdLayoutRenderers,
+    ...antdDataControlRenderers,
+    ...tableRenderers,
+  ];
+
+  //const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
+  const client = new SparqlClientImpl(
+    'https://rdf4j.agentlab.ru/rdf4j-server',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+  );
+  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+          <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
+        </MstContextProvider>
+      </Provider>
+    </div>
+  );
+};
+
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
+
 const viewKinds = [
   {
     '@id': 'mktp:TreeTableFormMktpCategoriesViewKind',
@@ -50,6 +91,7 @@ const viewKinds = [
             '@id': 'mktp:HSCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -61,6 +103,7 @@ const viewKinds = [
             '@id': 'mktp:KPCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'kp:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -72,6 +115,7 @@ const viewKinds = [
             '@id': 'mktp:TBCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'tb:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -85,11 +129,12 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              CardInCatLink: undefined, //'https://www.wildberries.ru/catalog/igrushki/antistress',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
-        limit: 1000,
+        limit: 100,
       },
       {
         '@id': 'mktp:Cards_Coll',
@@ -103,6 +148,7 @@ const viewKinds = [
               '@id': 'mktp:Cards_Coll_Ent0_con',
               '@_id': undefined,
             },
+            service: mktpSchemaRepoIri,
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
@@ -118,13 +164,13 @@ const viewKinds = [
             width: '100%',
             height: '100%',
           },
+          height: 'all-empty-space',
+          //width: 'all-empty-space',
           defaultSize: {
             'mktp:MarketplacesTabs': '17%',
             'mktp:CategoryCardsTable': '43%',
             'mktp:CategoryCardForm': '43%',
           },
-          height: 'all-empty-space',
-          //width: 'all-empty-space',
         },
         elements: [
           {
@@ -426,39 +472,18 @@ const additionalColls: CollState[] = [
   },
 ];
 
-export default {
-  title: 'Several Controls/Tree-Table-Form',
-  component: Form,
-  argTypes: {
-    backgroundColor: { control: 'color' },
-  },
-} as Meta;
+export const MktpCategories100Percent = Template.bind({});
+MktpCategories100Percent.args = {
+  additionalColls,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
 
-export const MktpCategories: Story<{}> = () => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-    ...tableRenderers,
-  ];
-
-  //const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  const client = new SparqlClientImpl(
-    'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
+export const MktpCategories50Percent = Template.bind({});
+const additionalColls50 = cloneDeep(additionalColls);
+additionalColls50[0].data[0].elements[0].options.style.height = '50%';
+MktpCategories50Percent.args = {
+  additionalColls: additionalColls50,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
 };

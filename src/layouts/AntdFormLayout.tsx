@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { useContext } from 'react';
-//import { AutoResizer } from 'react-base-table';
 import { Row, Button, Form } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { AutoSizer } from 'react-virtualized';
@@ -27,19 +26,9 @@ const divStyle: React.CSSProperties = {
   padding: '5px',
 };
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
 export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onSave }) => {
   const { store } = useContext(MstContext);
-  const onValidate = Symbol.for('onValidate');
+  //const onValidate = Symbol.for('onValidate');
   const activeSave = false;
   //if (store.onSaveData[form] && store.onSaveData[form][onValidate]) {
   //  activeSave = store.onSaveData[form][onValidate].length !== 0;
@@ -89,12 +78,15 @@ export const AntdFormLayout: React.FC<any> = ({
   onEdit,
   editing,
 }) => {
+  const { readOnly, style } = viewKindElement.options;
   return (
     <AutoSizer>
       {({ width, height }: any) => (
-        <div style={{ width, height, overflow: 'auto' }} onClick={() => onEdit()}>
-          <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>
-          <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />
+        <div
+          style={{ width, height, overflow: 'auto', position: 'relative', ...style }}
+          onClick={() => !readOnly && onEdit()}>
+          {title && <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>}
+          {readOnly ? null : <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />}
           <Form labelAlign={'left'}>
             <AntdVerticalLayoutWithStore
               id={`${id}Layout`}
@@ -105,6 +97,7 @@ export const AntdFormLayout: React.FC<any> = ({
               schema={{}}
               enabled={enabled}
               form={id}
+              readOnly={readOnly}
             />
           </Form>
         </div>

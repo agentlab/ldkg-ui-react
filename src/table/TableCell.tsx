@@ -29,7 +29,7 @@ import './JsonAntdTable.css';
 
 const type = 'DragableBodyRow';
 
-export const DragableRow = ({ index, moveRow, className, style, ...restProps }: any) => {
+export const DragableRow = ({ index, moveRow, className, style, ...restProps }: any): JSX.Element => {
   const ref = React.useRef<HTMLTableRowElement>();
   const [{ isOver, dropClassName }, drop] = useDrop({
     accept: type,

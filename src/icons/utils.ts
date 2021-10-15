@@ -38,7 +38,7 @@ export function getThemeFromTypeName(type: string): ThemeType | null {
   return result;
 }
 
-export function removeTypeTheme(type: string) {
+export function removeTypeTheme(type: string): string {
   return type.replace(fillTester, '').replace(outlineTester, '').replace(twoToneTester, '');
 }
 
@@ -48,7 +48,7 @@ const themeMap: { [key in ThemeType]: string } = {
   twoTone: 'twoTone',
 };
 
-export function withThemeSuffix(type: string, theme: ThemeType) {
+export function withThemeSuffix(type: string, theme: ThemeType): string {
   const result = upperFirst(camelCase(type));
   const realTheme = upperFirst(themeMap[theme]);
 
@@ -60,7 +60,7 @@ export function withThemeSuffix(type: string, theme: ThemeType) {
 }
 
 // For alias or compatibility
-export function alias(type: string) {
+export function alias(type: string): string {
   let newType = type;
   switch (type) {
     case 'cross':

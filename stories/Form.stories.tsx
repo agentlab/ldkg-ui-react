@@ -7,13 +7,14 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
+import { cloneDeep } from 'lodash';
 import moment from 'moment';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
+import { SparqlClientImpl, rootModelInitialState, CollState, JsObject } from '@agentlab/sparql-jsld-client';
 
 import {
   RendererRegistryEntry,
@@ -51,6 +52,9 @@ const viewKinds = [
       {
         '@id': 'rm:_83hd7f',
         '@type': 'aldkg:FormLayout',
+        options: {
+          readOnly: false,
+        },
         elements: [
           {
             '@id': 'rm:_17Gj78',
@@ -98,29 +102,44 @@ const viewDescrs = [
   },
 ];
 
-const additionalColls: CollState[] = [
-  // ViewKinds Collection
-  {
-    constr: viewKindCollConstr,
-    data: viewKinds,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): CollState[] => {
+  const additionalColls = [
+    // ViewKinds Collection
+    {
+      constr: viewKindCollConstr,
+      data: viewKinds,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
+      },
     },
-  },
-  // ViewDescrs Collection
-  {
-    constr: viewDescrCollConstr,
-    data: viewDescrs,
-    opt: {
-      updPeriod: undefined,
-      lastSynced: moment.now(),
-      //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
-      // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+    // ViewDescrs Collection
+    {
+      constr: viewDescrCollConstr,
+      data: viewDescrs,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
     },
-  },
-];
+  ];
+  if (data) {
+    additionalColls.push({
+      constr: viewKinds[0].collsConstrs[0],
+      data,
+      opt: {
+        updPeriod: undefined,
+        lastSynced: moment.now(),
+        //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
+        // for viewDescrs.collConstrs (it loads lazily -- after the first access)
+      },
+    });
+  }
+  return additionalColls;
+};
 
 export default {
   title: 'Form/ArtifactForm',
@@ -134,7 +153,12 @@ const Template: Story<any> = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
   const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+  const rootStore = createUiModelFromState(
+    'reqs2',
+    client,
+    rootModelInitialState,
+    createAdditionalColls(args.viewKinds, args.data),
+  );
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
@@ -149,5 +173,56 @@ const Template: Story<any> = (args: any) => {
   );
 };
 
-export const RemoteData = Template.bind({});
-RemoteData.args = {};
+export const EditableRemoteData = Template.bind({});
+EditableRemoteData.args = {
+  viewKinds,
+};
+
+export const ReadOnlyRemoteData = Template.bind({});
+const readOnlyFormViewKinds = cloneDeep(viewKinds);
+readOnlyFormViewKinds[0].elements[0].options.readOnly = true;
+ReadOnlyRemoteData.args = {
+  viewKinds: readOnlyFormViewKinds,
+};
+
+export const EditableObjectWithNullProperty = Template.bind({});
+EditableObjectWithNullProperty.args = {
+  viewKinds,
+  data: [
+    {
+      creator: null,
+      assetFolder: null,
+      description: 'TestDescr',
+    },
+  ],
+};
+
+export const ReadOnlyObjectWithNullProperty = Template.bind({});
+ReadOnlyObjectWithNullProperty.args = {
+  viewKinds: readOnlyFormViewKinds,
+  data: [
+    {
+      creator: null,
+      assetFolder: null,
+      description: 'TestDescr',
+    },
+  ],
+};
+
+export const EditableEmptyObject = Template.bind({});
+EditableEmptyObject.args = {
+  viewKinds,
+  data: [{}],
+};
+
+export const ReadOnlyEmptyObject = Template.bind({});
+ReadOnlyEmptyObject.args = {
+  viewKinds: readOnlyFormViewKinds,
+  data: [{}],
+};
+
+export const ReadOnlyNoObject = Template.bind({});
+ReadOnlyNoObject.args = {
+  viewKinds, // form should be read-only even if viewKind is not read-only
+  data: [],
+};

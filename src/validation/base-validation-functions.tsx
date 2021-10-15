@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-export const regExpValidation = (data: any, propsToValidator: any) => {
+export const regExpValidation = (data: any, propsToValidator: any): boolean => {
   const re = new RegExp(propsToValidator.regExp);
   return re.test(data.toString());
 };

@@ -12,7 +12,7 @@ import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
 
 import { FormsDispatchProps, FormsDispatch } from '../Form';
-import { rankWith, uiTypeIs, RankedTester, optionIs } from '../testers';
+import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
 
 import { LayoutComponent } from './LayoutComponent';
@@ -28,9 +28,7 @@ const renderSplitElements = ({ viewKind, viewKindElement, viewDescr, enabled, Re
       const style = el.options && el.options.style;
       return (
         <Pane key={idx} style={style} initialSize={defaultSize[id]}>
-          <div>
-            <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
-          </div>
+          <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
         </Pane>
       );
     })
@@ -58,7 +56,7 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   };
   return (
     <React.Fragment>
-      <div style={{ position: 'relative', ...options.style }}>
+      <div style={{ position: 'relative', height: '100%', ...options.style }}>
         <SplitPane split='vertical' minSize={300}>
           {renderSplitElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
         </SplitPane>

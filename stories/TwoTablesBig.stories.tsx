@@ -14,7 +14,7 @@ import { Meta, Story } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { rootModelInitialState, CollState, SparqlClientImpl, sendGet } from '@agentlab/sparql-jsld-client';
+import { rootModelInitialState, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -29,6 +29,41 @@ import {
   viewDescrCollConstr,
   viewKindCollConstr,
 } from '../src';
+
+export default {
+  title: 'Several Controls/TwoTablesBig',
+  component: Form,
+} as Meta;
+
+const Template: Story = (args: any) => {
+  const antdRenderers: RendererRegistryEntry[] = [
+    ...antdControlRenderers,
+    ...antdLayoutRenderers,
+    ...antdDataControlRenderers,
+    ...tableRenderers,
+  ];
+
+  const client = new SparqlClientImpl(
+    'https://rdf4j.agentlab.ru/rdf4j-server',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+  );
+  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </MstContextProvider>
+      </Provider>
+    </div>
+  );
+};
+
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
 
 const viewKinds = [
   {
@@ -45,6 +80,7 @@ const viewKinds = [
             '@id': 'mktp:Categories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -58,8 +94,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              CardInCatLink: undefined, //'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -73,8 +110,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Product_Coll_Ent0_Cond',
-              CardInProdLink: 'mktp_d:Massager',
+              CardInProdLink: undefined, //'mktp_d:Massager',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -86,6 +124,7 @@ const viewKinds = [
             '@id': 'mktp:Products_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'mktp:ProductShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -106,14 +145,14 @@ const viewKinds = [
                 width: '100%',
                 height: '100%',
               },
+              height: 'all-empty-space',
+              width: 'all-empty-space',
               defaultSize: {
                 'mktp:MarketplacesTabs': '17%',
                 'mktp:CategoryCardsTable': '43%',
                 'mktp:ProductCardsTable': '26%',
                 'mktp:ProductTree': '17%',
               },
-              height: 'all-empty-space',
-              //width: 'all-empty-space',
             },
             // child ui elements configs
             elements: [
@@ -583,38 +622,6 @@ const additionalColls: CollState[] = [
     },
   },
 ];
-
-export default {
-  title: 'Several Controls/TwoTablesBig',
-  component: Form,
-} as Meta;
-
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-    ...tableRenderers,
-  ];
-
-  const client = new SparqlClientImpl(
-    'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
 
 export const RemoteData = Template.bind({});
 RemoteData.args = {};
