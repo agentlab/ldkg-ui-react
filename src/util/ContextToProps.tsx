@@ -324,8 +324,8 @@ export const withStoreToSelectControlProps = (Component: React.FC<any>): React.F
       withConnections &&
         options.connections.forEach((e: any) => {
           const condition: any = {};
-          condition[e.by] = data['@id'];
-          //view2.editCondition(e.to, condition, scope, e.by, data);
+          condition[e.toProp] = data['@id'];
+          //view2.editCondition(e.toObj, condition, scope, e.toProp, data);
         });
     };
     return (
@@ -541,7 +541,7 @@ export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<
       const visible = checkProperty('visible', id, viewKindElement, viewKind);
       const { store } = useContext(MstContext);
       if (viewKindElement.options && viewKindElement.options.connections) {
-        viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
+        viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.toObj));
       }
       return (
         <Component
@@ -586,32 +586,6 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
       onOk();
     };
     return <Component visible={visible} onOk={onSave} onCancel={onCancel} />;
-  });
-
-export const withStoreToQueryProps = (Component: any): any =>
-  observer<any>(({ ...props }: any) => {
-    const { schema } = props;
-    const { store } = useContext(MstContext);
-    const [collIriOverride] = processViewKindOverride(props, store);
-    return (
-      <Component
-        schema={schema}
-        uri={collIriOverride}
-        tags={[]}
-        options={{}}
-        addFilter={(data: FilterType) => {
-          //return store.selectData('nav:folder', { '@id': 'folders:samples_module',  title: ''});
-          /*store.queryFilter(uri, data);*/
-        }}
-        removeFilter={(data: FilterType) => {
-          /*store.removeFilter(uri, data.property);*/
-        }}
-        fullTextSearchString={store.fullTextSearchString}
-        setFullTextSearchString={(newValue: string) => {
-          store.fullTextSearchString = newValue;
-        }}
-      />
-    );
   });
 
 const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }: ToControlProps & { data: any }) => {

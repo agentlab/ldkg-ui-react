@@ -21,7 +21,7 @@ const localeRus = {
   title: 'Создание фильтра',
   add: 'Добавить',
   addAndClose: 'Добавить и закрыть',
-  close: 'Отмены',
+  close: 'Отмена',
   artifactType: 'Тип требования',
   emptyFilter: 'Пусто',
   choiceAtribute: 'Выберите атрибут',

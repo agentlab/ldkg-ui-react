@@ -29,6 +29,32 @@ import {
 
 import { tableRenderers } from '../src';
 
+export default {
+  title: 'Several Controls/QueryTable',
+  component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
+} as Meta;
+
+const Template: Story = (args: any) => {
+  const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
+
+  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </MstContextProvider>
+      </Provider>
+    </div>
+  );
+};
+
 const viewKinds = [
   {
     '@id': 'rm:TableViewKind',
@@ -64,8 +90,8 @@ const viewKinds = [
         },
         elements: [
           {
-            '@id': 'SearchComponents',
-            '@type': 'Query',
+            '@id': 'mktp:QueryComponent',
+            '@type': 'aldkg:Query',
           },
           {
             '@id': 'ProductCardTable',
@@ -292,30 +318,6 @@ const additionalColls: CollState[] = [
     },
   },
 ];
-
-export default {
-  title: 'Complex control/Search component and Table',
-  component: Form,
-} as Meta;
-
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
-
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
 
 export const RemoteData = Template.bind({});
 RemoteData.args = {};
