@@ -36,11 +36,11 @@ const viewKinds = [
 
     collsConstrs: [
       {
-        '@id': 'rm:FormView_Artifacts_Coll',
+        '@id': 'rm:Artifacts_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:FormView_Artifacts_Coll_Ent0',
+            '@id': 'rm:Artifacts_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
           },
@@ -59,17 +59,17 @@ const viewKinds = [
           {
             '@id': 'rm:_17Gj78',
             '@type': 'aldkg:Control',
-            resultsScope: 'rm:FormView_Artifacts_Coll/creator',
+            resultsScope: 'rm:Artifacts_Coll/creator',
           },
           {
             '@id': 'rm:_297Hgf56',
             '@type': 'aldkg:Control',
-            resultsScope: 'rm:FormView_Artifacts_Coll/assetFolder',
+            resultsScope: 'rm:Artifacts_Coll/assetFolder',
           },
           {
             '@id': 'rm:_934jHd67',
             '@type': 'aldkg:Control',
-            resultsScope: 'rm:FormView_Artifacts_Coll/description',
+            resultsScope: 'rm:Artifacts_Coll/description',
             options: {
               validation: [
                 {
@@ -147,6 +147,8 @@ export default {
   argTypes: {
     backgroundColor: { control: 'color' },
   },
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const Template: Story<any> = (args: any) => {

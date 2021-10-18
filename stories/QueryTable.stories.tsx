@@ -30,7 +30,7 @@ import {
 import { tableRenderers } from '../src';
 
 export default {
-  title: 'Table/Remote Mktp',
+  title: 'Several Controls/QueryTable',
   component: Form,
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
@@ -39,11 +39,8 @@ export default {
 const Template: Story = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
 
-  const client = new SparqlClientImpl(
-    'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
@@ -58,25 +55,26 @@ const Template: Story = (args: any) => {
   );
 };
 
-const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
-const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
-
 const viewKinds = [
   {
-    '@id': 'mktp:TableViewKind',
+    '@id': 'rm:TableViewKind',
     '@type': 'aldkg:ViewKind',
     title: 'Карточки',
     description: 'Big table View with form',
     collsConstrs: [
       {
-        '@id': 'mktp:ProductCard_Coll',
+        '@id': 'rm:ProductCard_Coll',
         '@type': 'aldkg:CollConst',
         entConstrs: [
           {
-            '@id': 'mktp:ProductCard_Coll_Shape0',
+            '@id': 'rm:ProductCard_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
-            service: mktpSchemaRepoIri,
+            /*conditions: {
+               '@id': 'rm:CollectionView_Artifacts_Coll_Shape0_Condition',
+               '@type': 'rm:QueryCondition',
+               assetFolder: 'folders:samples_collection', //'folders:root',
+             },*/
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
@@ -85,22 +83,25 @@ const viewKinds = [
     ],
     elements: [
       {
-        '@id': 'mktp:_934jHd67',
+        '@id': 'rm:_934jHd67',
         '@type': 'aldkg:VerticalLayout',
         options: {
           height: 'all-empty-space',
         },
         elements: [
           {
+            '@id': 'mktp:QueryComponent',
+            '@type': 'aldkg:Query',
+          },
+          {
             '@id': 'ProductCardTable',
             '@type': 'aldkg:Array',
-            resultsScope: 'mktp:ProductCard_Coll',
+            resultsScope: 'rm:ProductCard_Coll',
             options: {
               draggable: true,
               resizeableHeader: true,
               height: 'all-empty-space',
               style: { height: '100%' },
-              multiSelect: true,
               order: [
                 'imageUrl',
                 'name',
@@ -285,7 +286,7 @@ const viewDescrs = [
   {
     '@id': 'rm:TableViewDescr',
     '@type': 'aldkg:ViewDescr',
-    viewKind: 'mktp:TableViewKind',
+    viewKind: 'rm:TableViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],

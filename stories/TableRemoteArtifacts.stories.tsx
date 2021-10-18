@@ -52,7 +52,7 @@ const viewKinds = [
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:Users_Shape0',
+            '@id': 'rm:Users_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'pporoles:UserShape',
           },
@@ -63,7 +63,7 @@ const viewKinds = [
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:ArtifactClasses_Coll_Shape0',
+            '@id': 'rm:ArtifactClasses_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactClassesShape',
           },
@@ -74,22 +74,22 @@ const viewKinds = [
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:ArtifactFormats_Coll_Shape0',
+            '@id': 'rm:ArtifactFormats_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'rmUserTypes:_YwcOsRmREemK5LEaKhoOowShape',
           },
         ],
       },
       {
-        '@id': 'rm:CollectionView_Artifacts_Coll',
+        '@id': 'rm:Artifacts_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:CollectionView_Artifacts_Coll_Shape0',
+            '@id': 'rm:Artifacts_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
             conditions: {
-              '@id': 'rm:CollectionView_Artifacts_Coll_Shape0_Condition',
+              '@id': 'rm:Artifacts_Coll_Cond',
               '@type': 'aldkg:Condition',
               assetFolder: 'folders:samples_collection', //'folders:root',
             },
@@ -110,7 +110,7 @@ const viewKinds = [
           {
             '@id': 'ArtifactTable',
             '@type': 'aldkg:Array',
-            resultsScope: 'rm:CollectionView_Artifacts_Coll',
+            resultsScope: 'rm:Artifacts_Coll',
             options: {
               draggable: true,
               resizeableHeader: true,
@@ -229,6 +229,8 @@ const additionalColls: CollState[] = [
 export default {
   title: 'Table/Remote Artifacts',
   component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const Template: Story = (args: any) => {
