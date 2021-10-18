@@ -68,10 +68,10 @@ export const AntdDataLayout: React.FC<any> = React.memo(
       />
     );
   },
-  (prev, next) => {
+  /*(prev, next) => {
     console.log('PREV', prev, 'NEXT', next, prev === next);
     return true;
-  },
+  },*/
 );
 
 export const antdDataControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:DataControl'));

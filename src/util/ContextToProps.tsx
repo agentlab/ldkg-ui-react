@@ -249,14 +249,12 @@ export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<
       store,
     );
     const coll = store.getColl(collIriOverride);
-    let data = coll?.data;
-    if (!data || data.length === 0) {
-      //if (store.data[scope] === undefined) {
-      //store.loadData(scope);
-      return <Spin />;
+    if (!coll) return <Spin />;
+
+    let data: any[] = [];
+    if (!coll.isLoading) {
+      data = cloneDeep(coll.dataJs);
     }
-    //const scope = viewKindElement.resultsScope;
-    data = cloneDeep(getSnapshot(data));
     const options = viewKindElement?.options || {};
     const withConnections = options.connections;
     const onSelect = (data: any) => {
@@ -338,53 +336,6 @@ export const withStoreToSelectControlProps = (Component: React.FC<any>): React.F
         options={viewKindElement.options}
         handleChange={onChange}
         {...props}
-      />
-    );
-  });
-
-export const withStoreToTabProps = (Component: React.FC<any>): React.FC<any> =>
-  observer<any>(({ ...props }: any) => {
-    const { schema, viewKind, viewDescr } = props;
-    const { store } = useContext(MstContext);
-    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
-    //  store.setSaveLogic(viewKindElement.resultsScope);
-    //}
-
-    const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
-      props,
-      store,
-    );
-    const options = viewKindElement.options || {};
-
-    const coll = store.getColl(collIriOverride);
-    let data = coll?.data;
-    if (!data) {
-      return <Spin />;
-    }
-    data = getSnapshot(data);
-    const withConnections = options.connections;
-    const onChange = (data: any) => {
-      store.setSelectedData(collIriOverride, data);
-      if (withConnections) {
-        store.editConn(withConnections, data['@id']);
-        //        options.connections.forEach((e: any) => {
-        //          const condition: any = {};
-        //          condition[e.by] = data['@id'];
-        //          store.editCondition(e.to, condition, scope, e.by, data);
-        //        });
-      }
-    };
-    return (
-      <Component
-        viewKind={viewKind}
-        viewKindElement={viewKindElement}
-        viewDescr={viewDescr}
-        viewDescrElement={viewDescrElement}
-        schema={schema}
-        uri={id}
-        tabs={data}
-        handleChange={onChange}
-        options={options}
       />
     );
   });

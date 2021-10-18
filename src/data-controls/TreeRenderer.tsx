@@ -46,6 +46,11 @@ export const TreeRenderer: React.FC<any> = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [beforeSearchExpand, setBeforeSearchExpand] = useState([]);
+
+  useEffect(() => {
+    setTreeData(child);
+  }, [child]);
+
   useEffect(() => {
     onSelect(selected);
   }, [selected, onSelect]);
