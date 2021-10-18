@@ -4,8 +4,9 @@ import { FilterType, Relation, ValueOfFilter } from './type';
 import { JSONSchema6DefinitionForRdfProperty, JsObject } from '@agentlab/sparql-jsld-client';
 import moment from 'moment';
 import { JSONSchema6, JSONSchema6Definition } from 'json-schema';
+
 import { BodyOfListFilter } from './filtersBody/BodyOfListFilter';
-import { BodyOfIntegerFilter } from './filtersBody/BodyOfIntegerFilter';
+import { BodyOfIntegerFilter, equalTypesOfRelations } from './filtersBody/BodyOfIntegerFilter';
 import { BodyOfDateTimeFilter } from './filtersBody/BodyOfDateTimeFilter';
 import { BodyOfStringFilter } from './filtersBody/BodyOfStringFilter';
 
@@ -63,18 +64,6 @@ export const genFormattedTypeOfFilter = (
   }
 
   return formattedType;
-};
-
-export const equalTypesOfRelations = (typeA?: string, typeB?: string): boolean => {
-  const keyWord = 'hidden';
-
-  let indexOfKeyword = typeA && typeA.indexOf(keyWord) !== -1 ? typeA.indexOf(keyWord) + keyWord.length : 0;
-  const firstType = typeA && typeA.substring(indexOfKeyword);
-
-  indexOfKeyword = typeB && typeB.indexOf(keyWord) !== -1 ? typeB.indexOf(keyWord) + keyWord.length : 0;
-  const secondType = typeB && typeB.substring(indexOfKeyword);
-
-  return firstType === secondType;
 };
 
 export const getTypeOfRelation = (currentRelations: Relation[], nameOfSelectRelation: string): string | undefined => {

@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React, { createContext, PropsWithChildren } from 'react';
 import { CellRendererRegistryEntry, RendererRegistryEntry } from './renderers';
-import { registerMstViewKindSchema } from './models/MstViewDescr';
+import { registerMstViewDescrSchema, registerMstViewKindSchema } from './models/MstViewDescr';
 
 export interface MstContextProps {
   store: any;
@@ -34,8 +34,23 @@ export const MstContextProvider = ({
   cells?: CellRendererRegistryEntry[];
 }>): JSX.Element => {
   renderers.forEach((r) => {
-    if ((r as any).mstVkeType) {
-      registerMstViewKindSchema((r as any).mstVkeType);
+    const mstVkeType = (r as any).mstVkeType;
+    if (mstVkeType) {
+      registerMstViewKindSchema(mstVkeType, true);
+    }
+    const mstVdeType = (r as any).mstVdeType;
+    if (mstVdeType) {
+      registerMstViewDescrSchema(mstVdeType, true);
+    }
+  });
+  cells.forEach((с) => {
+    const mstVkeType = (с as any).mstVkeType;
+    if (mstVkeType) {
+      registerMstViewKindSchema(mstVkeType, true);
+    }
+    const mstVdeType = (с as any).mstVdeType;
+    if (mstVdeType) {
+      registerMstViewDescrSchema(mstVdeType, true);
     }
   });
   return <MstContext.Provider value={{ store, renderers, cells }}>{children}</MstContext.Provider>;

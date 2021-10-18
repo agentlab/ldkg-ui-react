@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';

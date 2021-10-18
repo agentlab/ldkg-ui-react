@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Input, Tooltip } from 'antd';
-import { equalTypesOfRelations } from '../Filter';
 import { ValueOfFilter } from '../type';
 
 const localeRus = {
@@ -14,6 +13,18 @@ interface BodyOfIntegerFilterProps {
   defaultValues: ValueOfFilter;
   type?: string;
 }
+
+export const equalTypesOfRelations = (typeA?: string, typeB?: string): boolean => {
+  const keyWord = 'hidden';
+
+  let indexOfKeyword = typeA && typeA.indexOf(keyWord) !== -1 ? typeA.indexOf(keyWord) + keyWord.length : 0;
+  const firstType = typeA && typeA.substring(indexOfKeyword);
+
+  indexOfKeyword = typeB && typeB.indexOf(keyWord) !== -1 ? typeB.indexOf(keyWord) + keyWord.length : 0;
+  const secondType = typeB && typeB.substring(indexOfKeyword);
+
+  return firstType === secondType;
+};
 
 export const BodyOfIntegerFilter: React.FC<BodyOfIntegerFilterProps> = ({ handleChange, defaultValues, type }) => {
   const relationForOneNumber = { title: localeRus.equal, predicate: 'equal', type: 'singleNumber' };
