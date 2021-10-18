@@ -257,7 +257,7 @@ export const createUiModelFromState = (
   repId: string,
   client: SparqlClient,
   initialState: any,
-  additionalColls: CollState[] | undefined = undefined,
+  additionalColls?: CollState[],
 ): any => {
   registerMstCollSchema(MstViewKind);
   registerMstCollSchema(MstViewDescr);

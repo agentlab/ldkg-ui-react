@@ -11,8 +11,9 @@ import { isEqual, maxBy } from 'lodash-es';
 import React, { useContext } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { CellRendererRegistryEntry } from './renderers';
 import { UnknownRenderer } from './UnknownRenderer';
-import { ErrorFallback, DispatchCellProps, FormsCell, RenderCellProps } from './Form';
+import { ErrorFallback, DispatchCellProps, RenderCellProps } from './Form';
 import { MstContext } from './MstContext';
 
 /**
@@ -47,7 +48,7 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
         </td>
       );
     } else {
-      const Render: React.FC<RenderCellProps> = (renderer as FormsCell).cell;
+      const Render: React.FC<RenderCellProps> = (renderer as CellRendererRegistryEntry).cell;
       return (
         <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
           <Render
