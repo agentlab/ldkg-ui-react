@@ -34,6 +34,8 @@ import { tableRenderers } from '../src';
 export default {
   title: 'Several Controls/TwoTables RemoteData',
   component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const Template: Story = (args: any) => {
@@ -169,7 +171,7 @@ const viewKinds = [
                   title: 'WildBerries',
                   treeNodeTitleKey: 'name',
                   treeNodeParentKey: 'SubcatInCatLink',
-                  connections: [{ to: 'mktp:ProductCards_in_Category_Coll_Ent0_con', by: 'CardInCatLink' }],
+                  connections: [{ toObj: 'mktp:ProductCards_in_Category_Coll_Ent0_con', toProp: 'CardInCatLink' }],
                 },
               },
               {
@@ -576,7 +578,7 @@ const viewKinds = [
               title: 'Продукты',
               treeNodeTitleKey: 'title',
               treeNodeParentKey: 'SubProdInProdLink',
-              connections: [{ to: 'mktp:ProductCards_in_Product_Coll_Ent0_Cond', by: 'CardInProdLink' }],
+              connections: [{ toObj: 'mktp:ProductCards_in_Product_Coll_Ent0_Cond', toProp: 'CardInProdLink' }],
             },
           },
         ],

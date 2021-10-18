@@ -10,7 +10,7 @@
 import { RendererRegistryEntry } from '../renderers';
 import { antdFormLayoutTester, AntdFormLayoutWithStore } from './AntdFormLayout';
 import { antdHorizontalLayoutTester, AntdHorizontalLayoutWithStore } from './AntdHorizontalLayout';
-import { antdVerticalLayoutTester, AntdVerticalLayoutWithStore } from './AntdVerticalLayout';
+import { antdVerticalLayoutTester, AntdVerticalLayoutWithStore, MstVkeVerticalLayout } from './AntdVerticalLayout';
 import { splitPaneLayoutTester, SplitPaneLayoutWithStore } from './SplitPaneLayout';
 import { antdTabsLayoutTester, AntdTabsLayoutWithStore } from './TabsLayout';
 
@@ -19,7 +19,7 @@ export const antdLayoutRenderers: RendererRegistryEntry[] = [
     tester: antdHorizontalLayoutTester,
     renderer: AntdHorizontalLayoutWithStore,
   },
-  { tester: antdVerticalLayoutTester, renderer: AntdVerticalLayoutWithStore },
+  { tester: antdVerticalLayoutTester, renderer: AntdVerticalLayoutWithStore, mstVkeType: MstVkeVerticalLayout },
   {
     tester: antdFormLayoutTester,
     renderer: AntdFormLayoutWithStore,

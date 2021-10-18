@@ -32,6 +32,8 @@ import { tableRenderers } from '../src';
 export default {
   title: 'Table/Remote Mktp',
   component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const Template: Story = (args: any) => {

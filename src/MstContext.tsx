@@ -33,5 +33,10 @@ export const MstContextProvider = ({
   renderers: RendererRegistryEntry[];
   cells?: CellRendererRegistryEntry[];
 }>): JSX.Element => {
+  renderers.forEach((r) => {
+    if ((r as any).mstVkeType) {
+      registerMstViewKindSchema((r as any).mstVkeType);
+    }
+  });
   return <MstContext.Provider value={{ store, renderers, cells }}>{children}</MstContext.Provider>;
 };

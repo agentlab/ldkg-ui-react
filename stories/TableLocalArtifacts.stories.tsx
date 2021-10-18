@@ -260,6 +260,8 @@ const fakeData = [
 export default {
   title: 'Table/LocalArtifacts',
   component: BaseTableControl,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const Template: Story = (args: any) => {

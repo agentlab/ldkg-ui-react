@@ -9,7 +9,9 @@
  ********************************************************************************/
 import React from 'react';
 import { Row, Col } from 'antd';
-import { getSnapshot } from 'mobx-state-tree';
+import { getSnapshot, types } from 'mobx-state-tree';
+
+import { MstViewKindElement } from '../models/MstViewDescr';
 import { FormsDispatchProps, FormsDispatch } from '../Form';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
@@ -17,6 +19,14 @@ import { withLayoutProps } from '../util/ContextToProps';
 import { renderLayoutElements } from '../util/layout';
 import { Idx } from '../util/layout';
 import { LayoutComponent } from './LayoutComponent';
+
+export const MstVkeVerticalLayout = types.compose(
+  'MstVerticalLayout',
+  MstViewKindElement,
+  types.model({
+    '@type': types.literal('aldkg:VerticalLayout'),
+  }),
+);
 
 export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
   viewKind,
