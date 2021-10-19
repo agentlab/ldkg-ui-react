@@ -450,8 +450,8 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
           store.setSelectedData(collIriOverride, data[0]);
           withConnections && store.editConn(withConnections, data[0]);
         } else {
-          store.setSelectedData(collIriOverride, undefined);
-          withConnections && store.editConn(withConnections, undefined);
+          store.setSelectedData(collIriOverride, null);
+          withConnections && store.editConn(withConnections, null);
         }
       }
     };

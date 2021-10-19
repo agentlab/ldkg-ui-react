@@ -51,7 +51,7 @@
     "lint-staged": "lint-staged"
   },
   "peerDependencies": {
-    "@agentlab/sparql-jsld-client": ">=5.0.0-rc.18",
+    "@agentlab/sparql-jsld-client": ">=5.0.0-rc.19",
     "@ant-design/icons": ">=4.7.0",
     "@rdfjs/data-model": ">=1.3.4",
     "@tinymce/tinymce-react": ">=3.13.0",
@@ -81,7 +81,7 @@
     "uuid62": ">=1.0.1"
   },
   "dependencies": {
-    "@agentlab/sparql-jsld-client": "^5.0.0-rc.18",
+    "@agentlab/sparql-jsld-client": "^5.0.0-rc.19",
     "@ant-design/icons": "^4.7.0",
     "@tinymce/tinymce-react": "^3.13.0",
     "@types/react": "^17.0.30",
