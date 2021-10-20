@@ -98,3 +98,5 @@ export const AntdTabControlWithStore = observer<any>((props) => {
     </div>
   );
 });
+
+export const antdTabControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:TabControl'));
