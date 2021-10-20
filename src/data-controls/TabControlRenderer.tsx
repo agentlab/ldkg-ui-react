@@ -56,9 +56,13 @@ export const AntdTabControlWithStore = observer<any>((props) => {
   const withConnections = options.connections;
   let tabs: JsObject[] = data;
 
+  //if (tabs && tabs[0] && tabs[0].rank) {
+  //  tabs = tabs.slice().sort((t1, t2) => t1.rank - t2.rank);
+  //}
+
   let additionalTabs = (viewKindElement as IMstVkeTabControl).tabs;
   if (additionalTabs) {
-    additionalTabs = additionalTabs.slice().sort((t1, t2) => t2.rank - t1.rank);
+    additionalTabs = additionalTabs.slice().sort((t1, t2) => t1.rank - t2.rank);
     tabs = [...additionalTabs.filter((t) => t.rank <= 100), ...tabs, ...additionalTabs.filter((t) => t.rank > 100)];
   }
 
@@ -94,5 +98,3 @@ export const AntdTabControlWithStore = observer<any>((props) => {
     </div>
   );
 });
-
-export const antdTabControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:TabControl'));
