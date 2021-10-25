@@ -708,9 +708,9 @@ const additionalCollsVerticalLayout100Height = cloneDeep(additionalColls);
 additionalCollsVerticalLayout100Height[0].data[0].elements = [
   {
     '@id': 'mktp:_934jHd67',
-    '@type': 'aldkg:VerticalLayout',
+    '@type': 'aldkg:PanelLayout',
     options: {
-      height: 'all-empty-space',
+      style: { height: '100%' },
     },
     elements: additionalCollsVerticalLayout100Height[0].data[0].elements,
   },
@@ -739,9 +739,9 @@ const additionalCollsVerticalLayout100HeightForm = cloneDeep(additionalColls);
 additionalCollsVerticalLayout100HeightForm[0].data[0].elements = [
   {
     '@id': 'mktp:_934jHd67',
-    '@type': 'aldkg:VerticalLayout',
+    '@type': 'aldkg:PanelLayout',
     options: {
-      height: 'all-empty-space',
+      style: { height: '100%' },
     },
     elements: [...additionalCollsVerticalLayout100HeightForm[0].data[0].elements, cardForm],
   },

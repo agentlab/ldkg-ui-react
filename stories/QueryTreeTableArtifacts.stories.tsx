@@ -136,7 +136,9 @@ const viewKinds = [
         '@id': 'rm:_934jHd67',
         '@type': 'aldkg:VerticalLayout',
         options: {
-          height: 'all-empty-space',
+          style: {
+            height: '100%',
+          },
         },
         elements: [
           {
@@ -238,11 +240,12 @@ const viewKinds = [
             '@id': 'rm:_we34U8',
             '@type': 'aldkg:SplitPaneLayout',
             options: {
+              grow: '1',
+              width: '100%',
               style: {
                 width: '100%',
                 height: '100%',
               },
-              height: 'all-empty-space',
               //width: 'all-empty-space',
               defaultSize: {
                 'rm:_901hHft': '17%',

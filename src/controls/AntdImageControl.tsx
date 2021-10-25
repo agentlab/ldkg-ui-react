@@ -7,7 +7,6 @@ export const AntdImageControl = (props: any): JSX.Element => {
   const { uiOptions, data } = props;
   return (
     <Image
-      height={'80%'}
       src={Array.isArray(data) ? data[0] || '' : data && typeof data === 'string' ? data : ''}
       fallback={uiOptions.fallback}
     />

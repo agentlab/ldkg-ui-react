@@ -97,10 +97,10 @@ const viewKinds = [
     elements: [
       {
         '@id': 'mktp:_8255hFsd',
-        '@type': 'aldkg:VerticalLayout',
+        '@type': 'aldkg:PanelLayout',
         options: {
           style: {
-            height: '20%',
+            width: '100%',
           },
           width: 'all-empty-space',
         },
@@ -111,36 +111,32 @@ const viewKinds = [
             options: {
               style: {
                 height: '100%',
+                width: '100%',
               },
               readOnly: true,
             },
             elements: [
               {
                 '@id': 'mktp:_87Dfg78',
-                '@type': 'aldkg:HorizontalLayout',
+                '@type': 'aldkg:PanelLayout',
                 options: {
-                  justify: 'start', // start end center space-between space-around
-                  align: 'flex-start',
-                  //contentSize: true,
+                  flow: 'horizontal',
                   style: {
-                    //flexGrow: '5',
+                    height: '100%',
                     width: '100%',
-                  },
-                  defaultSize: {
-                    'mktp:_8255hFd3': 4,
-                    'mktp:_88Dfg78': 20,
                   },
                   width: 'all-empty-space',
                 },
                 elements: [
                   {
                     '@id': 'mktp:_8255hFd3',
-                    '@type': 'aldkg:VerticalLayout',
+                    '@type': 'aldkg:PanelLayout',
                     options: {
                       style: {
+                        width: '20%',
+                        height: '100%',
                         padding: '5px',
                       },
-                      width: 'all-empty-space',
                     },
                     elements: [
                       {
@@ -156,10 +152,12 @@ const viewKinds = [
                   },
                   {
                     '@id': 'mktp:_88Dfg78',
-                    '@type': 'aldkg:VerticalLayout',
+                    '@type': 'aldkg:PanelLayout',
                     options: {
                       style: {
+                        verticalAlign: 'top',
                         height: '20%',
+                        width: '80%',
                       },
                     },
                     elements: [
@@ -170,11 +168,9 @@ const viewKinds = [
                       },
                       {
                         '@id': 'mktp:_87Dfg78',
-                        '@type': 'aldkg:HorizontalLayout',
+                        '@type': 'aldkg:PanelLayout',
                         options: {
-                          justify: 'start', // start end center space-between space-around
-                          align: 'flex-start',
-                          //contentSize: true,
+                          flow: 'horizontal',
                           style: {
                             //flexGrow: '5',
                             width: '100%',
@@ -187,6 +183,7 @@ const viewKinds = [
                             '@type': 'aldkg:VerticalLayout',
                             options: {
                               style: {
+                                verticalAlign: 'top',
                                 padding: '5px',
                               },
                               width: 'all-empty-space',
@@ -224,6 +221,7 @@ const viewKinds = [
                             '@type': 'aldkg:VerticalLayout',
                             options: {
                               style: {
+                                verticalAlign: 'top',
                                 padding: '5px',
                               },
                               width: 'all-empty-space',
@@ -256,6 +254,7 @@ const viewKinds = [
                             '@type': 'aldkg:VerticalLayout',
                             options: {
                               style: {
+                                verticalAlign: 'top',
                                 padding: '5px',
                               },
                               width: 'all-empty-space',
@@ -293,6 +292,7 @@ const viewKinds = [
                             '@type': 'aldkg:VerticalLayout',
                             options: {
                               style: {
+                                verticalAlign: 'top',
                                 padding: '5px',
                               },
                               width: 'all-empty-space',
@@ -342,12 +342,12 @@ const viewKinds = [
       },
       {
         '@id': 'mktp:_8255hFsd',
-        '@type': 'aldkg:VerticalLayout',
+        '@type': 'aldkg:PanelLayout',
         options: {
           style: {
             height: '80%',
+            width: '100%',
           },
-          width: 'all-empty-space',
         },
         elements: [
           {

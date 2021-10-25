@@ -84,9 +84,12 @@ const viewKinds = [
     elements: [
       {
         '@id': 'rm:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
+        '@type': 'aldkg:PanelLayout',
         options: {
-          height: 'all-empty-space',
+          style: {
+            height: '100%',
+            width: '100%',
+          },
         },
         elements: [
           {

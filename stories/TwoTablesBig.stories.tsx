@@ -149,10 +149,12 @@ const viewKinds = [
     elements: [
       {
         '@id': 'mktp:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
-        //options: {
-        //  height: 'all-empty-space',
-        ///},
+        '@type': 'aldkg:PanelLayout',
+        options: {
+          style: {
+            height: '100%',
+          },
+        },
         elements: [
           {
             '@id': 'mktp:_df7eds',
