@@ -44,6 +44,7 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
         split={options.split || 'vertical'}
         initialSizes={options.initialSizes}
         minSizes={options.minSizes}
+        collapsedSizes={options.collapsedSizes}
         collapse={
           options.collapseDirection && {
             collapseDirection: options.collapseDirection,
