@@ -168,11 +168,8 @@ const viewKinds = [
           },
           height: 'all-empty-space',
           //width: 'all-empty-space',
-          defaultSize: {
-            'mktp:MarketplacesTabs': '17%',
-            'mktp:CategoryCardsTable': '43%',
-            'mktp:CategoryCardForm': '43%',
-          },
+          collapseDirection: 'left',
+          initialSizes: [17, 43, 43],
         },
         elements: [
           {

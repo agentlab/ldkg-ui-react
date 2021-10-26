@@ -7,35 +7,13 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React from 'react';
-import SplitPane from 'react-split-pane';
-import Pane from 'react-split-pane/lib/Pane';
-
-import { FormsDispatchProps, FormsDispatch } from '../Form';
+import React, { useMemo } from 'react';
+import { SplitPane } from 'react-collapse-pane';
+import { FormsDispatch } from '../Form';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
-
 import { LayoutComponent } from './LayoutComponent';
-import { Idx, RenderLayoutProps } from '../util/layout';
 import { IViewKindElement } from '../models/uischema';
-
-const renderSplitElements = ({ viewKind, viewKindElement, viewDescr, enabled, Render, form }: RenderLayoutProps) => {
-  const elements = viewKindElement.elements;
-  const defaultSize = viewKindElement.options && viewKindElement.options.defaultSize;
-  return elements ? (
-    elements.map((el: IViewKindElement, idx: number) => {
-      const id = el['@id'] || el.resultsScope || '';
-      const style = el.options && el.options.style;
-      return (
-        <Pane key={idx} style={style} initialSize={defaultSize[id]}>
-          <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
-        </Pane>
-      );
-    })
-  ) : (
-    <></>
-  );
-};
 
 export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   viewKindElement,
@@ -45,23 +23,35 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   enabled,
   visible,
 }) => {
-  //const layout = viewKindElement as Layout;
+  const elements = viewKindElement.elements;
   const options = viewKindElement.options || {};
-  const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
-    return (
-      <div>
-        <FormsDispatch viewKind={viewKind} viewKindElement={viewKindElement} viewDescr={viewDescr} enabled={enabled} />
-      </div>
-    );
-  };
+
+  const panes = useMemo(
+    () =>
+      elements
+        ? elements.map((el: IViewKindElement, idx: number) => (
+            <div key={idx} style={{ width: '100%', height: '100%', position: 'relative' }}>
+              <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
+            </div>
+          ))
+        : [],
+    [viewKind, elements, viewDescr, enabled],
+  );
+
   return (
-    <React.Fragment>
-      <div style={{ position: 'relative', height: '100%', ...options.style }}>
-        <SplitPane split='vertical' minSize={300}>
-          {renderSplitElements({ viewKind, viewKindElement, viewDescr, enabled, Render })}
-        </SplitPane>
-      </div>
-    </React.Fragment>
+    <div style={{ position: 'relative', height: '100%', ...options.style }}>
+      <SplitPane
+        split={options.split || 'vertical'}
+        initialSizes={options.initialSizes}
+        minSizes={options.minSizes}
+        collapse={
+          options.collapseDirection && {
+            collapseDirection: options.collapseDirection,
+          }
+        }>
+        {panes}
+      </SplitPane>
+    </div>
   );
 };
 

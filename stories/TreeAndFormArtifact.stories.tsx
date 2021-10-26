@@ -68,10 +68,9 @@ const viewKinds = [
             width: '100%',
             height: '50%',
           },
-          defaultSize: {
-            'rm:Folders_Coll': '17%',
-            'rm:_fgu778f': '83%',
-          },
+
+          collapseDirection: 'left',
+          initialSizes: [17, 83],
           height: 'all-empty-space',
           //width: 'all-empty-space',
         },

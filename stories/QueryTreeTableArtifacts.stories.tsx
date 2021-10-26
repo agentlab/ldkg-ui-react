@@ -247,9 +247,8 @@ const viewKinds = [
                 height: '100%',
               },
               //width: 'all-empty-space',
-              defaultSize: {
-                'rm:_901hHft': '17%',
-              },
+              collapseDirection: 'left',
+              initialSizes: [17, 83],
             },
             elements: [
               {
