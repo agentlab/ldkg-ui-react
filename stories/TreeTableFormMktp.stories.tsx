@@ -58,7 +58,7 @@ const Template: Story = (args: any) => {
   //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
@@ -131,7 +131,7 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: undefined, //'https://www.wildberries.ru/catalog/igrushki/antistress',
+              CardInCatLink: null, //'https://www.wildberries.ru/catalog/igrushki/antistress',
             },
             service: mktpSchemaRepoIri,
           },
@@ -148,7 +148,7 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:Cards_Coll_Ent0_con',
-              '@_id': undefined,
+              '@_id': null,
             },
             service: mktpSchemaRepoIri,
           },
