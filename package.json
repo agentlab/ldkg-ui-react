@@ -45,7 +45,8 @@
     "cypress:open": "cypress open",
     "lint": "eslint \"{src,stories,test}/**/*.{js,jsx,ts,tsx}\"",
     "prepare": "husky install && yarn build",
-    "storybook": "start-storybook -s ./stories/public -p 6006",
+    "storybook": "start-storybook -p 6006",
+    "storybook17": "SET NODE_OPTIONS=--openssl-legacy-provider && yarn storybook",
     "build-storybook": "build-storybook",
     "format": "./node_modules/.bin/prettier --write \"{src,stories,test}/**/*.{js,jsx,ts,tsx,json,css,less,scss,md}\"",
     "lint-staged": "lint-staged"
