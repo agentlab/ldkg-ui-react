@@ -19,6 +19,8 @@ export const GridRenderer: React.FC<any> = (props) => {
   const { viewKind, viewKindElement, viewDescr, viewDescrElement, child, schema } = props;
   const grid = viewKindElement?.options?.grid || { gutter: 16, column: 4 };
   const template = viewKindElement?.options?.elementTemplate || null;
+  const style = viewKindElement?.options?.style;
+
   const createCell = (data: any, id: string | number) =>
     template ? (
       template.map((e: IViewKindElement, idx: number) => (
@@ -38,6 +40,11 @@ export const GridRenderer: React.FC<any> = (props) => {
       <span key={id}>{data['@id']}</span>
     );
   return (
-    <List grid={grid} dataSource={child} renderItem={(item, idx) => <List.Item>{createCell(item, idx)}</List.Item>} />
+    <List
+      grid={grid}
+      style={style}
+      dataSource={child}
+      renderItem={(item, idx) => <List.Item>{createCell(item, idx)}</List.Item>}
+    />
   );
 };

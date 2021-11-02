@@ -30,7 +30,9 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
 }) => {
   const [editing, setEditing] = useState(false);
   const [currentData, setCurrentData] = useState(props.data);
+  const [fontSize, setFontSize] = useState<number>();
   const inputRef = useRef<any>(null);
+  const cellRef = useRef<any>(null);
   const formatterId = uiOptions.formatter || 'base';
   const query = uiOptions.query;
   let width = 'auto';
@@ -64,9 +66,30 @@ export const CellRenderer: React.FC<ControlComponent & WithCell> = ({
       specialProps[key] = rowData[formatterProps[key]];
     }
   }
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      setFontSize(entries[0].contentRect.width * uiOptions.relativeFont);
+    });
+
+    if (uiOptions.relativeFont) {
+      const antRow = cellRef.current.parentNode.parentNode;
+      resizeObserver.observe(antRow);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
   //console.log('RENDER', props.data);
   return (
-    <div style={{ margin: '5px', display: 'block', alignSelf: 'start', width: width, ...uiOptions.style }}>
+    <div
+      ref={cellRef}
+      style={{
+        margin: '5px',
+        display: 'block',
+        alignSelf: 'start',
+        width: width,
+        fontSize,
+        ...uiOptions.style,
+      }}>
       {editable ? (
         editing ? (
           <Cell inputRef={inputRef} value={currentData} handleChange={save} {...props} />
