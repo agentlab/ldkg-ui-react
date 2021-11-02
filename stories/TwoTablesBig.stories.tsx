@@ -40,7 +40,7 @@ export default {
 const Template: Story<any> = (args) => {
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
@@ -74,6 +74,7 @@ const viewKinds = [
     title: 'TwoTables',
     description: 'Big table View with TwoTables',
     collsConstrs: [
+      /// Marketplaces
       {
         '@id': 'mktp:Marketplaces_Coll',
         '@type': 'aldkg:CollConstr',
@@ -87,7 +88,7 @@ const viewKinds = [
         ],
         orderBy: [{ expression: variable('rank0'), descending: false }],
       },
-      /// Marketplace products
+      /// Marketplace categories & cards
       {
         '@id': 'mktp:Categories_Coll',
         '@type': 'aldkg:CollConstr',
@@ -95,7 +96,7 @@ const viewKinds = [
           {
             '@id': 'mktp:Categories_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:CategoryShape',
+            schema: 'als:CategoryShape', //'hs:CategoryShape',
             service: mktpSchemaRepoIri,
           },
         ],
@@ -110,7 +111,7 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent_con',
-              CardInCatLink: undefined, //'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              CardInCatLink: 'https://muying.1688.com/wanju',
             },
             service: mktpSchemaRepoIri,
           },
@@ -139,7 +140,7 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Product_Coll_Ent_Cond',
-              CardInProdLink: undefined, //'mktp_d:Massager',
+              CardInProdLink: null, //'mktp_d:Massager',
             },
             service: mktpSchemaRepoIri,
           },
@@ -149,10 +150,12 @@ const viewKinds = [
     elements: [
       {
         '@id': 'mktp:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
-        //options: {
-        //  height: 'all-empty-space',
-        ///},
+        '@type': 'aldkg:PanelLayout',
+        options: {
+          style: {
+            height: '100%',
+          },
+        },
         elements: [
           {
             '@id': 'mktp:_df7eds',
@@ -188,14 +191,7 @@ const viewKinds = [
                 width: '100%',
                 height: '100%',
               },
-              height: 'all-empty-space',
-              width: 'all-empty-space',
-              defaultSize: {
-                'mktp:MarketplacesTabs': '17%',
-                'mktp:CategoryCardsTable': '43%',
-                'mktp:ProductCardsTable': '26%',
-                'mktp:ProductTree': '17%',
-              },
+              initialSizes: [17, 43, 26, 17],
             },
             // child ui elements configs
             elements: [
@@ -222,7 +218,6 @@ const viewKinds = [
                   },
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',
@@ -405,7 +400,6 @@ const viewKinds = [
                 options: {
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

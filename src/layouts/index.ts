@@ -13,6 +13,7 @@ import { antdHorizontalLayoutTester, AntdHorizontalLayoutWithStore } from './Ant
 import { antdVerticalLayoutTester, AntdVerticalLayoutWithStore, MstVkeVerticalLayout } from './AntdVerticalLayout';
 import { splitPaneLayoutTester, SplitPaneLayoutWithStore } from './SplitPaneLayout';
 import { antdTabsLayoutTester, AntdTabsLayoutWithStore } from './TabsLayout';
+import { panelLayoutTester, PanelLayoutWithStore } from './Panel';
 
 export const antdLayoutRenderers: RendererRegistryEntry[] = [
   {
@@ -31,6 +32,10 @@ export const antdLayoutRenderers: RendererRegistryEntry[] = [
   {
     tester: antdTabsLayoutTester,
     renderer: AntdTabsLayoutWithStore,
+  },
+  {
+    tester: panelLayoutTester,
+    renderer: PanelLayoutWithStore,
   },
 ];
 

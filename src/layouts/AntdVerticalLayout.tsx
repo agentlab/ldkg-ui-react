@@ -19,6 +19,7 @@ import { withLayoutProps } from '../util/ContextToProps';
 import { renderLayoutElements } from '../util/layout';
 import { Idx } from '../util/layout';
 import { LayoutComponent } from './LayoutComponent';
+import { convertSizeOptionToStyle } from './utils';
 
 export const MstVkeVerticalLayout = types.compose(
   'MstVerticalLayout',
@@ -40,38 +41,32 @@ export const AntdVerticalLayoutRenderer: React.FC<LayoutComponent> = ({
 }) => {
   const style = viewKindElement.options?.style;
   const Render: React.FC<FormsDispatchProps & Idx> = ({ idx, viewKind, viewKindElement, viewDescr, enabled }) => {
-    const height = viewKindElement.options?.style?.height;
-    console.log('OPT', viewKindElement, height);
-    const newViewKindElement = { ...viewKindElement };
-    if (newViewKindElement.options) {
-      newViewKindElement.options.style = {};
-    }
+    const height = viewKindElement.options?.height;
+    const width = viewKindElement.options?.width;
+    const grow = viewKindElement.options?.grow;
+
+    const rowStyle = convertSizeOptionToStyle({ height, width });
     return (
       <Row
         style={{
           position: 'relative',
-          width: '100%', //
-          height,
-          //flex: viewKindElement.options && viewKindElement.options.height === 'all-empty-space' ? '1 1 auto' : '',
+          ...rowStyle,
+          flexGrow: grow,
         }}>
-        <Col span={24} style={{ position: 'relative' }}>
-          <FormsDispatch
-            viewKind={viewKind}
-            viewKindElement={newViewKindElement}
-            viewDescr={viewDescr}
-            enabled={enabled}
-            form={form}
-          />
-        </Col>
+        <FormsDispatch
+          viewKind={viewKind}
+          viewKindElement={viewKindElement}
+          viewDescr={viewDescr}
+          enabled={enabled}
+          form={form}
+        />
       </Row>
     );
   };
   return (
-    <React.Fragment>
-      <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', height: '100%', ...style }}>
-        {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render, readOnly })}
-      </div>
-    </React.Fragment>
+    <div style={{ display: 'flex', flexDirection: 'column', ...style }}>
+      {renderLayoutElements({ viewKind, viewKindElement, viewDescr, enabled, Render, readOnly })}
+    </div>
   );
 };
 

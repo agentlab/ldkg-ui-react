@@ -102,9 +102,11 @@ const viewKinds = [
     elements: [
       {
         '@id': 'rm:_124jHd67',
-        '@type': 'aldkg:VerticalLayout',
+        '@type': 'aldkg:PanelLayout',
         options: {
-          height: 'all-empty-space',
+          style: {
+            height: '100%',
+          },
         },
         elements: [
           {
@@ -114,7 +116,6 @@ const viewKinds = [
             options: {
               draggable: true,
               resizeableHeader: true,
-              height: 'all-empty-space',
               style: { height: '100%' },
               order: [
                 'identifier',

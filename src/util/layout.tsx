@@ -13,7 +13,7 @@ import { IViewKindElement } from '../models/uischema';
 import { FormsDispatchProps } from '../Form';
 
 export declare type Idx = {
-  idx: number;
+  idx?: number;
 };
 
 export interface RenderLayoutProps extends FormsDispatchProps {

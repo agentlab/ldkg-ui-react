@@ -16,7 +16,7 @@ import 'react-virtualized/styles.css'; // only needs to be imported once
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { MstContext } from '../MstContext';
 import { withStoreToFormProps } from '../util/ContextToProps';
-import { AntdVerticalLayoutWithStore } from './AntdVerticalLayout';
+import { PanelLayoutWithStore } from './Panel';
 
 import './form.css';
 
@@ -80,29 +80,23 @@ export const AntdFormLayout: React.FC<any> = ({
 }) => {
   const { readOnly, style } = viewKindElement.options;
   return (
-    <AutoSizer>
-      {({ width, height }: any) => (
-        <div
-          style={{ width, height, overflow: 'auto', position: 'relative', ...style }}
-          onClick={() => !readOnly && onEdit()}>
-          {title && <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>}
-          {readOnly ? null : <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />}
-          <Form labelAlign={'left'}>
-            <AntdVerticalLayoutWithStore
-              id={`${id}Layout`}
-              viewKind={viewKind}
-              viewKindElement={viewKindElement}
-              viewDescr={viewDescr}
-              viewDescrElement={viewDescrElement}
-              schema={{}}
-              enabled={enabled}
-              form={id}
-              readOnly={readOnly}
-            />
-          </Form>
-        </div>
-      )}
-    </AutoSizer>
+    <div style={{ overflow: 'auto', position: 'relative', ...style }} onClick={() => !readOnly && onEdit()}>
+      {title && <span style={{ padding: '7px', fontSize: '2em' }}>{title}</span>}
+      {readOnly ? null : <LogicalButton form={id} onSave={onSave} onCancel={onCancel} />}
+      <Form labelAlign={'left'}>
+        <PanelLayoutWithStore
+          id={`${id}Layout`}
+          viewKind={viewKind}
+          viewKindElement={viewKindElement}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
+          schema={{}}
+          enabled={enabled}
+          form={id}
+          readOnly={readOnly}
+        />
+      </Form>
+    </div>
   );
 };
 

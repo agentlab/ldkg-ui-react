@@ -41,7 +41,7 @@ const Template: Story = (args: any) => {
 
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
@@ -86,9 +86,9 @@ const viewKinds = [
     elements: [
       {
         '@id': 'mktp:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
+        '@type': 'aldkg:PanelLayout',
         options: {
-          height: 'all-empty-space',
+          style: { height: '100%' },
         },
         elements: [
           {
@@ -98,7 +98,6 @@ const viewKinds = [
             options: {
               draggable: true,
               resizeableHeader: true,
-              height: 'all-empty-space',
               style: { height: '100%' },
               multiSelect: true,
               order: [
