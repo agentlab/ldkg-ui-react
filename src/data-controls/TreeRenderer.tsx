@@ -18,7 +18,9 @@ import { TreeContextMenu } from './TreeContextMenu';
 import './styles.css';
 
 const divStyle: React.CSSProperties = {
+  height: '100%',
   padding: '5px',
+  overflow: 'scroll',
 };
 
 export const TreeRenderer: React.FC<any> = (props) => {
