@@ -18,7 +18,9 @@ import { TreeContextMenu } from './TreeContextMenu';
 import './styles.css';
 
 const divStyle: React.CSSProperties = {
+  height: '100%',
   padding: '5px',
+  overflow: 'scroll',
 };
 
 export const TreeRenderer: React.FC<any> = (props) => {
@@ -46,6 +48,11 @@ export const TreeRenderer: React.FC<any> = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [beforeSearchExpand, setBeforeSearchExpand] = useState([]);
+
+  useEffect(() => {
+    setTreeData(child);
+  }, [child]);
+
   useEffect(() => {
     onSelect(selected);
   }, [selected, onSelect]);

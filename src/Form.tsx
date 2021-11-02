@@ -14,6 +14,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Spin } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { getSnapshot } from 'mobx-state-tree';
+import { JsObject } from '@agentlab/sparql-jsld-client';
 
 import { JsonSchema7 } from './models/jsonSchema7';
 //import ModalAntd from './antd/util/AntdModal';
@@ -21,7 +22,6 @@ import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
 import { RankedTester } from './testers';
 import { IViewDescr, IViewDescrElement, IViewKind, IViewKindElement } from './models/uischema';
-import { JsObject } from '@agentlab/sparql-jsld-client';
 
 export interface ControlComponent {
   data: any;
@@ -45,14 +45,6 @@ export interface ControlComponent {
   formData?: any;
 }
 
-export interface FormsRenderer {
-  tester: RankedTester;
-  renderer: React.FC<any>;
-}
-export interface FormsCell {
-  tester: RankedTester;
-  cell: React.FC<any>;
-}
 export interface FormsInitStateProps {
   viewDescrCollId: string;
   viewDescrId: string;

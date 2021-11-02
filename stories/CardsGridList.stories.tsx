@@ -25,8 +25,7 @@ import {
   RendererRegistryEntry,
 } from '../src';
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
-import { createUiModelFromState, registerMstViewKindSchema } from '../src/models/MstViewDescr';
-import { MstVerticalLayout } from '../src/models/MstViewSchemas';
+import { createUiModelFromState } from '../src/models/MstViewDescr';
 
 const viewKinds = [
   {
@@ -316,6 +315,8 @@ export default {
   argTypes: {
     backgroundColor: { control: 'color' },
   },
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 export const Full: Story<{}> = () => {
@@ -324,7 +325,6 @@ export const Full: Story<{}> = () => {
     ...antdLayoutRenderers,
     ...antdDataControlRenderers,
   ];
-  registerMstViewKindSchema(MstVerticalLayout);
 
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',

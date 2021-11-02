@@ -42,6 +42,8 @@ export default {
   argTypes: {
     backgroundColor: { control: 'color' },
   },
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const Template: Story = (args: any) => {
@@ -56,7 +58,7 @@ const Template: Story = (args: any) => {
   //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
@@ -73,6 +75,9 @@ const Template: Story = (args: any) => {
   );
 };
 
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
+
 const viewKinds = [
   {
     '@id': 'mktp:TreeTableFormMktpCategoriesViewKind',
@@ -88,6 +93,7 @@ const viewKinds = [
             '@id': 'mktp:HSCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -99,6 +105,7 @@ const viewKinds = [
             '@id': 'mktp:KPCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'kp:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -110,6 +117,7 @@ const viewKinds = [
             '@id': 'mktp:TBCategories_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'tb:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -123,8 +131,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/igrushki/antistress',
+              CardInCatLink: null, //'https://www.wildberries.ru/catalog/igrushki/antistress',
             },
+            service: mktpSchemaRepoIri,
           },
         ],
         limit: 100,
@@ -139,8 +148,9 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:Cards_Coll_Ent0_con',
-              '@_id': undefined,
+              '@_id': null,
             },
+            service: mktpSchemaRepoIri,
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
@@ -156,13 +166,8 @@ const viewKinds = [
             width: '100%',
             height: '100%',
           },
-          height: 'all-empty-space',
-          //width: 'all-empty-space',
-          defaultSize: {
-            'mktp:MarketplacesTabs': '17%',
-            'mktp:CategoryCardsTable': '43%',
-            'mktp:CategoryCardForm': '43%',
-          },
+          collapseDirection: 'left',
+          initialSizes: [17, 43, 43],
         },
         elements: [
           {
@@ -178,7 +183,7 @@ const viewKinds = [
                   title: 'WildBerries',
                   treeNodeTitleKey: 'name',
                   treeNodeParentKey: 'SubcatInCatLink',
-                  connections: [{ to: 'mktp:ProductCards_in_Category_Coll_Ent0_con', by: 'CardInCatLink' }],
+                  connections: [{ toObj: 'mktp:ProductCards_in_Category_Coll_Ent0_con', toProp: 'CardInCatLink' }],
                 },
               },
               {
@@ -210,10 +215,9 @@ const viewKinds = [
             '@type': 'aldkg:Array',
             resultsScope: 'mktp:ProductCards_in_Category_Coll',
             options: {
-              connections: [{ to: 'mktp:Cards_Coll_Ent0_con', by: '@_id' }],
+              connections: [{ toObj: 'mktp:Cards_Coll_Ent0_con', toProp: '@_id' }],
               draggable: true,
               resizeableHeader: true,
-              height: 'all-empty-space',
               style: { height: '100%' },
               order: ['imageUrl', 'name', 'price', 'saleValue', 'country', 'brand', 'seller', 'identifier'],
               imageUrl: {

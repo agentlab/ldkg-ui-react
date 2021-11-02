@@ -13,7 +13,7 @@ import { IViewKindElement } from '../models/uischema';
 import { FormsDispatchProps } from '../Form';
 
 export declare type Idx = {
-  idx: number;
+  idx?: number;
 };
 
 export interface RenderLayoutProps extends FormsDispatchProps {
@@ -35,7 +35,7 @@ export const renderLayoutElements = ({
   //const sort = id ? viewKind.properties && viewKind.properties[id] && viewKind.properties[id].order : undefined;
   if (!elements || elements.length === 0) return <></>;
   return elements.map((el: IViewKindElement, idx: number) => {
-    el = { ...el, options: { ...el.options, readOnly } };
+    el = { ...el, options: { readOnly, ...el.options } };
     return (
       <Render key={idx} idx={idx} viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
     );

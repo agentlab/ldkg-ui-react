@@ -19,7 +19,6 @@ export * from './layouts';
 export * from './models/uischema';
 
 export * from './models/MstViewDescr';
-export * from './models/MstViewSchemas';
 export * from './models/ViewCollConstrs';
 export * from './models/ViewShapeSchema';
 

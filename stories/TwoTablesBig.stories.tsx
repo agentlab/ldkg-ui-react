@@ -33,34 +33,39 @@ import {
 export default {
   title: 'Several Controls/TwoTablesBig',
   component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-    ...tableRenderers,
-  ];
-
+const Template: Story<any> = (args) => {
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
   return (
     <div style={{ height: 'calc(100vh - 32px)' }}>
       <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells}>
+          <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
         </MstContextProvider>
       </Provider>
     </div>
   );
 };
+
+const antdRenderers: RendererRegistryEntry[] = [
+  ...antdControlRenderers,
+  ...antdLayoutRenderers,
+  ...antdDataControlRenderers,
+  ...tableRenderers,
+];
+
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
 
 const viewKinds = [
   {
@@ -69,14 +74,30 @@ const viewKinds = [
     title: 'TwoTables',
     description: 'Big table View with TwoTables',
     collsConstrs: [
+      /// Marketplaces
+      {
+        '@id': 'mktp:Marketplaces_Coll',
+        '@type': 'aldkg:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'mktp:Marketplaces_Coll_Ent',
+            '@type': 'aldkg:EntConstr',
+            schema: 'mktp:MarketplaceShape',
+            service: mktpSchemaRepoIri,
+          },
+        ],
+        orderBy: [{ expression: variable('rank0'), descending: false }],
+      },
+      /// Marketplace categories & cards
       {
         '@id': 'mktp:Categories_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'mktp:Categories_Coll_Shape0',
+            '@id': 'mktp:Categories_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:CategoryShape',
+            schema: 'als:CategoryShape', //'hs:CategoryShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -85,13 +106,27 @@ const viewKinds = [
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'mktp:ProductCards_in_Category_Coll_Ent0',
+            '@id': 'mktp:ProductCards_in_Category_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
             conditions: {
-              '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent_con',
+              CardInCatLink: 'https://muying.1688.com/wanju',
             },
+            service: mktpSchemaRepoIri,
+          },
+        ],
+      },
+      //// Mktp Products
+      {
+        '@id': 'mktp:Products_Coll',
+        '@type': 'aldkg:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'mktp:Products_Coll_Ent',
+            '@type': 'aldkg:EntConstr',
+            schema: 'mktp:ProductShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -100,24 +135,14 @@ const viewKinds = [
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'mktp:ProductCards_in_Product_Coll_Ent0',
+            '@id': 'mktp:ProductCards_in_Product_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'hs:ProductCardShape',
             conditions: {
-              '@id': 'mktp:ProductCards_in_Product_Coll_Ent0_Cond',
-              CardInProdLink: 'mktp_d:Massager',
+              '@id': 'mktp:ProductCards_in_Product_Coll_Ent_Cond',
+              CardInProdLink: null, //'mktp_d:Massager',
             },
-          },
-        ],
-      },
-      {
-        '@id': 'mktp:Products_Coll',
-        '@type': 'aldkg:CollConstr',
-        entConstrs: [
-          {
-            '@id': 'mktp:Products_Coll_Shape0',
-            '@type': 'aldkg:EntConstr',
-            schema: 'mktp:ProductShape',
+            service: mktpSchemaRepoIri,
           },
         ],
       },
@@ -125,11 +150,39 @@ const viewKinds = [
     elements: [
       {
         '@id': 'mktp:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
-        //options: {
-        //  height: 'all-empty-space',
-        ///},
+        '@type': 'aldkg:PanelLayout',
+        options: {
+          style: {
+            height: '100%',
+          },
+        },
         elements: [
+          {
+            '@id': 'mktp:_df7eds',
+            '@type': 'aldkg:TabControl',
+            // by this resultsScope TabControl could have read access to the results, selected by Query with @id='rm:ProjectViewClass_ArtifactFormats_Query'
+            resultsScope: 'mktp:Marketplaces_Coll', // bind to results data by query @id
+            options: {
+              title: 'Маркетплейсы',
+              style: {
+                margin: '0 0 0 24px',
+              },
+              contentSize: true,
+              // by this connection TabControl could have read/write access to the property 'artifactFormat' in condition object with @id='rm:ProjectViewClass_Artifacts_Query_Shape0_Condition'
+              connections: [
+                {
+                  toObj: 'mktp:Categories_Coll_Ent',
+                  toProp: 'schema',
+                  fromProp: 'categoryShape',
+                },
+                {
+                  toObj: 'mktp:ProductCards_in_Category_Coll_Ent',
+                  toProp: 'schema',
+                  fromProp: 'productCardShape',
+                },
+              ],
+            },
+          },
           {
             '@id': 'mktp:_97hFH67',
             '@type': 'aldkg:SplitPaneLayout',
@@ -138,56 +191,21 @@ const viewKinds = [
                 width: '100%',
                 height: '100%',
               },
-              height: 'all-empty-space',
-              width: 'all-empty-space',
-              defaultSize: {
-                'mktp:MarketplacesTabs': '17%',
-                'mktp:CategoryCardsTable': '43%',
-                'mktp:ProductCardsTable': '26%',
-                'mktp:ProductTree': '17%',
-              },
+              initialSizes: [17, 43, 26, 17],
             },
             // child ui elements configs
             elements: [
               {
-                '@id': 'mktp:MarketplacesTabs',
-                '@type': 'aldkg:TabsLayout',
-                elements: [
-                  {
-                    '@id': 'mktp:_23sLhd67',
-                    '@type': 'aldkg:DataControl',
-                    resultsScope: 'mktp:Categories_Coll',
-                    options: {
-                      renderType: 'tree',
-                      title: 'WildBerries',
-                      treeNodeTitleKey: 'name',
-                      treeNodeParentKey: 'SubcatInCatLink',
-                      connections: [{ to: 'mktp:ProductCards_in_Category_Coll_Ent0_con', by: 'CardInCatLink' }],
-                    },
-                  },
-                  {
-                    '@id': 'mktp:_90Syd67',
-                    '@type': 'aldkg:DataControl',
-                    resultsScope: 'mktp:Categories_Coll_Amzn',
-                    options: {
-                      renderType: 'tree',
-                      title: 'Amazon',
-                      treeNodeTitleKey: 'name',
-                      treeNodeParentKey: 'SubcatInCatLink',
-                    },
-                  },
-                  {
-                    '@id': 'mktp:_20dAy80',
-                    '@type': 'aldkg:DataControl',
-                    resultsScope: 'mktp:Categories_Coll_1688',
-                    options: {
-                      renderType: 'tree',
-                      title: '1688',
-                      treeNodeTitleKey: 'name',
-                      treeNodeParentKey: 'SubcatInCatLink',
-                    },
-                  },
-                ],
+                '@id': 'mktp:_23sLhd67',
+                '@type': 'aldkg:DataControl',
+                resultsScope: 'mktp:Categories_Coll',
+                options: {
+                  renderType: 'tree',
+                  title: 'Категории маркетплейса',
+                  treeNodeTitleKey: 'name',
+                  treeNodeParentKey: 'SubcatInCatLink',
+                  connections: [{ toObj: 'mktp:ProductCards_in_Category_Coll_Ent_con', toProp: 'CardInCatLink' }],
+                },
               },
               {
                 '@id': 'mktp:CategoryCardsTable',
@@ -200,7 +218,6 @@ const viewKinds = [
                   },
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',
@@ -383,7 +400,6 @@ const viewKinds = [
                 options: {
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',
@@ -568,7 +584,7 @@ const viewKinds = [
                   title: 'Продукты',
                   treeNodeTitleKey: 'title',
                   treeNodeParentKey: 'SubProdInProdLink',
-                  connections: [{ to: 'mktp:ProductCards_in_Product_Coll_Ent0_Cond', by: 'CardInProdLink' }],
+                  connections: [{ toObj: 'mktp:ProductCards_in_Product_Coll_Ent_Cond', toProp: 'CardInProdLink' }],
                 },
               },
             ],
@@ -617,4 +633,10 @@ const additionalColls: CollState[] = [
 ];
 
 export const RemoteData = Template.bind({});
-RemoteData.args = {};
+RemoteData.args = {
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+  additionalColls: additionalColls,
+  renderers: antdRenderers,
+  cells: antdCells,
+};

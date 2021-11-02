@@ -11,12 +11,16 @@ import { RankedTester } from './testers';
 
 export interface RendererRegistryEntry {
   tester: RankedTester;
-  renderer: any;
+  renderer: React.FC<any>;
+  mstVkeType?: any;
+  mstVdeType?: any;
 }
 
 export interface CellRendererRegistryEntry {
   tester: RankedTester;
-  cell: any;
+  cell: React.FC<any>;
+  mstVkeType?: any;
+  mstVdeType?: any;
 }
 
 /**
