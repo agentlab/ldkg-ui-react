@@ -71,8 +71,6 @@ const viewKinds = [
 
           collapseDirection: 'left',
           initialSizes: [17, 83],
-          height: 'all-empty-space',
-          //width: 'all-empty-space',
         },
         elements: [
           {

@@ -32,6 +32,8 @@ import { tableRenderers } from '../src';
 export default {
   title: 'Layout',
   component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
 const baseStyle = {
@@ -55,7 +57,7 @@ const Template: Story = (args: any) => {
 
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);

@@ -48,7 +48,7 @@ export const Empty: Story<{}> = () => {
 
   const client = new SparqlClientImpl(
     'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp/namespaces',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
@@ -107,8 +107,6 @@ const viewKinds = [
           collapseDirection: 'up',
           initialSizes: [25, 65],
           minSizes: [100, 100],
-          //height: 'all-empty-space',
-          //width: 'all-empty-space',
         },
         elements: [
           {
@@ -118,7 +116,6 @@ const viewKinds = [
               style: {
                 width: '100%',
               },
-              width: 'all-empty-space',
             },
             elements: [
               {
@@ -141,7 +138,6 @@ const viewKinds = [
                         height: '100%',
                         width: '100%',
                       },
-                      width: 'all-empty-space',
                     },
                     elements: [
                       {
@@ -191,7 +187,6 @@ const viewKinds = [
                                 //flexGrow: '5',
                                 width: '100%',
                               },
-                              width: 'all-empty-space',
                             },
                             elements: [
                               {
@@ -202,7 +197,6 @@ const viewKinds = [
                                     verticalAlign: 'top',
                                     padding: '5px',
                                   },
-                                  width: 'all-empty-space',
                                 },
                                 elements: [
                                   {
@@ -240,7 +234,6 @@ const viewKinds = [
                                     verticalAlign: 'top',
                                     padding: '5px',
                                   },
-                                  width: 'all-empty-space',
                                 },
                                 elements: [
                                   {
@@ -273,7 +266,6 @@ const viewKinds = [
                                     verticalAlign: 'top',
                                     padding: '5px',
                                   },
-                                  width: 'all-empty-space',
                                 },
                                 elements: [
                                   {
@@ -311,7 +303,6 @@ const viewKinds = [
                                     verticalAlign: 'top',
                                     padding: '5px',
                                   },
-                                  width: 'all-empty-space',
                                 },
                                 elements: [
                                   {
@@ -373,7 +364,6 @@ const viewKinds = [
                 options: {
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

@@ -149,8 +149,6 @@ const viewKinds = [
           },
           initialSizes: [40, 60],
           collapseDirection: 'left',
-          //height: 'all-empty-space',
-          //width: 'all-empty-space',
         },
         // child ui elements configs
         elements: [
@@ -164,8 +162,6 @@ const viewKinds = [
               },
               initialSizes: [30, 70],
               collapseDirection: 'left',
-              //height: 'all-empty-space',
-              //width: 'all-empty-space',
             },
             elements: [
               {
@@ -220,7 +216,6 @@ const viewKinds = [
                   multiSelect: true,
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',
@@ -408,8 +403,6 @@ const viewKinds = [
               },
               initialSizes: [80, 20],
               collapseDirection: 'right',
-              //height: 'all-empty-space',
-              //width: 'all-empty-space',
             },
             elements: [
               {
@@ -419,7 +412,6 @@ const viewKinds = [
                 options: {
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

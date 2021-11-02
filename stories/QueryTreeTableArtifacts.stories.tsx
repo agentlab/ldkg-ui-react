@@ -246,7 +246,6 @@ const viewKinds = [
                 width: '100%',
                 height: '100%',
               },
-              //width: 'all-empty-space',
               collapseDirection: 'left',
               initialSizes: [17, 83],
             },
