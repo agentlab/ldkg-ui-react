@@ -95,7 +95,9 @@ export const AntdNumberCellWithStore = withStoreToCellProps(AntdNumberCell);
  */
 export const AntdImageCell = (props: any): JSX.Element => {
   const { data } = props;
-  return <Image width={'100%'} src={data[0]} />;
+  return (
+    <Image width={'100%'} src={Array.isArray(data) ? data[0] || '' : data && typeof data === 'string' ? data : ''} />
+  );
 };
 export const antdImageCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:ImageCell'));
 export const AntdImageCellWithStore = withStoreToCellProps(AntdImageCell);

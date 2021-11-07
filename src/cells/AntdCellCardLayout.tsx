@@ -19,7 +19,7 @@ import './cell.css';
 
 export const AntdCellCardLayout = (props: any): JSX.Element => {
   const { viewKind, viewKindElement, viewDescr, viewDescrElement, schema, data, id } = props;
-  const { style } = viewKindElement?.options;
+  const style = viewKindElement?.options?.style || {};
   const createCardChilds = () =>
     viewKindElement.elements
       ? viewKindElement.elements.map((e: IViewKindElement, idx: number) => {
