@@ -108,7 +108,7 @@ const viewKinds = [
           {
             '@id': 'mktp:ProductCards_in_Category_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:ProductCardShape',
+            schema: 'als:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent_con',
               CardInCatLink: 'https://muying.1688.com/wanju',
