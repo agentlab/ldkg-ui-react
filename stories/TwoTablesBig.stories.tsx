@@ -150,7 +150,7 @@ const viewKinds = [
     elements: [
       {
         '@id': 'mktp:_934jHd67',
-        '@type': 'aldkg:PanelLayout',
+        '@type': 'aldkg:VerticalLayout',
         options: {
           style: {
             height: '100%',
@@ -187,6 +187,7 @@ const viewKinds = [
             '@id': 'mktp:_97hFH67',
             '@type': 'aldkg:SplitPaneLayout',
             options: {
+              grow: '1',
               style: {
                 width: '100%',
                 height: '100%',
