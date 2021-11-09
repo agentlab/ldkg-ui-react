@@ -421,14 +421,17 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       targetData = targetColl?.data;
     }
     const coll = store.getColl(collIriOverride);
+
     let data = coll?.data;
     if (!data) {
       return <Spin />;
     }
     data = getSnapshot(data);
-    const loadMoreData = async (offset: number) => {
-      return data; //store.loadDataByUri(scope, offset);
+
+    const loadMoreData = async () => {
+      coll.loadMore();
     };
+
     const withConnections = options.connections;
     const addDataToTarget = (data: any) => {
       if (targetData) {
@@ -468,7 +471,6 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
         viewDescrElement={viewDescrElement}
         addDataToTarget={addDataToTarget}
         schema={schema}
-        limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}
         sortDir={{} /*store.queries[scope].orderBy*/}
         uri={id}
