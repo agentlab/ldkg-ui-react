@@ -96,7 +96,7 @@ const viewKinds = [
           {
             '@id': 'mktp:Categories_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'als:CategoryShape', //'hs:CategoryShape',
+            schema: 'als:CategoryShape',
             service: mktpSchemaRepoIri,
           },
         ],
@@ -116,6 +116,7 @@ const viewKinds = [
             service: mktpSchemaRepoIri,
           },
         ],
+        limit: 30,
       },
       //// Mktp Products
       {
@@ -137,7 +138,7 @@ const viewKinds = [
           {
             '@id': 'mktp:ProductCards_in_Product_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:ProductCardShape',
+            schema: 'als:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Product_Coll_Ent_Cond',
               CardInProdLink: null, //'mktp_d:Massager',
@@ -170,13 +171,15 @@ const viewKinds = [
               contentSize: true,
               // by this connection TabControl could have read/write access to the property 'artifactFormat' in condition object with @id='rm:ProjectViewClass_Artifacts_Query_Shape0_Condition'
               connections: [
-                {
-                  toObj: 'mktp:Categories_Coll_Ent',
-                  toProp: 'schema',
-                  fromProp: 'categoryShape',
-                },
+                { toObj: 'mktp:Categories_Coll_Ent', toProp: 'schema', fromProp: 'categoryShape' },
                 {
                   toObj: 'mktp:ProductCards_in_Category_Coll_Ent',
+                  toProp: 'schema',
+                  fromProp: 'productCardShape',
+                },
+                // Product cards
+                {
+                  toObj: 'mktp:ProductCards_in_Product_Coll_Ent',
                   toProp: 'schema',
                   fromProp: 'productCardShape',
                 },

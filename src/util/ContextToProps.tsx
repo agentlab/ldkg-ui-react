@@ -9,7 +9,7 @@
  ********************************************************************************/
 import { cloneDeep, get, isArray, isEqual, omit } from 'lodash-es';
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import { getSnapshot, applySnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
@@ -395,6 +395,18 @@ export const withStoreToCollapseProps = (Component: React.FC<any>): React.FC<any
     );
   });
 
+const ComponentCachingSubRenderer = (props: any) => {
+  console.log('ChartSubRenderer');
+  const [allState, setAllState] = useState<any>(null);
+  useEffect(() => {
+    if (!props.dataIsLoading) {
+      //console.log('setDelayedConfig');
+      setAllState(props);
+    }
+  }, [props]);
+  return <props.comp {...allState} />;
+};
+
 export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewDescr, schema } = props;
@@ -421,12 +433,19 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       targetData = targetColl?.data;
     }
     const coll = store.getColl(collIriOverride);
+    let dataIsLoading = false;
 
-    let data = coll?.data;
-    if (!data) {
-      return <Spin />;
+    let data: any[] = [];
+    if (!coll.isLoading) {
+      data = coll?.data;
+      if (!data) {
+        data = [];
+      } else {
+        data = getSnapshot(data as any);
+      }
+    } else {
+      dataIsLoading = true;
     }
-    data = getSnapshot(data);
 
     const loadMoreData = async () => {
       coll.loadMore();
@@ -464,7 +483,9 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       return data; //store.getDataByQuery(newQuery);
     };
     return (
-      <Component
+      <ComponentCachingSubRenderer
+        dataIsLoading={dataIsLoading}
+        comp={Component}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
