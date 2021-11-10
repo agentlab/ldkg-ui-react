@@ -55,6 +55,7 @@ export const BaseTableControl: React.FC<JsonSchemaTableProps> = React.memo(
     onSelect = () => {},
     onDeleteRows,
     onSort,
+    actionsMap,
     loadExpandedData,
     addDataToTarget,
     sortDir,
@@ -89,6 +90,7 @@ export const BaseTableControl: React.FC<JsonSchemaTableProps> = React.memo(
         schema={schema}
         options={options}
         sortDir={sortDir}
+        actionsMap={actionsMap}
         target={options?.target?.name}
         addDataToTarget={addDataToTarget}
         limit={limit}

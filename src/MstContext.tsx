@@ -10,17 +10,20 @@
 import React, { createContext, PropsWithChildren } from 'react';
 import { CellRendererRegistryEntry, RendererRegistryEntry } from './renderers';
 import { registerMstViewDescrSchema, registerMstViewKindSchema } from './models/MstViewDescr';
+import { Actions } from './actions';
 
 export interface MstContextProps {
   store: any;
   renderers: RendererRegistryEntry[];
   cells: CellRendererRegistryEntry[];
+  actions: Actions;
 }
 
 export const MstContext = createContext<MstContextProps>({
   store: {},
   renderers: [],
   cells: [],
+  actions: {},
 });
 
 export const MstContextProvider = ({
@@ -28,10 +31,12 @@ export const MstContextProvider = ({
   renderers,
   cells = [],
   children,
+  actions = {},
 }: PropsWithChildren<{
   store: any;
   renderers: RendererRegistryEntry[];
   cells?: CellRendererRegistryEntry[];
+  actions?: Actions;
 }>): JSX.Element => {
   renderers.forEach((r) => {
     const mstVkeType = (r as any).mstVkeType;
@@ -53,5 +58,5 @@ export const MstContextProvider = ({
       registerMstViewDescrSchema(mstVdeType, true);
     }
   });
-  return <MstContext.Provider value={{ store, renderers, cells }}>{children}</MstContext.Provider>;
+  return <MstContext.Provider value={{ store, renderers, cells, actions }}>{children}</MstContext.Provider>;
 };

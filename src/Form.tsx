@@ -20,6 +20,7 @@ import { JsonSchema7 } from './models/jsonSchema7';
 //import ModalAntd from './antd/util/AntdModal';
 import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
+import { Actions } from './actions';
 import { RankedTester } from './testers';
 import { IViewDescr, IViewDescrElement, IViewKind, IViewKindElement } from './models/uischema';
 
@@ -59,7 +60,7 @@ export interface FormsDispatchProps {
 }
 export interface RenderProps extends FormsDispatchProps {
   viewDescrElement?: IViewDescrElement;
-
+  actions?: Actions;
   id: string;
   schema: JsonSchema7;
   readOnly?: boolean;
@@ -127,7 +128,7 @@ export const processViewKindOverride = (
 };
 
 export const FormsDispatch = observer<FormsDispatchProps>((props) => {
-  const { store, renderers } = useContext(MstContext);
+  const { store, renderers, actions } = useContext(MstContext);
   const { viewKind, viewDescr, form, enabled } = props;
 
   const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
@@ -166,6 +167,7 @@ export const FormsDispatch = observer<FormsDispatchProps>((props) => {
           viewDescr={viewDescr}
           viewDescrElement={viewDescrElement}
           schema={schema}
+          actions={actions}
           enabled={enabled}
           form={form}
         />

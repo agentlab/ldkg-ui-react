@@ -8,29 +8,21 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React from 'react';
-import { Divider } from 'antd';
-import { PlusOutlined, DeleteTwoTone, LinkOutlined } from '@ant-design/icons';
-import { JsObject, JsStrObj } from '@agentlab/sparql-jsld-client';
+import { JsObject } from '@agentlab/sparql-jsld-client';
 
 import './BaseTableMenu.css';
-
-import { tt } from '../ForDelete';
 
 interface BaseTablrMenu {
   record: JsObject;
   selection: any[];
-  target?: string;
-  addDataToTarget: (data: any) => void;
   visible: boolean;
   x: number | string;
   y: number | string;
-  onCreateArtifactBefore: (o: any) => void;
-  onCreateArtifactAfter: (o: any) => void;
-  onDeleteArtifacts: (o: any) => void;
-  onLinkArtifacts: (o: JsObject | any[]) => void;
+  actionsMap?: { title: string; action: (selection: unknown[]) => Promise<void> | void }[];
+  onClick: () => void;
 }
 
-const labelsRu: JsStrObj = {
+/*const labelsRu: JsStrObj = {
   'table.menu.createArtifactBefore': 'Создать перед',
   'table.menu.createArtifactBefore0': 'Создать перед {{ count }}',
   'table.menu.createArtifactBefore1': 'Создать перед {{ count }}',
@@ -47,67 +39,23 @@ const labelsRu: JsStrObj = {
   'table.menu.linkArtifacts0': 'Слинковать {{ count }}',
   'table.menu.linkArtifacts1': 'Слинковать {{ count }}',
   'table.menu.linkArtifacts2': 'Слинковать {{ count }}',
-};
+};*/
 
-export const BaseTableMenu: React.FC<BaseTablrMenu> = ({
-  record,
-  selection,
-  visible,
-  x,
-  y,
-  target,
-  addDataToTarget,
-  onCreateArtifactBefore,
-  onCreateArtifactAfter,
-  onDeleteArtifacts,
-  onLinkArtifacts,
-}) => {
-  const t = (id: string, o?: JsObject) => tt(labelsRu, id, o);
-  if (visible) {
-    return (
+export const BaseTableMenu: React.FC<BaseTablrMenu> = ({ record, selection, visible, x, y, actionsMap, onClick }) => {
+  return (
+    (actionsMap && visible && (
       <ul className='popup' style={{ left: `${x}px`, top: `${y}px`, position: 'fixed' }}>
-        <li
-          onClick={() => (selection.length === 0 ? onCreateArtifactBefore(record) : onCreateArtifactBefore(selection))}>
-          <PlusOutlined />
-          {selection.length === 0
-            ? t('table.menu.createArtifactBefore')
-            : t('table.menu.createArtifactBefore', { count: selection.length })}
-        </li>
-        <li onClick={() => (selection.length === 0 ? onCreateArtifactAfter(record) : onCreateArtifactAfter(selection))}>
-          <PlusOutlined />
-          {selection.length === 0
-            ? t('table.menu.createArtifactAfter')
-            : t('table.menu.createArtifactAfter', { count: selection.length })}
-        </li>
-        <Divider style={{ margin: '2px' }} />
-        <li
-          onClick={() =>
-            selection.length === 0 ? onDeleteArtifacts([record.identifier]) : onDeleteArtifacts(selection)
-          }>
-          <DeleteTwoTone twoToneColor='red' />
-          {selection.length === 0
-            ? t('table.menu.deleteArtifacts')
-            : t('table.menu.deleteArtifacts', { count: selection.length })}
-        </li>
-        <Divider style={{ margin: '2px' }} />
-        <li onClick={() => (selection.length === 0 ? onLinkArtifacts(record) : onLinkArtifacts(selection))}>
-          <LinkOutlined style={{ color: '#08c' }} />
-          {selection.length === 0
-            ? t('table.menu.linkArtifacts')
-            : t('table.menu.linkArtifacts', { count: selection.length })}
-        </li>
-        {selection.length !== 0 && target ? (
-          <React.Fragment>
-            <Divider style={{ margin: '2px' }} />
-            <li onClick={() => addDataToTarget(selection)}>
-              <LinkOutlined style={{ color: '#08c' }} />
-              {`Добавить в ${target}`}
-            </li>
-          </React.Fragment>
-        ) : null}
+        {actionsMap.map(({ title, action }) => (
+          <li
+            onClick={() => {
+              action(selection);
+              onClick();
+            }}>
+            {title}
+          </li>
+        ))}
       </ul>
-    );
-  } else {
-    return null;
-  }
+    )) ||
+    null
+  );
 };

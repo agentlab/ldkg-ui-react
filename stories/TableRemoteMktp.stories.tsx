@@ -80,7 +80,7 @@ const viewKinds = [
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
-        //limit: 50,
+        limit: 10,
       },
     ],
     elements: [

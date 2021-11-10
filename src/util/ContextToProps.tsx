@@ -9,7 +9,7 @@
  ********************************************************************************/
 import { cloneDeep, get, isArray, isEqual, omit } from 'lodash-es';
 
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { Spin } from 'antd';
 import { getSnapshot, applySnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
@@ -22,6 +22,7 @@ import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } 
 import { validators } from '../validation';
 import { MstContext } from '../MstContext';
 import { FilterType } from '../controls/query/type';
+import { mapViewKindPropsToActions } from '../actions';
 
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
@@ -409,7 +410,7 @@ const ComponentCachingSubRenderer = (props: any) => {
 
 export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr, schema } = props;
+    const { viewKind, viewDescr, schema, actions } = props;
     const { store } = useContext(MstContext);
     //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
     //  store.setSaveLogic(viewKindElement.resultsScope);
@@ -419,7 +420,7 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       props,
       store,
     );
-    const options = viewKindElement.options || {};
+    const options = useMemo(() => viewKindElement.options || {}, [viewKindElement]);
     let targetIri = options?.target?.iri;
     let targetData: any = null;
     if (targetIri) {
@@ -434,6 +435,11 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
     }
     const coll = store.getColl(collIriOverride);
     let dataIsLoading = false;
+
+    const actionsMap = useMemo(
+      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
+      [coll, actions, options],
+    );
 
     let data: any[] = [];
     if (!coll.isLoading) {
@@ -466,7 +472,6 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       }
     };
     const onSelect = (data: any) => {
-      console.log('onChange', data);
       if (data && isArray(data)) {
         if (data.length === 1) {
           store.setSelectedData(collIriOverride, data[0]);
@@ -493,6 +498,7 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
         addDataToTarget={addDataToTarget}
         schema={schema}
         loadExpandedData={loadExpandedData}
+        actionsMap={actionsMap}
         sortDir={{} /*store.queries[scope].orderBy*/}
         uri={id}
         onDeleteRows={onDeleteRows}

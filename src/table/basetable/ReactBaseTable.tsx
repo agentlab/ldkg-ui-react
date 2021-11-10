@@ -99,6 +99,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
     loadExpandedData,
     isMenu,
     sortDir,
+    actionsMap,
     schema,
     onDeleteRows,
     target,
@@ -395,14 +396,8 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
           record={popupRecord}
           selection={selection}
           visible={popupVisible}
-          onCreateArtifactBefore={() => {}}
-          target={target}
-          addDataToTarget={onAddDataToTarget}
-          onCreateArtifactAfter={() => {}}
-          onDeleteArtifacts={() => {
-            onDeleteRows(selection);
-          }}
-          onLinkArtifacts={() => {}}
+          actionsMap={actionsMap}
+          onClick={() => setSelection([])}
         />
       </React.Fragment>
     );
