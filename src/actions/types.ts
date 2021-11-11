@@ -1,6 +1,6 @@
 export type ActionFunctionProps = {
   root: any;
-  coll: unknown;
+  coll: any;
   selection: unknown[];
   options?: { [key: string]: unknown };
 };

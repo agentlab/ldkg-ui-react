@@ -14,6 +14,7 @@ import { Tree, Input } from 'antd';
 import { SaveReqDialoglWithStore } from '../util/OnSaveDialog';
 import { NodeRenderer } from './NodeRenderer';
 import { TreeContextMenu } from './TreeContextMenu';
+import { ContextMenu } from '../components';
 
 import './styles.css';
 
@@ -36,6 +37,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
     onCreateFolder,
     onDeleteFolder,
     onRename,
+    actionsMap,
   } = props;
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState<any>(child[0]);
@@ -239,17 +241,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
   };
 
   const onCreateDirectory = (parentId: string) => {
-    onCreateFolder({ [titlePropName]: 'new', [viewKindElement?.options.treeNodeParentKey || 'parent']: parentId }).then(
-      (e: any) => {
-        const data = [...treeData];
-        loop(data, parentId, (item: any) => {
-          const newNode = { ...e, ...{ edited: true, '@type': 'nav:folder', key: e['@id'] } };
-          item.children = [...item.children, ...[newNode]];
-          //item.children.unshift(newNode);
-        });
-        setTreeData(data);
-      },
-    );
+    onCreateFolder({ [titlePropName]: 'new', [viewKindElement?.options.treeNodeParentKey || 'parent']: parentId });
   };
   const onDeleteDirectory = (id: string) => {
     onDeleteFolder(id).then((e: any) => {
@@ -289,14 +281,24 @@ export const TreeRenderer: React.FC<any> = (props) => {
         schemaUri={viewKindElement.resultsScope}
         onCancel={() => setVisible(false)}
       />
-      <TreeContextMenu
+      <ContextMenu
         x={popupCoords.x}
         y={popupCoords.y}
-        node={popupRecord as any}
-        selection={[]}
+        record={popupRecord as any}
+        selection={
+          popupRecord?.otherProps
+            ? [
+                {
+                  ...popupRecord.otherProps,
+                  parentKey: viewKindElement?.options.treeNodeParentKey || 'parent',
+                  titlePropName,
+                },
+              ]
+            : []
+        }
         visible={popupVisible}
-        onCreateDirectory={onCreateDirectory}
-        onDeleteDirectory={onDeleteDirectory}
+        actionsMap={actionsMap}
+        onClick={() => null}
       />
     </div>
   );

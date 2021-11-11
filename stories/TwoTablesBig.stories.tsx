@@ -28,6 +28,7 @@ import {
   tableRenderers,
   viewDescrCollConstr,
   viewKindCollConstr,
+  actions,
 } from '../src';
 
 export default {
@@ -49,7 +50,7 @@ const Template: Story<any> = (args) => {
   return (
     <div style={{ height: 'calc(100vh - 32px)' }}>
       <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells}>
+        <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells} actions={actions}>
           <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
         </MstContextProvider>
       </Provider>
@@ -204,6 +205,18 @@ const viewKinds = [
                 '@type': 'aldkg:DataControl',
                 resultsScope: 'mktp:Categories_Coll',
                 options: {
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addTreeObj',
+                      title: 'Добавить папку',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить папку',
+                    },
+                  ],
                   renderType: 'tree',
                   title: 'Категории маркетплейса',
                   treeNodeTitleKey: 'name',
@@ -216,10 +229,16 @@ const viewKinds = [
                 '@type': 'aldkg:Array',
                 resultsScope: 'mktp:ProductCards_in_Category_Coll',
                 options: {
-                  target: {
-                    name: 'правую таблицу',
-                    iri: 'mktp:ProductCards_in_Product_Coll',
-                  },
+                  selectActions: [
+                    {
+                      '@id': 'action3',
+                      '@type': 'ldkg:addConectionToTarget',
+                      title: 'Добавить в правую таблицу',
+                      options: {
+                        target: 'mktp:ProductCards_in_Product_Coll',
+                      },
+                    },
+                  ],
                   draggable: true,
                   resizeableHeader: true,
                   style: { height: '100%' },
@@ -584,6 +603,18 @@ const viewKinds = [
                 '@type': 'aldkg:DataControl',
                 resultsScope: 'mktp:Products_Coll',
                 options: {
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addTreeObj',
+                      title: 'Добавить папку',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить папку',
+                    },
+                  ],
                   renderType: 'tree',
                   title: 'Продукты',
                   treeNodeTitleKey: 'title',

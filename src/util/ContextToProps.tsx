@@ -243,7 +243,7 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
 
 export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr } = props;
+    const { viewKind, viewDescr, actions } = props;
     const { store } = useContext(MstContext);
     const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
       props,
@@ -273,21 +273,30 @@ export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<
     const onDnD = ({ childId, parentId }: any) => {
       store.updateObjectData({ parent: parentId }, collIriOverride, childId);
     };
+
+    const actionsMap = useMemo(
+      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
+      [coll, actions, options],
+    );
+
     const onCreateFolder = (data: any) => {
-      return store.onCreateObject(data, collIriOverride);
+      return coll.testOnAddObjs([data]);
     };
     const onDeleteFolder = (id: any) => {
       if (id) {
-        return store.onDeleteObject(id, collIriOverride);
+        return coll.testOnDeleteObjs([id]);
       }
     };
+
     const onRename = (newTitle: string, id: any) => {
-      store.updateObjectData({ title: newTitle }, collIriOverride, id);
+      coll.testOnUpdateObj(id, { title: newTitle });
     };
+
     return (
       <Component
         uri={id}
         dataSource={data}
+        actionsMap={actionsMap}
         editing={store.editingData.get(collIriOverride)}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
