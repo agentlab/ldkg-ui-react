@@ -28,6 +28,7 @@ import {
   tableRenderers,
   viewDescrCollConstr,
   viewKindCollConstr,
+  actions,
 } from '../src';
 
 export default {
@@ -49,7 +50,7 @@ const Template: Story<any> = (args) => {
   return (
     <div style={{ height: 'calc(100vh - 32px)' }}>
       <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells}>
+        <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells} actions={actions}>
           <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
         </MstContextProvider>
       </Provider>
@@ -96,7 +97,7 @@ const viewKinds = [
           {
             '@id': 'mktp:Categories_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'als:CategoryShape', //'hs:CategoryShape',
+            schema: 'als:CategoryShape',
             service: mktpSchemaRepoIri,
           },
         ],
@@ -114,6 +115,7 @@ const viewKinds = [
               CardInCatLink: 'https://muying.1688.com/wanju',
             },
             service: mktpSchemaRepoIri,
+            limit: 30,
           },
         ],
       },
@@ -137,7 +139,7 @@ const viewKinds = [
           {
             '@id': 'mktp:ProductCards_in_Product_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:ProductCardShape',
+            schema: 'als:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Product_Coll_Ent_Cond',
               CardInProdLink: null, //'mktp_d:Massager',
@@ -170,13 +172,15 @@ const viewKinds = [
               contentSize: true,
               // by this connection TabControl could have read/write access to the property 'artifactFormat' in condition object with @id='rm:ProjectViewClass_Artifacts_Query_Shape0_Condition'
               connections: [
-                {
-                  toObj: 'mktp:Categories_Coll_Ent',
-                  toProp: 'schema',
-                  fromProp: 'categoryShape',
-                },
+                { toObj: 'mktp:Categories_Coll_Ent', toProp: 'schema', fromProp: 'categoryShape' },
                 {
                   toObj: 'mktp:ProductCards_in_Category_Coll_Ent',
+                  toProp: 'schema',
+                  fromProp: 'productCardShape',
+                },
+                // Product cards
+                {
+                  toObj: 'mktp:ProductCards_in_Product_Coll_Ent',
                   toProp: 'schema',
                   fromProp: 'productCardShape',
                 },
@@ -201,6 +205,18 @@ const viewKinds = [
                 '@type': 'aldkg:DataControl',
                 resultsScope: 'mktp:Categories_Coll',
                 options: {
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addTreeObj',
+                      title: 'Добавить папку',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить папку',
+                    },
+                  ],
                   renderType: 'tree',
                   title: 'Категории маркетплейса',
                   treeNodeTitleKey: 'name',
@@ -213,10 +229,16 @@ const viewKinds = [
                 '@type': 'aldkg:Array',
                 resultsScope: 'mktp:ProductCards_in_Category_Coll',
                 options: {
-                  target: {
-                    name: 'правую таблицу',
-                    iri: 'mktp:ProductCards_in_Product_Coll',
-                  },
+                  selectActions: [
+                    {
+                      '@id': 'action3',
+                      '@type': 'ldkg:addConectionToTarget',
+                      title: 'Добавить в правую таблицу',
+                      options: {
+                        target: 'mktp:ProductCards_in_Product_Coll',
+                      },
+                    },
+                  ],
                   draggable: true,
                   resizeableHeader: true,
                   style: { height: '100%' },
@@ -581,6 +603,18 @@ const viewKinds = [
                 '@type': 'aldkg:DataControl',
                 resultsScope: 'mktp:Products_Coll',
                 options: {
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addTreeObj',
+                      title: 'Добавить папку',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить папку',
+                    },
+                  ],
                   renderType: 'tree',
                   title: 'Продукты',
                   treeNodeTitleKey: 'title',

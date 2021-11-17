@@ -9,7 +9,7 @@
  ********************************************************************************/
 import { cloneDeep, get, isArray, isEqual, omit } from 'lodash-es';
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { Spin } from 'antd';
 import { getSnapshot, applySnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
@@ -22,6 +22,7 @@ import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } 
 import { validators } from '../validation';
 import { MstContext } from '../MstContext';
 import { FilterType } from '../controls/query/type';
+import { mapViewKindPropsToActions } from '../actions';
 
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
@@ -242,7 +243,7 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
 
 export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr } = props;
+    const { viewKind, viewDescr, actions } = props;
     const { store } = useContext(MstContext);
     const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
       props,
@@ -272,21 +273,30 @@ export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<
     const onDnD = ({ childId, parentId }: any) => {
       store.updateObjectData({ parent: parentId }, collIriOverride, childId);
     };
+
+    const actionsMap = useMemo(
+      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
+      [coll, actions, options],
+    );
+
     const onCreateFolder = (data: any) => {
-      return store.onCreateObject(data, collIriOverride);
+      return coll.testOnAddObjs([data]);
     };
     const onDeleteFolder = (id: any) => {
       if (id) {
-        return store.onDeleteObject(id, collIriOverride);
+        return coll.testOnDeleteObjs([id]);
       }
     };
+
     const onRename = (newTitle: string, id: any) => {
-      store.updateObjectData({ title: newTitle }, collIriOverride, id);
+      coll.testOnUpdateObj(id, { title: newTitle });
     };
+
     return (
       <Component
         uri={id}
         dataSource={data}
+        actionsMap={actionsMap}
         editing={store.editingData.get(collIriOverride)}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
@@ -395,9 +405,21 @@ export const withStoreToCollapseProps = (Component: React.FC<any>): React.FC<any
     );
   });
 
+const ComponentCachingSubRenderer = (props: any) => {
+  console.log('ChartSubRenderer');
+  const [allState, setAllState] = useState<any>(null);
+  useEffect(() => {
+    if (!props.dataIsLoading) {
+      //console.log('setDelayedConfig');
+      setAllState(props);
+    }
+  }, [props]);
+  return <props.comp {...allState} />;
+};
+
 export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr, schema } = props;
+    const { viewKind, viewDescr, schema, actions } = props;
     const { store } = useContext(MstContext);
     //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
     //  store.setSaveLogic(viewKindElement.resultsScope);
@@ -407,7 +429,7 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       props,
       store,
     );
-    const options = viewKindElement.options || {};
+    const options = useMemo(() => viewKindElement.options || {}, [viewKindElement]);
     let targetIri = options?.target?.iri;
     let targetData: any = null;
     if (targetIri) {
@@ -421,14 +443,29 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       targetData = targetColl?.data;
     }
     const coll = store.getColl(collIriOverride);
-    let data = coll?.data;
-    if (!data) {
-      return <Spin />;
+    let dataIsLoading = false;
+
+    const actionsMap = useMemo(
+      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
+      [coll, actions, options],
+    );
+
+    let data: any[] = [];
+    if (!coll.isLoading) {
+      data = coll?.data;
+      if (!data) {
+        data = [];
+      } else {
+        data = getSnapshot(data as any);
+      }
+    } else {
+      dataIsLoading = true;
     }
-    data = getSnapshot(data);
-    const loadMoreData = async (offset: number) => {
-      return data; //store.loadDataByUri(scope, offset);
+
+    const loadMoreData = async () => {
+      //coll.loadMore();
     };
+
     const withConnections = options.connections;
     const addDataToTarget = (data: any) => {
       if (targetData) {
@@ -444,7 +481,6 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       }
     };
     const onSelect = (data: any) => {
-      console.log('onChange', data);
       if (data && isArray(data)) {
         if (data.length === 1) {
           store.setSelectedData(collIriOverride, data[0]);
@@ -461,15 +497,17 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
       return data; //store.getDataByQuery(newQuery);
     };
     return (
-      <Component
+      <ComponentCachingSubRenderer
+        dataIsLoading={dataIsLoading}
+        comp={Component}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
         addDataToTarget={addDataToTarget}
         schema={schema}
-        limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}
+        actionsMap={actionsMap}
         sortDir={{} /*store.queries[scope].orderBy*/}
         uri={id}
         onDeleteRows={onDeleteRows}

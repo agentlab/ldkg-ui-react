@@ -36,6 +36,7 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
     ...rest
   }) => {
     const { cells } = useContext(MstContext);
+    if (schema && schema.items) schema = { ...schema, ...schema.items };
     const renderer = maxBy(cells, (r) => r.tester(viewKindElement, schema));
     if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
       return (

@@ -136,7 +136,7 @@ const viewKinds = [
             service: mktpSchemaRepoIri,
           },
         ],
-        limit: 100,
+        limit: 10,
       },
       {
         '@id': 'mktp:Cards_Coll',

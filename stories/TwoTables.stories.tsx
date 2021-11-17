@@ -27,6 +27,7 @@ import {
   RendererRegistryEntry,
   viewKindCollConstr,
   viewDescrCollConstr,
+  actions,
 } from '../src';
 
 import { tableRenderers } from '../src';
@@ -54,7 +55,7 @@ const Template: Story = (args: any) => {
   return (
     <div style={{ height: 'calc(100vh - 32px)' }}>
       <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells} actions={actions}>
           <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
         </MstContextProvider>
       </Provider>
@@ -215,6 +216,26 @@ const viewKinds = [
                   },
                   multiSelect: true,
                   draggable: true,
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addObjects',
+                      title: 'Добавить объекты',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить объекты',
+                    },
+                    {
+                      '@id': 'action3',
+                      '@type': 'ldkg:addConectionToTarget',
+                      title: 'Добавить в правую таблицу',
+                      options: {
+                        target: 'mktp:ProductCards_in_Product_Coll',
+                      },
+                    },
+                  ],
                   resizeableHeader: true,
                   style: { height: '100%' },
                   order: [
@@ -410,6 +431,18 @@ const viewKinds = [
                 '@type': 'aldkg:Array',
                 resultsScope: 'mktp:ProductCards_in_Product_Coll',
                 options: {
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addObjects',
+                      title: 'Добавить объекты',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить объекты',
+                    },
+                  ],
                   draggable: true,
                   resizeableHeader: true,
                   style: { height: '100%' },

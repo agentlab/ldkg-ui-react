@@ -9,6 +9,7 @@
  ********************************************************************************/
 export * from './antd-controls';
 export * from './cells';
+export * from './actions';
 
 export * from './controls';
 export * from './data-controls';

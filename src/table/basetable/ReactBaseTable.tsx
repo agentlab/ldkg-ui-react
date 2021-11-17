@@ -94,12 +94,12 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
     parsedSchema,
     onChangeMenu,
     dataSource,
-    limit,
     loadMoreData,
     setColumnVisible,
     loadExpandedData,
     isMenu,
     sortDir,
+    actionsMap,
     schema,
     onDeleteRows,
     target,
@@ -120,7 +120,6 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
     const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
     const sortColumns = createSortColumnsObject(sortDir);
     const [loadingMore, setLoadingMore] = useState(false);
-    const [loadedAll, setLoadedAll] = useState(false);
     const [selection, setSelection] = useState<any[]>([]);
     const i18n = { language: 'ru_RU' };
     const systemCol = {
@@ -305,20 +304,10 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       }
       setExpandedRowKeys(newExpandedRowKeys);
     };
-    const loadMore = () => {
-      //if (!limit) {
-      setLoadedAll(true);
-      /*} else {
-        setLoadingMore(true);
-        loadMoreData(data.length).then((d: any) => {
-          if (d.length < limit) {
-            setLoadedAll(true);
-          }
-          const newData = [...data, ...d];
-          setData(newData);
-          setLoadingMore(false);
-        });
-      }*/
+    const loadMore = async () => {
+      setLoadingMore(true);
+      await loadMoreData();
+      setLoadingMore(false);
     };
 
     const rowClassName = ({ rowData, rowIndex }: any): string => {
@@ -335,7 +324,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       return null;
     };
     const handleEndReached = (props: any) => {
-      if (loadingMore || loadedAll || data.length === 0) return;
+      if (loadingMore || data.length === 0) return;
       loadMore();
     };
     const handleSortEnd = ({ oldIndex, newIndex }: any) => {
@@ -349,13 +338,14 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
       setSelection([]);
       onSelect([]);
       const newData = checkChildren(dataSource);
-      if (newData.length < limit) {
+      /*if (newData.length < limit) {
         setLoadedAll(true);
       } else {
         setLoadedAll(false);
-      }
+      }*/
       setData(newData);
-    }, [dataSource, limit]);
+    }, [dataSource]);
+
     return (
       <React.Fragment>
         {initTinyMCE}
@@ -406,14 +396,8 @@ export const EditableTable: React.FC<EditableTableProps<any>> = React.memo(
           record={popupRecord}
           selection={selection}
           visible={popupVisible}
-          onCreateArtifactBefore={() => {}}
-          target={target}
-          addDataToTarget={onAddDataToTarget}
-          onCreateArtifactAfter={() => {}}
-          onDeleteArtifacts={() => {
-            onDeleteRows(selection);
-          }}
-          onLinkArtifacts={() => {}}
+          actionsMap={actionsMap}
+          onClick={() => setSelection([])}
         />
       </React.Fragment>
     );
