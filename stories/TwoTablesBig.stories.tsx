@@ -115,9 +115,9 @@ const viewKinds = [
               CardInCatLink: 'https://muying.1688.com/wanju',
             },
             service: mktpSchemaRepoIri,
+            limit: 30,
           },
         ],
-        limit: 30,
       },
       //// Mktp Products
       {
