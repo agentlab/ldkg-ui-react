@@ -463,7 +463,7 @@ export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =
     }
 
     const loadMoreData = async () => {
-      coll.loadMore();
+      //coll.loadMore();
     };
 
     const withConnections = options.connections;
