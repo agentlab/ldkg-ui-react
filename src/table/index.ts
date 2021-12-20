@@ -20,9 +20,10 @@ export * from './basetable/TableSettingMenu';
 export * from './BaseTableControl';
 export * from './TableCell';
 
-export const tableRenderers: RendererRegistryEntry[] = [
+// deprecated for removal
+/*export const tableRenderers: RendererRegistryEntry[] = [
   {
     tester: tableArrayControlTester,
     renderer: BaseTableArrayControlWithStore,
   },
-];
+];*/

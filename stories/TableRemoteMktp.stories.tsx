@@ -73,14 +73,28 @@ const viewKinds = [
         '@type': 'aldkg:CollConst',
         entConstrs: [
           {
-            '@id': 'mktp:ProductCard_Coll_Shape0',
+            '@id': 'mktp:ProductCard_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:ProductCardShape',
+            schema: 'als:ProductCardShape',
+            conditions: {
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent_Cond',
+              amountValueMoving30: {
+                relation: 'between-incl-both',
+                value: [20000, 60000],
+              },
+            },
+            variables: {
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent_Var',
+              imageUrl: null,
+              name: null,
+              amountValueMoving30: null,
+              commentsCount: null,
+            },
             service: mktpSchemaRepoIri,
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
-        limit: 10,
+        limit: 100,
       },
     ],
     elements: [
@@ -103,10 +117,11 @@ const viewKinds = [
               order: [
                 'imageUrl',
                 'name',
-                'price',
-                'saleValue',
-                'categoryPopularity',
+                'amountValueMoving30',
                 'commentsCount',
+                'price',
+                /*'saleValue',
+                'categoryPopularity',
                 'starsValue',
                 'questionsCount',
                 'lastMonthSalesAmount',
@@ -130,23 +145,38 @@ const viewKinds = [
                 'firstParsedAt',
                 'lastMonthParsedAt',
                 'parsedAt',
-                'prevParsedAt',
+                'prevParsedAt',*/
               ],
               imageUrl: {
-                width: 60,
+                width: 100,
                 formatter: 'image',
-                editable: false,
-              },
-              identifier: {
-                formatter: 'link',
-                //dataToFormatter: { link: 'identifier' },
-                sortable: true,
                 editable: false,
               },
               name: {
                 width: 340,
                 formatter: 'link',
                 dataToFormatter: { link: '@id' },
+                sortable: true,
+                editable: false,
+              },
+              price: {
+                width: 60,
+                sortable: true,
+                editable: false,
+              },
+              amountValueMoving30: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              commentsCount: {
+                width: 100,
+                sortable: true,
+                editable: false,
+              },
+              /*identifier: {
+                formatter: 'link',
+                //dataToFormatter: { link: 'identifier' },
                 sortable: true,
                 editable: false,
               },
@@ -157,11 +187,6 @@ const viewKinds = [
               },
               brand: {
                 formatter: 'link',
-                sortable: true,
-                editable: false,
-              },
-              price: {
-                width: 60,
                 sortable: true,
                 editable: false,
               },
@@ -177,11 +202,6 @@ const viewKinds = [
               },
               categoryPopularity: {
                 width: 100,
-                editable: false,
-              },
-              commentsCount: {
-                width: 100,
-                sortable: true,
                 editable: false,
               },
               starsValue: {
@@ -271,7 +291,7 @@ const viewKinds = [
               },
               prevParsedAt: {
                 editable: false,
-              },
+              },*/
             },
           },
         ],

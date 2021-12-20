@@ -36,4 +36,4 @@ export * from './renderers';
 export * from './testers';
 export * from './UnknownRenderer';
 
-export * from './table';
+export * from './BaseTable';
