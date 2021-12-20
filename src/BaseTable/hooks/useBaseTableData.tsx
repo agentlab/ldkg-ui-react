@@ -20,8 +20,8 @@ export const useTableData = ({ viewKindElement: baseViewKindElement, viewDescr, 
   );
 
   const handleEndReached = useCallback(() => {
-    if (!coll.isLoading && !coll.isLoaded) {
-      coll.loadMoreData();
+    if (!coll.isLoading) {
+      coll.loadMore();
     }
   }, [coll]);
 
