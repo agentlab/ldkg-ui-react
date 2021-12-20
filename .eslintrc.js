@@ -5,56 +5,42 @@ module.exports = {
     sourceType: 'module',
     //project: './tsconfig.json',
     ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
-    },
+      jsx: true // Allows for the parsing of JSX
+
+    }
   },
   settings: {
     react: {
-      version: 'detect',
-    },
+      version: 'detect'
+    }
   },
   plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks', 'prettier'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    //'airbnb-typescript',
-    'react-app',
-    'prettier',
-    'plugin:prettier/recommended',
-  ],
+  extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "react-app", "prettier", "plugin:prettier/recommended", "plugin:storybook/recommended"],
   rules: {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-empty-function': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
-    '@typescript-eslint/ban-types': [
-      'error',
-      {
-        extendDefaults: true,
-        types: {
-          '{}': false,
-          Function: false,
-        },
-      },
-    ],
+    '@typescript-eslint/ban-types': ['error', {
+      extendDefaults: true,
+      types: {
+        '{}': false,
+        Function: false
+      }
+    }],
     'react/jsx-props-no-spreading': 'off',
     'react/prop-types': 'off',
     'import/no-anonymous-default-export': 'off',
     'import/prefer-default-export': 'off',
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        selector: 'variableLike',
-        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-      },
-    ],
+    '@typescript-eslint/naming-convention': ['error', {
+      selector: 'variableLike',
+      format: ['camelCase', 'PascalCase', 'UPPER_CASE']
+    }]
   },
-  overrides: [
-    {
-      files: ['**/*.stories.*'],
-      rules: {
-        'import/no-anonymous-default-export': 'off',
-      },
-    },
-  ],
+  overrides: [{
+    files: ['**/*.stories.*'],
+    rules: {
+      'import/no-anonymous-default-export': 'off'
+    }
+  }]
 };
