@@ -45,8 +45,11 @@ const Template: Story = (args: any) => {
     ...tableRenderers,
   ];
 
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, args.additionalColls);
+  const client = new SparqlClientImpl(
+    'https://rdf4j.agentlab.ru/rdf4j-server',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
+  );
+  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   connectReduxDevtools(require('remotedev'), rootStore);
@@ -89,7 +92,7 @@ const viewKinds = [
             schema: 'hs:ProductCardShape',
             conditions: {
               '@id': 'mktp:ProductCards_in_Category_Coll_Ent0_con',
-              CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
+              //CardInCatLink: 'https://www.wildberries.ru/catalog/zdorove/ozdorovlenie?sort=popular&page=1&xsubject=594',
             },
           },
         ],
@@ -130,7 +133,7 @@ const viewKinds = [
               },
               initialSizes: [80, 20],
               split: 'horizontal',
-              collapseDirection: 'top',
+              collapseDirection: 'down',
             },
             // child ui elements configs
             elements: [
@@ -143,7 +146,7 @@ const viewKinds = [
                     height: '100%',
                   },
                   initialSizes: [80, 20],
-                  collapseDirection: 'left',
+                  collapseDirection: 'right',
                 },
                 // child ui elements configs
                 elements: [
