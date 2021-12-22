@@ -4,6 +4,7 @@ import { JsObject } from '@agentlab/sparql-jsld-client';
 import { EditableCell } from '../components/cells/EditableTableCell';
 import { createViewKindElement } from './createViewKindElement';
 import { getColumnFilterProps } from './getFilterColumnProps';
+import isEmpty from 'lodash/isEmpty';
 
 type Props = {
   property: string;
@@ -23,11 +24,13 @@ export const createColumn = ({
   viewDescr,
   viewDescrElement,
 }: Props) => {
+  const order = viewKindElement?.options?.order || [];
   const options = viewKindElement?.options?.[property] || {};
+  const disabled = (isEmpty(options) && !order.includes(property)) || !!options?.disabled;
   const newColumn: JsObject = {
     editable: false,
     hidden: false,
-    disabled: false,
+    disabled,
     width: 200,
     resizable: true,
     title: propertySchema.title || property,
