@@ -1,0 +1,6 @@
+# Ignore TinyMCE static, which will be updated by 'yarn install'
+
+/themes
+/skins
+/plugins
+/icons
