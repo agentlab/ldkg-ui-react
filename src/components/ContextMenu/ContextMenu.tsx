@@ -28,6 +28,7 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ record, selection, vis
       <ul className='popup' style={{ left: `${x}px`, top: `${y}px`, position: 'fixed' }}>
         {actionsMap.map(({ title, action }) => (
           <li
+            key={title}
             onClick={() => {
               action(selection);
               onClick();

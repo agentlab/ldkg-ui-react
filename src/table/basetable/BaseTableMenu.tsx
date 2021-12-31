@@ -47,6 +47,7 @@ export const BaseTableMenu: React.FC<BaseTablrMenu> = ({ record, selection, visi
       <ul className='popup' style={{ left: `${x}px`, top: `${y}px`, position: 'fixed' }}>
         {actionsMap.map(({ title, action }) => (
           <li
+            key={title}
             onClick={() => {
               action(selection);
               onClick();
