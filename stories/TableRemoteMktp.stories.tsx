@@ -114,39 +114,7 @@ const viewKinds = [
               resizeableHeader: true,
               style: { height: '100%' },
               multiSelect: true,
-              order: [
-                'imageUrl',
-                'name',
-                'amountValueMoving30',
-                'commentsCount',
-                'price',
-                /*'saleValue',
-                'categoryPopularity',
-                'starsValue',
-                'questionsCount',
-                'lastMonthSalesAmount',
-                'lastMonthSalesValue',
-                'perMonthSalesAmount',
-                'perMonthSalesValue',
-                'prevMonthSalesAmount',
-                'prevMonthSalesValue',
-                'salesAmountDiff',
-                'totalSales',
-                'totalSalesDiff',
-                'stocks',
-                'stocksDiffOrders',
-                'stocksDiffReturns',
-                'country',
-                'brand',
-                'seller',
-                'identifier',
-                'rootId',
-                'photosCount',
-                'firstParsedAt',
-                'lastMonthParsedAt',
-                'parsedAt',
-                'prevParsedAt',*/
-              ],
+              order: ['imageUrl', 'name', 'amountValueMoving30', 'commentsCount', 'price'],
               imageUrl: {
                 width: 100,
                 formatter: 'image',
@@ -174,124 +142,13 @@ const viewKinds = [
                 sortable: true,
                 editable: false,
               },
-              /*identifier: {
+              identifier: {
                 formatter: 'link',
                 //dataToFormatter: { link: 'identifier' },
                 sortable: true,
                 editable: false,
+                disabled: true,
               },
-              country: {
-                width: 60,
-                sortable: true,
-                editable: false,
-              },
-              brand: {
-                formatter: 'link',
-                sortable: true,
-                editable: false,
-              },
-              saleValue: {
-                width: 60,
-                sortable: true,
-                editable: false,
-              },
-              seller: {
-                formatter: 'link',
-                sortable: true,
-                editable: false,
-              },
-              categoryPopularity: {
-                width: 100,
-                editable: false,
-              },
-              starsValue: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              questionsCount: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              lastMonthSalesAmount: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              lastMonthSalesValue: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              perMonthSalesAmount: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              perMonthSalesValue: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              prevMonthSalesAmount: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              prevMonthSalesValue: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              salesAmountDiff: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              totalSales: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              totalSalesDiff: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              stocks: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              stocksDiffOrders: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              stocksDiffReturns: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              rootId: {
-                editable: false,
-              },
-              photosCount: {
-                editable: false,
-              },
-              firstParsedAt: {
-                editable: false,
-              },
-              lastMonthParsedAt: {
-                editable: false,
-              },
-              parsedAt: {
-                editable: false,
-              },
-              prevParsedAt: {
-                editable: false,
-              },*/
             },
           },
         ],

@@ -41,7 +41,7 @@ export const useColumns = ({
       }),
     [schemaProperties, viewKind, viewKindElement, viewDescr, viewDescrElement],
   );
-  //говно - надо поменять
+
   const setColumnsVisible = useCallback(
     (idxs: any) =>
       setVisibleColumns((prevVisibleColumns: any) => {
@@ -56,8 +56,8 @@ export const useColumns = ({
   );
 
   const menuItems = useMemo(
-    () => getConfigMenuItems({ columns: parsedColumns, setColumnsVisible }),
-    [parsedColumns, setColumnsVisible],
+    () => getConfigMenuItems({ columns: visibleColumns, setColumnsVisible }),
+    [visibleColumns, setColumnsVisible],
   );
   const systemColumn = useMemo(() => getSystemColumn({ menuItems }), [menuItems]);
   const selectionColumn = useMemo(
