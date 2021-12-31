@@ -1,6 +1,6 @@
 {
   "name": "@agentlab/ldkg-ui-react",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "LDKG Forms UI Components",
   "license": "GPL-3.0",
   "author": "Alexey Ivanov <amivanoff@gmail.com>",
@@ -146,7 +146,6 @@
     "cypress-storybook": "^0.5.1",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-config-react-app": "^7.0.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-flowtype": "^8.0.3",
     "eslint-plugin-import": "^2.25.3",

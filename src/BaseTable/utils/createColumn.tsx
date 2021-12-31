@@ -4,7 +4,7 @@ import { JsObject } from '@agentlab/sparql-jsld-client';
 import { EditableCell } from '../components/cells/EditableTableCell';
 import { createViewKindElement } from './createViewKindElement';
 import { getColumnFilterProps } from './getFilterColumnProps';
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash-es';
 
 type Props = {
   property: string;
