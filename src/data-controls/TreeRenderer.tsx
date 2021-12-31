@@ -263,7 +263,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
       />
       <Tree
         selectedKeys={selectedKey}
-        draggable
+        draggable={{ icon: false }}
         onExpand={onExpand}
         expandedKeys={expandedKeys}
         autoExpandParent={autoExpandParent}

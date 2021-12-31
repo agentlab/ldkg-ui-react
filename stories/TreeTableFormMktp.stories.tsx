@@ -183,7 +183,9 @@ const viewKinds = [
                   title: 'WildBerries',
                   treeNodeTitleKey: 'name',
                   treeNodeParentKey: 'SubcatInCatLink',
-                  connections: [{ toObj: 'mktp:ProductCards_in_Category_Coll_Ent0_con', toProp: 'CardInCatLink' }],
+                  connections: [
+                    { toObj: 'mktp:ProductCards_in_Category_Coll_Ent0_con', toProp: 'CardInCatLink', fromProp: '@id' },
+                  ],
                 },
               },
               {

@@ -261,6 +261,7 @@ const viewKinds = [
                       //from: 'selector', // inner UI component variable name in case it has several variables? e.g. drag, moveX/moveY, width/height?
                       toObj: 'rm:Artifacts_Coll_Cond',
                       toProp: 'assetFolder',
+                      fromProp: '@id',
                     },
                   ],
                 },

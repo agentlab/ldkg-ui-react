@@ -221,7 +221,9 @@ const viewKinds = [
                   title: 'Категории маркетплейса',
                   treeNodeTitleKey: 'name',
                   treeNodeParentKey: 'SubcatInCatLink',
-                  connections: [{ toObj: 'mktp:ProductCards_in_Category_Coll_Ent_con', toProp: 'CardInCatLink' }],
+                  connections: [
+                    { toObj: 'mktp:ProductCards_in_Category_Coll_Ent_con', toProp: 'CardInCatLink', fromProp: '@id' },
+                  ],
                 },
               },
               {
@@ -619,7 +621,9 @@ const viewKinds = [
                   title: 'Продукты',
                   treeNodeTitleKey: 'title',
                   treeNodeParentKey: 'SubProdInProdLink',
-                  connections: [{ toObj: 'mktp:ProductCards_in_Product_Coll_Ent_Cond', toProp: 'CardInProdLink' }],
+                  connections: [
+                    { toObj: 'mktp:ProductCards_in_Product_Coll_Ent_Cond', toProp: 'CardInProdLink', fromProp: '@id' },
+                  ],
                 },
               },
             ],
