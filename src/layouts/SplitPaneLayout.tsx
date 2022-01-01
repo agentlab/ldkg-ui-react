@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { useMemo } from 'react';
-import { SplitPane } from 'react-collapse-pane';
+import { SplitPane } from '@agentlab/react-collapse-pane';
 import { FormsDispatch } from '../Form';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
@@ -49,7 +49,8 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
           options.collapseDirection && {
             collapseDirection: options.collapseDirection,
           }
-        }>
+        }
+        resizerOptions={options.resizerOptions}>
         {panes}
       </SplitPane>
     </div>

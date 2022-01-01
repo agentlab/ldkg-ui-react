@@ -63,6 +63,25 @@ const Template: Story = (args: any) => {
   );
 };
 
+/*const css = {
+    height: '1px',
+    background: 'rgba(0, 0, 0, 0.1)',
+  };
+  const hoverCss = {
+    height: '10px',
+    marginTop: '-10px',
+    backgroundImage: 'radial-gradient(at center center,rgba(0,0,0,0.2) 0%,transparent 70%,transparent 100%)',
+    backgroundSize: '100% 50px',
+    backgroundPosition: '50% 0',
+    backgroundRepeat: 'no-repeat',
+    borderRight: '1px solid rgba(0, 0, 0, 0.1)',
+  };*/
+const css = {
+  width: '2px',
+  backgroundColor: 'rgba(120, 120, 120, 0.3)',
+};
+const hoverCss = { backgroundColor: 'rgba(120, 120, 120, 0.6)' };
+
 const viewKinds = [
   {
     '@id': 'mktp:TwoTablesViewKind',
@@ -163,6 +182,11 @@ const viewKinds = [
               },
               initialSizes: [30, 70],
               collapseDirection: 'left',
+              resizerOptions: {
+                grabberSize: '2rem',
+                css: css,
+                hoverCss: hoverCss,
+              },
             },
             elements: [
               {
