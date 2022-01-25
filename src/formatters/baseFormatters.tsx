@@ -87,9 +87,34 @@ export const link = ({ value, link, options }: any): JSX.Element => {
       {specialImage ? (
         <Image style={{ display: 'inline', width: '1em', height: '1em' }} src={specialImage} preview={false} />
       ) : null}
-      <a style={{ color: 'black', verticalAlign: 'middle' }} href={link ? link : value}>
+      <a style={{ verticalAlign: 'middle' }} href={link ? link : value}>
         {label}
       </a>
+    </React.Fragment>
+  );
+};
+
+export const extlink = ({ value, link, options }: any): JSX.Element => {
+  const label = options.label || value || link;
+  const icon = options.icon;
+  return (
+    <React.Fragment>
+      {icon ? (
+        <>
+          {label}
+          <a
+            style={{ verticalAlign: 'top', padding: '0px 16px 2px 6px ' }}
+            href={link ? link : value}
+            target='_blank'
+            rel='noreferrer'>
+            <Image style={{ display: 'inline', width: '16px', height: '16px' }} src={icon} preview={false} />
+          </a>
+        </>
+      ) : (
+        <a style={{ verticalAlign: 'middle' }} href={link ? link : value} target='_blank' rel='noreferrer'>
+          {label}
+        </a>
+      )}
     </React.Fragment>
   );
 };

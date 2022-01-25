@@ -122,8 +122,11 @@ const viewKinds = [
               },
               name: {
                 width: 340,
-                formatter: 'link',
-                dataToFormatter: { link: '@id' },
+                formatter: 'extlink',
+                dataToFormatter: {
+                  link: '@id',
+                },
+                icon: 'img/icons8-external-link-16.png',
                 sortable: true,
                 editable: false,
               },
