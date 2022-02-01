@@ -29,106 +29,104 @@ import {
 
 import { tableRenderers } from '../src';
 
+export default {
+  title: 'Table/Remote Mktp',
+  component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
+} as Meta;
+
+const Template: Story = (args: any) => {
+  const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
+
+  const client = new SparqlClientImpl(
+    'https://rdf4j.agentlab.ru/rdf4j-server',
+    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
+  );
+  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+        </MstContextProvider>
+      </Provider>
+    </div>
+  );
+};
+
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
+
 const viewKinds = [
   {
-    '@id': 'rm:TableViewKind',
+    '@id': 'mktp:TableViewKind',
     '@type': 'aldkg:ViewKind',
     title: 'Карточки',
     description: 'Big table View with form',
     collsConstrs: [
       {
-        '@id': 'rm:ProductCard_Coll',
+        '@id': 'mktp:ProductCard_Coll',
         '@type': 'aldkg:CollConst',
         entConstrs: [
           {
-            '@id': 'rm:ProductCard_Coll_Shape0',
+            '@id': 'mktp:ProductCard_Coll_Ent',
             '@type': 'aldkg:EntConstr',
-            schema: 'hs:ProductCardShape',
-            /*conditions: {
-              '@id': 'rm:CollectionView_Artifacts_Coll_Shape0_Condition',
-              '@type': 'rm:QueryCondition',
-              assetFolder: 'folders:samples_collection', //'folders:root',
-            },*/
+            schema: 'als:ProductCardShape',
+            conditions: {
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent_Cond',
+              amountValueMoving30: {
+                relation: 'between-incl-both',
+                value: [20000, 60000],
+              },
+            },
+            variables: {
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent_Var',
+              imageUrl: null,
+              name: null,
+              amountValueMoving30: null,
+              commentsCount: null,
+            },
+            service: mktpSchemaRepoIri,
           },
         ],
         //orderBy: [{ expression: variable('identifier0'), descending: false }],
-        //limit: 50,
+        limit: 100,
       },
     ],
     elements: [
       {
-        '@id': 'rm:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
+        '@id': 'mktp:_934jHd67',
+        '@type': 'aldkg:PanelLayout',
         options: {
-          height: 'all-empty-space',
+          style: { height: '100%' },
         },
         elements: [
           {
             '@id': 'ProductCardTable',
             '@type': 'aldkg:Array',
-            resultsScope: 'rm:ProductCard_Coll',
+            resultsScope: 'mktp:ProductCard_Coll',
             options: {
               draggable: true,
               resizeableHeader: true,
-              height: 'all-empty-space',
               style: { height: '100%' },
-              order: [
-                'imageUrl',
-                'name',
-                'price',
-                'saleValue',
-                'categoryPopularity',
-                'commentsCount',
-                'starsValue',
-                'questionsCount',
-                'lastMonthSalesAmount',
-                'lastMonthSalesValue',
-                'perMonthSalesAmount',
-                'perMonthSalesValue',
-                'prevMonthSalesAmount',
-                'prevMonthSalesValue',
-                'salesAmountDiff',
-                'totalSales',
-                'totalSalesDiff',
-                'stocks',
-                'stocksDiffOrders',
-                'stocksDiffReturns',
-                'country',
-                'brand',
-                'seller',
-                'identifier',
-                'rootId',
-                'photosCount',
-                'firstParsedAt',
-                'lastMonthParsedAt',
-                'parsedAt',
-                'prevParsedAt',
-              ],
+              multiSelect: true,
+              order: ['imageUrl', 'name', 'amountValueMoving30', 'commentsCount', 'price'],
               imageUrl: {
-                width: 60,
+                width: 100,
                 formatter: 'image',
-                editable: false,
-              },
-              identifier: {
-                formatter: 'link',
-                //dataToFormatter: { link: 'identifier' },
-                sortable: true,
                 editable: false,
               },
               name: {
                 width: 340,
-                formatter: 'link',
-                dataToFormatter: { link: '@id' },
-                sortable: true,
-                editable: false,
-              },
-              country: {
-                width: 60,
-                sortable: true,
-                editable: false,
-              },
-              brand: {
-                formatter: 'link',
+                formatter: 'extlink',
+                dataToFormatter: {
+                  link: '@id',
+                },
+                icon: 'img/icons8-external-link-16.png',
                 sortable: true,
                 editable: false,
               },
@@ -137,18 +135,9 @@ const viewKinds = [
                 sortable: true,
                 editable: false,
               },
-              saleValue: {
-                width: 60,
-                sortable: true,
-                editable: false,
-              },
-              seller: {
-                formatter: 'link',
-                sortable: true,
-                editable: false,
-              },
-              categoryPopularity: {
+              amountValueMoving30: {
                 width: 100,
+                sortable: true,
                 editable: false,
               },
               commentsCount: {
@@ -156,93 +145,12 @@ const viewKinds = [
                 sortable: true,
                 editable: false,
               },
-              starsValue: {
-                width: 100,
+              identifier: {
+                formatter: 'link',
+                //dataToFormatter: { link: 'identifier' },
                 sortable: true,
                 editable: false,
-              },
-              questionsCount: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              lastMonthSalesAmount: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              lastMonthSalesValue: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              perMonthSalesAmount: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              perMonthSalesValue: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              prevMonthSalesAmount: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              prevMonthSalesValue: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              salesAmountDiff: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              totalSales: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              totalSalesDiff: {
-                width: 150,
-                sortable: true,
-                editable: false,
-              },
-              stocks: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              stocksDiffOrders: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              stocksDiffReturns: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
-              rootId: {
-                editable: false,
-              },
-              photosCount: {
-                editable: false,
-              },
-              firstParsedAt: {
-                editable: false,
-              },
-              lastMonthParsedAt: {
-                editable: false,
-              },
-              parsedAt: {
-                editable: false,
-              },
-              prevParsedAt: {
-                editable: false,
+                disabled: true,
               },
             },
           },
@@ -256,7 +164,7 @@ const viewDescrs = [
   {
     '@id': 'rm:TableViewDescr',
     '@type': 'aldkg:ViewDescr',
-    viewKind: 'rm:TableViewKind',
+    viewKind: 'mktp:TableViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
@@ -288,30 +196,6 @@ const additionalColls: CollState[] = [
     },
   },
 ];
-
-export default {
-  title: 'Table/Remote Mktp',
-  component: Form,
-} as Meta;
-
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
-
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
 
 export const RemoteData = Template.bind({});
 RemoteData.args = {};

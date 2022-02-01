@@ -9,18 +9,19 @@
  ********************************************************************************/
 import { sortBy } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
-import SplitPane from 'react-split-pane';
 import { Tree, Input } from 'antd';
 
 import { SaveReqDialoglWithStore } from '../util/OnSaveDialog';
-import { FormsDispatch } from '../Form';
 import { NodeRenderer } from './NodeRenderer';
 import { TreeContextMenu } from './TreeContextMenu';
+import { ContextMenu } from '../components';
 
 import './styles.css';
 
 const divStyle: React.CSSProperties = {
+  height: '100%',
   padding: '5px',
+  overflow: 'auto',
 };
 
 export const TreeRenderer: React.FC<any> = (props) => {
@@ -36,6 +37,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
     onCreateFolder,
     onDeleteFolder,
     onRename,
+    actionsMap,
   } = props;
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState<any>(child[0]);
@@ -48,6 +50,11 @@ export const TreeRenderer: React.FC<any> = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [beforeSearchExpand, setBeforeSearchExpand] = useState([]);
+
+  useEffect(() => {
+    setTreeData(child);
+  }, [child]);
+
   useEffect(() => {
     onSelect(selected);
   }, [selected, onSelect]);
@@ -234,17 +241,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
   };
 
   const onCreateDirectory = (parentId: string) => {
-    onCreateFolder({ [titlePropName]: 'new', [viewKindElement?.options.treeNodeParentKey || 'parent']: parentId }).then(
-      (e: any) => {
-        const data = [...treeData];
-        loop(data, parentId, (item: any) => {
-          const newNode = { ...e, ...{ edited: true, '@type': 'nav:folder', key: e['@id'] } };
-          item.children = [...item.children, ...[newNode]];
-          //item.children.unshift(newNode);
-        });
-        setTreeData(data);
-      },
-    );
+    onCreateFolder({ [titlePropName]: 'new', [viewKindElement?.options.treeNodeParentKey || 'parent']: parentId });
   };
   const onDeleteDirectory = (id: string) => {
     onDeleteFolder(id).then((e: any) => {
@@ -266,7 +263,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
       />
       <Tree
         selectedKeys={selectedKey}
-        draggable
+        draggable={{ icon: false }}
         onExpand={onExpand}
         expandedKeys={expandedKeys}
         autoExpandParent={autoExpandParent}
@@ -284,14 +281,24 @@ export const TreeRenderer: React.FC<any> = (props) => {
         schemaUri={viewKindElement.resultsScope}
         onCancel={() => setVisible(false)}
       />
-      <TreeContextMenu
+      <ContextMenu
         x={popupCoords.x}
         y={popupCoords.y}
-        node={popupRecord as any}
-        selection={[]}
+        record={popupRecord as any}
+        selection={
+          popupRecord?.otherProps
+            ? [
+                {
+                  ...popupRecord.otherProps,
+                  parentKey: viewKindElement?.options.treeNodeParentKey || 'parent',
+                  titlePropName,
+                },
+              ]
+            : []
+        }
         visible={popupVisible}
-        onCreateDirectory={onCreateDirectory}
-        onDeleteDirectory={onDeleteDirectory}
+        actionsMap={actionsMap}
+        onClick={() => null}
       />
     </div>
   );

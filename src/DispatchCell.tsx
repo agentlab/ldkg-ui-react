@@ -11,8 +11,9 @@ import { isEqual, maxBy } from 'lodash-es';
 import React, { useContext } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { CellRendererRegistryEntry } from './renderers';
 import { UnknownRenderer } from './UnknownRenderer';
-import { ErrorFallback, DispatchCellProps, FormsCell, RenderCellProps } from './Form';
+import { ErrorFallback, DispatchCellProps, RenderCellProps } from './Form';
 import { MstContext } from './MstContext';
 
 /**
@@ -35,6 +36,7 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
     ...rest
   }) => {
     const { cells } = useContext(MstContext);
+    if (schema && schema.items) schema = { ...schema, ...schema.items };
     const renderer = maxBy(cells, (r) => r.tester(viewKindElement, schema));
     if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
       return (
@@ -47,7 +49,7 @@ export const DispatchCell: React.FC<DispatchCellProps> = React.memo(
         </td>
       );
     } else {
-      const Render: React.FC<RenderCellProps> = (renderer as FormsCell).cell;
+      const Render: React.FC<RenderCellProps> = (renderer as CellRendererRegistryEntry).cell;
       return (
         <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
           <Render

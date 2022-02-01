@@ -11,13 +11,13 @@ import { RendererRegistryEntry } from '../renderers';
 import { antdDataControlTester, AntdDataControlWithStore } from './DataControl';
 import { saveControlTester, AntdSaveControlWithStore } from './SaveControl';
 import { antdSelectControlTester, AntdSelectControlWithStore } from './SelectControl';
-import { antdTabControlTester, AntdTabControlWithStore } from './TabControlRenderer';
+import { antdTabControlTester, AntdTabControlWithStore, MstVkeTabControl } from './TabControlRenderer';
 
 export const antdDataControlRenderers: RendererRegistryEntry[] = [
   { tester: antdDataControlTester, renderer: AntdDataControlWithStore },
   { tester: saveControlTester, renderer: AntdSaveControlWithStore },
   { tester: antdSelectControlTester, renderer: AntdSelectControlWithStore },
-  { tester: antdTabControlTester, renderer: AntdTabControlWithStore },
+  { tester: antdTabControlTester, renderer: AntdTabControlWithStore, mstVkeType: MstVkeTabControl },
 ];
 
 export * from './DataControl';

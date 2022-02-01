@@ -7,6 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
+import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import { variable } from '@rdfjs/data-model';
 import React from 'react';
@@ -26,9 +27,60 @@ import {
   RendererRegistryEntry,
   viewKindCollConstr,
   viewDescrCollConstr,
+  actions,
 } from '../src';
 
 import { tableRenderers } from '../src';
+
+export default {
+  title: 'Several Controls/TwoTables RemoteData',
+  component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
+} as Meta;
+
+const Template: Story = (args: any) => {
+  const antdRenderers: RendererRegistryEntry[] = [
+    ...antdControlRenderers,
+    ...antdLayoutRenderers,
+    ...antdDataControlRenderers,
+    ...tableRenderers,
+  ];
+
+  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, args.additionalColls);
+  const store: any = asReduxStore(rootStore);
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  connectReduxDevtools(require('remotedev'), rootStore);
+  return (
+    <div style={{ height: 'calc(100vh - 32px)' }}>
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells} actions={actions}>
+          <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
+        </MstContextProvider>
+      </Provider>
+    </div>
+  );
+};
+
+/*const css = {
+    height: '1px',
+    background: 'rgba(0, 0, 0, 0.1)',
+  };
+  const hoverCss = {
+    height: '10px',
+    marginTop: '-10px',
+    backgroundImage: 'radial-gradient(at center center,rgba(0,0,0,0.2) 0%,transparent 70%,transparent 100%)',
+    backgroundSize: '100% 50px',
+    backgroundPosition: '50% 0',
+    backgroundRepeat: 'no-repeat',
+    borderRight: '1px solid rgba(0, 0, 0, 0.1)',
+  };*/
+const css = {
+  width: '2px',
+  backgroundColor: 'rgba(120, 120, 120, 0.3)',
+};
+const hoverCss = { backgroundColor: 'rgba(120, 120, 120, 0.6)' };
 
 const viewKinds = [
   {
@@ -89,14 +141,36 @@ const viewKinds = [
           },
         ],
       },
+      {
+        '@id': 'mktp:Cards_Coll',
+        '@type': 'aldkg:CollConstr',
+        entConstrs: [
+          {
+            '@id': 'mktp:Cards_Coll_Ent0',
+            '@type': 'aldkg:EntConstr',
+            schema: 'hs:ProductCardShape',
+            conditions: {
+              '@id': 'mktp:Cards_Coll_Ent0_con',
+              '@_id': 'https://www.wildberries.ru/catalog/15570386/detail.aspx',
+            },
+          },
+        ],
+        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+      },
     ],
     elements: [
       {
-        '@id': 'mktp:_934jHd67',
-        '@type': 'aldkg:VerticalLayout',
-        //options: {
-        //  height: 'all-empty-space',
-        ///},
+        '@id': 'mktp:_97hFH67',
+        '@type': 'aldkg:SplitPaneLayout',
+        options: {
+          style: {
+            width: '100%',
+            height: '100%',
+          },
+          initialSizes: [40, 60],
+          collapseDirection: 'left',
+        },
+        // child ui elements configs
         elements: [
           {
             '@id': 'mktp:_97hFH67',
@@ -106,16 +180,14 @@ const viewKinds = [
                 width: '100%',
                 height: '100%',
               },
-              defaultSize: {
-                'mktp:MarketplacesTabs': '17%',
-                'mktp:CategoryCardsTable': '43',
-                'mktp:ProductCardsTable': '26%',
-                'mktp:ProductTree': '17%',
+              initialSizes: [30, 70],
+              collapseDirection: 'left',
+              resizerOptions: {
+                grabberSize: '2rem',
+                css: css,
+                hoverCss: hoverCss,
               },
-              height: 'all-empty-space',
-              //width: 'all-empty-space',
             },
-            // child ui elements configs
             elements: [
               {
                 '@id': 'mktp:MarketplacesTabs',
@@ -130,7 +202,13 @@ const viewKinds = [
                       title: 'WildBerries',
                       treeNodeTitleKey: 'name',
                       treeNodeParentKey: 'SubcatInCatLink',
-                      connections: [{ to: 'mktp:ProductCards_in_Category_Coll_Ent0_con', by: 'CardInCatLink' }],
+                      connections: [
+                        {
+                          toObj: 'mktp:ProductCards_in_Category_Coll_Ent0_con',
+                          toProp: 'CardInCatLink',
+                          fromProp: '@id',
+                        },
+                      ],
                     },
                   },
                   {
@@ -166,9 +244,29 @@ const viewKinds = [
                     name: 'правую таблицу',
                     iri: 'mktp:ProductCards_in_Product_Coll',
                   },
+                  multiSelect: true,
                   draggable: true,
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addObjects',
+                      title: 'Добавить объекты',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить объекты',
+                    },
+                    {
+                      '@id': 'action3',
+                      '@type': 'ldkg:addConectionToTarget',
+                      title: 'Добавить в правую таблицу',
+                      options: {
+                        target: 'mktp:ProductCards_in_Product_Coll',
+                      },
+                    },
+                  ],
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',
@@ -344,14 +442,39 @@ const viewKinds = [
                   },
                 },
               },
+            ],
+          },
+          {
+            '@id': 'mktp:_97hFH67',
+            '@type': 'aldkg:SplitPaneLayout',
+            options: {
+              style: {
+                width: '100%',
+                height: '100%',
+              },
+              initialSizes: [80, 20],
+              collapseDirection: 'right',
+            },
+            elements: [
               {
                 '@id': 'mktp:ProductCardsTable',
                 '@type': 'aldkg:Array',
                 resultsScope: 'mktp:ProductCards_in_Product_Coll',
                 options: {
+                  selectActions: [
+                    {
+                      '@id': 'action1',
+                      '@type': 'ldkg:addObjects',
+                      title: 'Добавить объекты',
+                    },
+                    {
+                      '@id': 'action2',
+                      '@type': 'ldkg:deleteObjects',
+                      title: 'Удалить объекты',
+                    },
+                  ],
                   draggable: true,
                   resizeableHeader: true,
-                  height: 'all-empty-space',
                   style: { height: '100%' },
                   order: [
                     'imageUrl',
@@ -536,7 +659,9 @@ const viewKinds = [
                   title: 'Продукты',
                   treeNodeTitleKey: 'title',
                   treeNodeParentKey: 'SubProdInProdLink',
-                  connections: [{ to: 'mktp:ProductCards_in_Product_Coll_Ent0_Cond', by: 'CardInProdLink' }],
+                  connections: [
+                    { toObj: 'mktp:ProductCards_in_Product_Coll_Ent0_Cond', toProp: 'CardInProdLink', fromProp: '@id' },
+                  ],
                 },
               },
             ],
@@ -559,6 +684,38 @@ const viewDescrs = [
     elements: [],
   },
 ];
+
+const cardForm = {
+  '@id': 'mktp:_933ndh8',
+  '@type': 'aldkg:VerticalLayout',
+  options: {
+    style: {
+      margin: '5px',
+    },
+  },
+  elements: [
+    {
+      '@id': 'mktp:_29jGu67',
+      '@type': 'aldkg:Control',
+      resultsScope: 'mktp:Cards_Coll/identifier',
+    },
+    {
+      '@id': 'mktp:_18hfgG78',
+      '@type': 'aldkg:Control',
+      resultsScope: 'mktp:Cards_Coll/name',
+    },
+    {
+      '@id': 'mktp:_732HJfg6',
+      '@type': 'aldkg:Control',
+      resultsScope: 'mktp:Cards_Coll/country',
+    },
+    {
+      '@id': 'mktp:_93jaSy67',
+      '@type': 'aldkg:Control',
+      resultsScope: 'mktp:Cards_Coll/brand',
+    },
+  ],
+};
 
 const additionalColls: CollState[] = [
   // ViewKinds Collection
@@ -584,34 +741,107 @@ const additionalColls: CollState[] = [
   },
 ];
 
-export default {
-  title: 'Several Controls/TwoTables',
-  component: Form,
-} as Meta;
-
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-    ...tableRenderers,
-  ];
-
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
-  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
+//////////////////////////////////////////////////////
+//   Without VerticalLayout AND without Form
+//////////////////////////////////////////////////////
+export const NoVerticalLayout100Height = Template.bind({});
+NoVerticalLayout100Height.args = {
+  additionalColls,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
 };
 
-export const RemoteData = Template.bind({});
-RemoteData.args = {};
+export const NoVerticalLayout50Height = Template.bind({});
+const additionalCollsNoVerticalLayout50Height = cloneDeep(additionalColls);
+additionalCollsNoVerticalLayout50Height[0].data[0].elements[0].options.style.height = '50%';
+NoVerticalLayout50Height.args = {
+  additionalColls: additionalCollsNoVerticalLayout50Height,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
+
+//////////////////////////////////////////////////////
+//   Without VerticalLayout AND with Form
+//////////////////////////////////////////////////////
+export const NoVerticalLayout100HeightForm = Template.bind({});
+const additionalCollsNoVerticalLayout100HeightForm = cloneDeep(additionalColls);
+additionalCollsNoVerticalLayout100HeightForm[0].data[0].elements = [
+  ...additionalCollsNoVerticalLayout100HeightForm[0].data[0].elements,
+  cardForm,
+];
+NoVerticalLayout100HeightForm.args = {
+  additionalColls: additionalCollsNoVerticalLayout100HeightForm,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
+
+export const NoVerticalLayout50HeightForm = Template.bind({});
+const additionalColls50HeightForm = cloneDeep(additionalCollsNoVerticalLayout100HeightForm);
+additionalColls50HeightForm[0].data[0].elements[0].options.style.height = '50%';
+NoVerticalLayout50HeightForm.args = {
+  additionalColls: additionalColls50HeightForm,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
+
+//////////////////////////////////////////////////////
+//   With VerticalLayout AND without Form
+//////////////////////////////////////////////////////
+export const VerticalLayout100Height = Template.bind({});
+const additionalCollsVerticalLayout100Height = cloneDeep(additionalColls);
+// wrap elements in VerticalLayout
+additionalCollsVerticalLayout100Height[0].data[0].elements = [
+  {
+    '@id': 'mktp:_934jHd67',
+    '@type': 'aldkg:PanelLayout',
+    options: {
+      style: { height: '100%' },
+    },
+    elements: additionalCollsVerticalLayout100Height[0].data[0].elements,
+  },
+];
+VerticalLayout100Height.args = {
+  additionalColls: additionalCollsVerticalLayout100Height,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
+
+export const VerticalLayout50Height = Template.bind({});
+const additionalCollsVerticalLayout50Height = cloneDeep(additionalCollsVerticalLayout100Height);
+additionalCollsVerticalLayout50Height[0].data[0].elements[0].elements[0].options.style.height = '50%';
+VerticalLayout50Height.args = {
+  additionalColls: additionalCollsVerticalLayout50Height,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
+
+//////////////////////////////////////////////////////
+//   With VerticalLayout AND with Form
+//////////////////////////////////////////////////////
+export const VerticalLayout100HeightForm = Template.bind({});
+const additionalCollsVerticalLayout100HeightForm = cloneDeep(additionalColls);
+// wrap elements in VerticalLayout
+additionalCollsVerticalLayout100HeightForm[0].data[0].elements = [
+  {
+    '@id': 'mktp:_934jHd67',
+    '@type': 'aldkg:PanelLayout',
+    options: {
+      style: { height: '100%' },
+    },
+    elements: [...additionalCollsVerticalLayout100HeightForm[0].data[0].elements, cardForm],
+  },
+];
+VerticalLayout100HeightForm.args = {
+  additionalColls: additionalCollsVerticalLayout100HeightForm,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};
+
+export const VerticalLayout50HeightForm = Template.bind({});
+const additionalCollsVerticalLayout50HeightForm = cloneDeep(additionalCollsVerticalLayout100HeightForm);
+additionalCollsVerticalLayout50HeightForm[0].data[0].elements[0].elements[0].options.style.height = '50%';
+VerticalLayout50HeightForm.args = {
+  additionalColls: additionalCollsVerticalLayout50HeightForm,
+  viewDescrId: viewDescrs[0]['@id'],
+  viewDescrCollId: viewDescrCollConstr['@id'],
+};

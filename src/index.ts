@@ -9,6 +9,7 @@
  ********************************************************************************/
 export * from './antd-controls';
 export * from './cells';
+export * from './actions';
 
 export * from './controls';
 export * from './data-controls';
@@ -18,8 +19,8 @@ export * from './layouts';
 
 export * from './models/uischema';
 
-export * from './models/ViewCollConstrs';
 export * from './models/MstViewDescr';
+export * from './models/ViewCollConstrs';
 export * from './models/ViewShapeSchema';
 
 export * from './util/AntdModal';
@@ -35,4 +36,4 @@ export * from './renderers';
 export * from './testers';
 export * from './UnknownRenderer';
 
-export * from './table';
+export * from './BaseTable';

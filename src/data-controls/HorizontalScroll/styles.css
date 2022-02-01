@@ -1,0 +1,21 @@
+* {
+  box-sizing: border-box;
+}
+
+.arrow {
+  width: 50px;
+  height: 50px;
+  align-self: center;
+  border-radius: 8px;
+  margin: 0 3px 0 3px;
+  background-color: white;
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgb(222, 222, 222);
+  cursor: pointer;
+  text-align: center;
+  vertical-align: middle;
+  right: 1%;
+  user-select: none;
+  font-size: 1.2rem;
+  color: rgb(136, 135, 135);
+}

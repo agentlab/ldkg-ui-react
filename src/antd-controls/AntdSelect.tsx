@@ -29,7 +29,7 @@ export const AntdSelect = React.memo((props: any /*EnumCellProps & WithClassname
       onChange={(value: any) => handleChange(path, value)}>
       {[
         <Select.Option value='' key={'empty'}>
-          ''
+          {''}
         </Select.Option>,
       ].concat(
         options.map((optionValue: any) => (

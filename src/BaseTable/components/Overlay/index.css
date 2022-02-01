@@ -1,0 +1,17 @@
+.overlay {
+  pointer-events: none;
+  background: rgba(131, 157, 190, 0.17);
+  position: absolute;
+  bottom: 30px;
+  width: 79px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.spin {
+  margin: 3px auto;
+}

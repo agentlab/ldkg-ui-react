@@ -17,8 +17,9 @@ import { Card } from 'antd';
 import { DispatchCell } from '../DispatchCell';
 import './cell.css';
 
-export const AntdCellCardLayout = (props: any) => {
+export const AntdCellCardLayout = (props: any): JSX.Element => {
   const { viewKind, viewKindElement, viewDescr, viewDescrElement, schema, data, id } = props;
+  const style = viewKindElement?.options?.style || {};
   const createCardChilds = () =>
     viewKindElement.elements
       ? viewKindElement.elements.map((e: IViewKindElement, idx: number) => {
@@ -38,7 +39,11 @@ export const AntdCellCardLayout = (props: any) => {
           );
         })
       : null;
-  return <Card hoverable>{createCardChilds()}</Card>;
+  return (
+    <Card style={style} hoverable>
+      {createCardChilds()}
+    </Card>
+  );
 };
 
 /**

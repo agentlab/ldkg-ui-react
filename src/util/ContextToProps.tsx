@@ -9,7 +9,7 @@
  ********************************************************************************/
 import { cloneDeep, get, isArray, isEqual, omit } from 'lodash-es';
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { Spin } from 'antd';
 import { getSnapshot, applySnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
@@ -22,6 +22,8 @@ import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } 
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
 import { MstContext } from '../MstContext';
+import { FilterType } from '../controls/query/type';
+import { mapViewKindPropsToActions } from '../actions';
 
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
@@ -60,7 +62,6 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     }>(successValidation);
 
     const { form } = props;
-    const controlProps = mapStateToControlProps(props);
 
     const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
       props,
@@ -70,12 +71,8 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
     const coll = collIriOverride ? store.getColl(collIriOverride) : undefined;
     let collData = coll?.data;
     if (collData) collData = getSnapshot(collData);
-
-    if (!collData || collData.length === 0) {
-      return <Spin />;
-    }
-
-    const data = collData[0];
+    const data = collData.length !== 0 ? collData[0] : {};
+    const controlProps = mapStateToControlProps({ ...props, data: data || {} });
     const onValidate = (data: any) => {
       if (viewKindElement.options && Array.isArray(viewKindElement.options.validation)) {
         const validation = viewKindElement.options.validation;
@@ -142,7 +139,7 @@ export const withStoreToFormProps = (Component: React.FC<any>): React.FC<RenderP
     );
   });
 
-export const withStoreToViewClassProps = (Component: any): any =>
+export const withStoreToViewClassProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewKindElement, viewDescr, viewDescrElement } = props;
     const { store } = useContext(MstContext);
@@ -161,7 +158,7 @@ export const withStoreToViewClassProps = (Component: any): any =>
     );
   });
 
-export const withStoreToViewProps = (Component: any): any =>
+export const withStoreToViewProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
@@ -201,12 +198,12 @@ export const withStoreToViewProps = (Component: any): any =>
     );
   });
 
-export const withStoreToModalProps = (Component: any): any =>
+export const withStoreToModalProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     return <Component {...props} />;
   });
 
-export const withStoreToButtonProps = (Component: any): any =>
+export const withStoreToButtonProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { schema, viewKindElement } = props;
     const { store } = useContext(MstContext);
@@ -222,16 +219,17 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>((props: any) => {
     const { data, onMeasureChange, height, uri, CKey, rowData, viewKindElement } = props;
     const path = viewKindElement.scope ? viewKindElement.scope.split('/').join('.') : null;
-    const controlProps = mapStateToControlProps(props);
     /*const { store } = useRootCtx();
     const onSave = (data: any) => {
       let newData: any = {};
       newData[CKey] = data;
       store.saveCellData(newData, uri, rowData['@id']);
     };*/
+    const cellData = path ? get(data, path) : data;
+    const controlProps = mapStateToControlProps({ ...props, data: cellData });
     return (
       <Component
-        data={path ? get(data, path) : data}
+        data={cellData}
         height={height}
         rowData={rowData}
         onMeasureChange={onMeasureChange}
@@ -244,23 +242,21 @@ export const withStoreToCellProps = (Component: React.FC<any>): React.FC<any> =>
     );
   });
 
-export const withStoreToDataControlProps = (Component: any): any =>
+export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr } = props;
+    const { viewKind, viewDescr, actions } = props;
     const { store } = useContext(MstContext);
     const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
       props,
       store,
     );
     const coll = store.getColl(collIriOverride);
-    let data = coll?.data;
-    if (!data || data.length === 0) {
-      //if (store.data[scope] === undefined) {
-      //store.loadData(scope);
-      return <Spin />;
+    if (!coll) return <Spin />;
+
+    let data: any[] = [];
+    if (!coll.isLoading) {
+      data = cloneDeep(coll.dataJs);
     }
-    //const scope = viewKindElement.resultsScope;
-    data = cloneDeep(getSnapshot(data));
     const options = viewKindElement?.options || {};
     const withConnections = options.connections;
     const onSelect = (data: any) => {
@@ -278,21 +274,30 @@ export const withStoreToDataControlProps = (Component: any): any =>
     const onDnD = ({ childId, parentId }: any) => {
       store.updateObjectData({ parent: parentId }, collIriOverride, childId);
     };
+
+    const actionsMap = useMemo(
+      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
+      [coll, actions, options],
+    );
+
     const onCreateFolder = (data: any) => {
-      return store.onCreateObject(data, collIriOverride);
+      return coll.testOnAddObjs([data]);
     };
     const onDeleteFolder = (id: any) => {
       if (id) {
-        return store.onDeleteObject(id, collIriOverride);
+        return coll.testOnDeleteObjs([id]);
       }
     };
+
     const onRename = (newTitle: string, id: any) => {
-      store.updateObjectData({ title: newTitle }, collIriOverride, id);
+      coll.testOnUpdateObj(id, { title: newTitle });
     };
+
     return (
       <Component
         uri={id}
         dataSource={data}
+        actionsMap={actionsMap}
         editing={store.editingData.get(collIriOverride)}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
@@ -309,7 +314,7 @@ export const withStoreToDataControlProps = (Component: any): any =>
     );
   });
 
-export const withStoreToSelectControlProps = (Component: any): any =>
+export const withStoreToSelectControlProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewKindElement, viewDescr, viewDescrElement } = props;
     const { store } = useContext(MstContext);
@@ -328,8 +333,8 @@ export const withStoreToSelectControlProps = (Component: any): any =>
       withConnections &&
         options.connections.forEach((e: any) => {
           const condition: any = {};
-          condition[e.by] = data['@id'];
-          //view2.editCondition(e.to, condition, scope, e.by, data);
+          condition[e.toProp] = data['@id'];
+          //view2.editCondition(e.toObj, condition, scope, e.toProp, data);
         });
     };
     return (
@@ -346,54 +351,7 @@ export const withStoreToSelectControlProps = (Component: any): any =>
     );
   });
 
-export const withStoreToTabProps = (Component: any): any =>
-  observer<any>(({ ...props }: any) => {
-    const { schema, viewKind, viewDescr } = props;
-    const { store } = useContext(MstContext);
-    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
-    //  store.setSaveLogic(viewKindElement.resultsScope);
-    //}
-
-    const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
-      props,
-      store,
-    );
-    const options = viewKindElement.options || {};
-
-    const coll = store.getColl(collIriOverride);
-    let data = coll?.data;
-    if (!data) {
-      return <Spin />;
-    }
-    data = getSnapshot(data);
-    const withConnections = options.connections;
-    const onChange = (data: any) => {
-      store.setSelectedData(collIriOverride, data);
-      if (withConnections) {
-        store.editConn(withConnections, data['@id']);
-        //        options.connections.forEach((e: any) => {
-        //          const condition: any = {};
-        //          condition[e.by] = data['@id'];
-        //          store.editCondition(e.to, condition, scope, e.by, data);
-        //        });
-      }
-    };
-    return (
-      <Component
-        viewKind={viewKind}
-        viewKindElement={viewKindElement}
-        viewDescr={viewDescr}
-        viewDescrElement={viewDescrElement}
-        schema={schema}
-        uri={id}
-        tabs={data}
-        handleChange={onChange}
-        options={options}
-      />
-    );
-  });
-
-export const withStoreToMenuProps = (Component: any): any =>
+export const withStoreToMenuProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { schema, viewKind, viewDescr } = props;
     const { store } = useContext(MstContext);
@@ -432,7 +390,7 @@ export const withStoreToMenuProps = (Component: any): any =>
     );
   });
 
-export const withStoreToCollapseProps = (Component: any): any =>
+export const withStoreToCollapseProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
     const { viewKind, viewKindElement, viewDescr, viewDescrElement } = props;
     const options = viewKindElement.options || {};
@@ -448,9 +406,21 @@ export const withStoreToCollapseProps = (Component: any): any =>
     );
   });
 
-export const withStoreToArrayProps = (Component: any): any =>
+const ComponentCachingSubRenderer = (props: any) => {
+  console.log('ChartSubRenderer');
+  const [allState, setAllState] = useState<any>(null);
+  useEffect(() => {
+    if (!props.dataIsLoading) {
+      //console.log('setDelayedConfig');
+      setAllState(props);
+    }
+  }, [props]);
+  return <props.comp {...allState} />;
+};
+
+export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =>
   observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr, schema } = props;
+    const { viewKind, viewDescr, schema, actions } = props;
     const { store } = useContext(MstContext);
     //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
     //  store.setSaveLogic(viewKindElement.resultsScope);
@@ -460,7 +430,7 @@ export const withStoreToArrayProps = (Component: any): any =>
       props,
       store,
     );
-    const options = viewKindElement.options || {};
+    const options = useMemo(() => viewKindElement.options || {}, [viewKindElement]);
     let targetIri = options?.target?.iri;
     let targetData: any = null;
     if (targetIri) {
@@ -474,14 +444,29 @@ export const withStoreToArrayProps = (Component: any): any =>
       targetData = targetColl?.data;
     }
     const coll = store.getColl(collIriOverride);
-    let data = coll?.data;
-    if (!data) {
-      return <Spin />;
+    let dataIsLoading = false;
+
+    const actionsMap = useMemo(
+      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
+      [coll, actions, options],
+    );
+
+    let data: any[] = [];
+    if (!coll.isLoading) {
+      data = coll?.data;
+      if (!data) {
+        data = [];
+      } else {
+        data = getSnapshot(data as any);
+      }
+    } else {
+      dataIsLoading = true;
     }
-    data = getSnapshot(data);
-    const loadMoreData = async (offset: number) => {
-      return data; //store.loadDataByUri(scope, offset);
+
+    const loadMoreData = async () => {
+      //coll.loadMore();
     };
+
     const withConnections = options.connections;
     const addDataToTarget = (data: any) => {
       if (targetData) {
@@ -497,14 +482,13 @@ export const withStoreToArrayProps = (Component: any): any =>
       }
     };
     const onSelect = (data: any) => {
-      console.log('onChange', data);
       if (data && isArray(data)) {
         if (data.length === 1) {
           store.setSelectedData(collIriOverride, data[0]);
           withConnections && store.editConn(withConnections, data[0]);
         } else {
-          store.setSelectedData(collIriOverride, undefined);
-          withConnections && store.editConn(withConnections, undefined);
+          store.setSelectedData(collIriOverride, null);
+          withConnections && store.editConn(withConnections, null);
         }
       }
     };
@@ -556,15 +540,17 @@ export const withStoreToArrayProps = (Component: any): any =>
       applySnapshot(coll.collConstr, newCollCnstr);
     };
     return (
-      <Component
+      <ComponentCachingSubRenderer
+        dataIsLoading={dataIsLoading}
+        comp={Component}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
         addDataToTarget={addDataToTarget}
         schema={schema}
-        limit={10 /*store.queries[viewKindElement.resultsScope].limit*/}
         loadExpandedData={loadExpandedData}
+        actionsMap={actionsMap}
         sortDir={store.getColl(collIriOverride).collConstr.orderBy}
         uri={id}
         onDeleteRows={onDeleteRows}
@@ -578,28 +564,31 @@ export const withStoreToArrayProps = (Component: any): any =>
   });
 
 export const withLayoutProps = (Component: React.FC<LayoutComponent>): React.FC<RenderProps> =>
-  observer<RenderProps>(({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, form }) => {
-    const id = viewKindElement['@id'] || '';
-    const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
-    const visible = checkProperty('visible', id, viewKindElement, viewKind);
-    const { store } = useContext(MstContext);
-    if (viewKindElement.options && viewKindElement.options.connections) {
-      viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.to));
-    }
-    return (
-      <Component
-        viewKind={viewKind}
-        viewKindElement={viewKindElement}
-        viewDescr={viewDescr}
-        viewDescrElement={viewDescrElement}
-        id={id}
-        schema={schema}
-        enabled={enabledLayout}
-        visible={visible}
-        form={form}
-      />
-    );
-  });
+  observer<RenderProps>(
+    ({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, enabled, form, readOnly }) => {
+      const id = viewKindElement['@id'] || '';
+      const enabledLayout = enabled && checkProperty('editable', id, viewKindElement, viewKind);
+      const visible = checkProperty('visible', id, viewKindElement, viewKind);
+      const { store } = useContext(MstContext);
+      if (viewKindElement.options && viewKindElement.options.connections) {
+        viewKindElement.options.connections.forEach((e: any) => store.setSaveLogic(e.from, e.toObj));
+      }
+      return (
+        <Component
+          viewKind={viewKind}
+          viewKindElement={viewKindElement}
+          viewDescr={viewDescr}
+          viewDescrElement={viewDescrElement}
+          id={id}
+          schema={schema}
+          enabled={enabledLayout}
+          visible={visible}
+          form={form}
+          readOnly={readOnly}
+        />
+      );
+    },
+  );
 
 export const withStoreToSaveButtonProps = (Component: React.FC<ButtonComponent>): React.FC<RenderProps> =>
   observer<RenderProps>(({ viewKindElement, enabled }) => {
@@ -629,8 +618,8 @@ export const withStoreToSaveDialogProps = (Component: React.FC<SaveDialog>): Rea
     return <Component visible={visible} onOk={onSave} onCancel={onCancel} />;
   });
 
-const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, enabled }: ToControlProps) => {
-  const pathSegments = id.split('/');
+const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }: ToControlProps & { data: any }) => {
+  const pathSegments = viewKindElement?.resultsScope?.split('/') || [];
   const path = pathSegments.join('.properties.');
   const visible = checkProperty('visible', path, viewKindElement, viewKind);
   const editable =
@@ -641,11 +630,12 @@ const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, enabled
   const labelDesc = createLabelDescriptionFrom(viewKindElement as any, schema);
   const label = labelDesc.show ? (labelDesc.text as string) : '';
   const key = pathSegments[1];
+  const enabled = data[key] !== undefined && data[key] !== null ? editable ?? true : false;
   return {
     description,
     label,
     visible,
-    enabled: editable === 'undefined' ? true : editable,
+    enabled,
     required,
     uiOptions,
     key,
@@ -755,7 +745,7 @@ export const withContextFormsSaveControlProps =
 
 //type FormsPropTypes = ControlProps | CombinatorProps | LayoutProps | CellProps | ArrayLayoutProps | StatePropsOfControlWithDetail | OwnPropsOfRenderer;
 
-export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/) => {
+export const areEqual = (prevProps: any /*FormsPropTypes*/, nextProps: any /*FormsPropTypes*/): boolean => {
   const prev = omit(prevProps, ['handleChange']);
   const next = omit(nextProps, ['handleChange']);
   return isEqual(prev, next);

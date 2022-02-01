@@ -7,29 +7,76 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React from 'react';
-import { Tabs, Col } from 'antd';
+import React, { useContext } from 'react';
+import { Tabs, Col, Spin } from 'antd';
+import { getSnapshot, types } from 'mobx-state-tree';
+import { observer } from 'mobx-react-lite';
 import { JsObject } from '@agentlab/sparql-jsld-client';
 
+import { MstViewKindElement } from '../models/MstViewDescr';
+
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
-import { withStoreToTabProps } from '../util/ContextToProps';
+import { MstContext } from '../MstContext';
+import { processViewKindOverride } from '../Form';
+import { MstJsObject } from '@agentlab/sparql-jsld-client/es/models/MstCollConstr';
+import { IViewKindElement } from '../models/uischema';
 
-interface TabControlProps {
+export type IMstVkeTabControl = IViewKindElement & {
   tabs: JsObject[];
-  handleChange?: (data: JsObject) => void;
-  options: JsObject;
-}
-
-const localeRus = {
-  all: 'Все',
 };
 
-export const TabControl: React.FC<TabControlProps> = ({ tabs = [], handleChange = () => {}, options = {} }) => {
+export const MstVkeTabControl = types.compose(
+  'MstVkeTabControl',
+  MstViewKindElement,
+  types.model({
+    '@type': types.literal('aldkg:TabControl'),
+    tabs: types.maybe(types.array(MstJsObject)),
+  }),
+);
+
+export const AntdTabControlWithStore = observer<any>((props) => {
+  const { schema, viewKind, viewDescr } = props;
+  const { store } = useContext(MstContext);
+  //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
+  //  store.setSaveLogic(viewKindElement.resultsScope);
+  //}
+
+  const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
+    props,
+    store,
+  );
+  const options = viewKindElement.options || {};
+
+  const coll = store.getColl(collIriOverride);
+  let data = coll?.data;
+  if (!data) {
+    return <Spin />;
+  }
+  data = getSnapshot(data);
+  const withConnections = options.connections;
+  let tabs: JsObject[] = data;
+
+  //if (tabs && tabs[0] && tabs[0].rank) {
+  //  tabs = tabs.slice().sort((t1, t2) => t1.rank - t2.rank);
+  //}
+
+  let additionalTabs = (viewKindElement as IMstVkeTabControl).tabs;
+  if (additionalTabs) {
+    additionalTabs = additionalTabs.slice().sort((t1, t2) => t1.rank - t2.rank);
+    tabs = [...additionalTabs.filter((t) => t.rank <= 100), ...tabs, ...additionalTabs.filter((t) => t.rank > 100)];
+  }
+
+  const handleChange = (data: any) => {
+    store.setSelectedData(collIriOverride, data);
+    if (withConnections) store.editConn(withConnections, data);
+  };
+
   const onSelect = (key: string) => {
-    if (key === 'all') {
-      handleChange({});
+    const v = tabs[Number(key)];
+    if (v['@type'] === 'aldkg:Tab') {
+      handleChange(v.value);
     } else {
-      handleChange(tabs[Number(key)]);
+      handleChange(v);
     }
   };
   return (
@@ -43,7 +90,6 @@ export const TabControl: React.FC<TabControlProps> = ({ tabs = [], handleChange 
       )}
       <Col>
         <Tabs size='small' onChange={onSelect}>
-          <Tabs.TabPane tab={localeRus.all} key='all' />
           {tabs.map((tab, index) => (
             <Tabs.TabPane tab={tab.title} key={String(index)} />
           ))}
@@ -51,11 +97,6 @@ export const TabControl: React.FC<TabControlProps> = ({ tabs = [], handleChange 
       </Col>
     </div>
   );
-};
-
-export const TabControlRenderer = (props: any) => {
-  return <TabControl {...props} />;
-};
+});
 
 export const antdTabControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:TabControl'));
-export const AntdTabControlWithStore = withStoreToTabProps(TabControlRenderer);

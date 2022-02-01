@@ -15,7 +15,7 @@ import { withStoreToCellProps } from '../util/ContextToProps';
 import { TinyMCE } from '../antd-controls/TinyMCE';
 import { CellRenderer } from './CellRenderer';
 
-export const TinyMCECell = (props: any) => {
+export const TinyMCECell = (props: any): JSX.Element => {
   return <CellRenderer Cell={TinyMCE} {...props} />;
 };
 

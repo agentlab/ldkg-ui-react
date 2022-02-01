@@ -7,10 +7,8 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { get } from 'lodash-es';
-
-import React from 'react';
-import { Button, Card, Image, Row, Col, Rate } from 'antd';
+import React, { useEffect, useState, useRef } from 'react';
+import { Button, Image, Rate } from 'antd';
 
 import {
   rankWith,
@@ -37,7 +35,7 @@ import './cell.css';
 /**
  * AntdBooleanCell
  */
-export const AntdBooleanCell = (props: any) => {
+export const AntdBooleanCell = (props: any): JSX.Element => {
   return <CellRenderer Cell={AntdCheckbox} {...props} />;
 };
 export const antdBooleanCellTester: RankedTester = rankWith(2, isBooleanControl);
@@ -46,12 +44,27 @@ export const AntdBooleanCellWithStore = withStoreToCellProps(AntdBooleanCell);
 /**
  * AntdButtonCell
  */
-export const AntdButtonCell = (props: any) => {
+export const AntdButtonCell = (props: any): JSX.Element => {
   const options = props.uiOptions;
+  const [fontSize, setFontSize] = useState<number>();
+  const cellRef = useRef<any>(null);
+
+  useEffect(() => {
+    const resizeObserver = new ResizeObserver((entries) => {
+      setFontSize(entries[0].contentRect.width * options.relativeFont);
+    });
+
+    if (options.relativeFont) {
+      const antRow = cellRef.current.parentNode.parentNode;
+      resizeObserver.observe(antRow);
+    }
+
+    return () => resizeObserver.disconnect();
+  }, []);
   return (
-    <Button size={'small'} style={options.style}>
+    <button ref={cellRef} style={{ fontSize, verticalAlign: 'middle', ...options.style }}>
       {options.label}
-    </Button>
+    </button>
   );
 };
 export const antdButtonCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:Button'));
@@ -60,14 +73,14 @@ export const AntdButtonCellWithStore = withStoreToCellProps(AntdButtonCell);
 /**
  * AntdEnumCell
  */
-export const AntdEnumCell = (props: any /*: EnumCellProps & WithClassname*/) => <AntdSelect {...props} />;
+export const AntdEnumCell = (props: any /*: EnumCellProps & WithClassname*/): JSX.Element => <AntdSelect {...props} />;
 export const antdEnumCellTester: RankedTester = rankWith(2, isEnumControl);
 export const AntdEnumCellWithStore = withStoreToCellProps(AntdEnumCell);
 
 /**
  * AntdNumberCell & AntdIntegerCell
  */
-export const AntdNumberCell = (props: any) => {
+export const AntdNumberCell = (props: any): JSX.Element => {
   return <CellRenderer Cell={AntdInputNumber} {...props} />;
 };
 
@@ -80,9 +93,11 @@ export const AntdNumberCellWithStore = withStoreToCellProps(AntdNumberCell);
 /**
  * AntdImageCell
  */
-export const AntdImageCell = (props: any) => {
+export const AntdImageCell = (props: any): JSX.Element => {
   const { data } = props;
-  return <Image style={{ height: '100%', width: '100%' }} src={data[0]} />;
+  return (
+    <Image width={'100%'} src={Array.isArray(data) ? data[0] || '' : data && typeof data === 'string' ? data : ''} />
+  );
 };
 export const antdImageCellTester: RankedTester = rankWith(2, uiTypeIs('aldkg:ImageCell'));
 export const AntdImageCellWithStore = withStoreToCellProps(AntdImageCell);
@@ -90,7 +105,7 @@ export const AntdImageCellWithStore = withStoreToCellProps(AntdImageCell);
 /**
  * AntdRateCell
  */
-export const AntdRateCell = (props: any /*: EnumCellProps & WithClassname*/) => {
+export const AntdRateCell = (props: any /*: EnumCellProps & WithClassname*/): JSX.Element => {
   return (
     <React.Fragment>
       <Rate
@@ -109,7 +124,7 @@ export const AntdRateCellWithStore = withStoreToCellProps(AntdRateCell);
 /**
  * AntdTextCell
  */
-export const AntdTextCell = (props: any) => {
+export const AntdTextCell = (props: any): JSX.Element => {
   return <CellRenderer Cell={AntdInputText} {...props} />;
 };
 export const antdTextCellTester: RankedTester = rankWith(1, isStringControl);
@@ -118,7 +133,7 @@ export const AntdTextCellWithStore = withStoreToCellProps(AntdTextCell);
 /**
  * AntdTimeCell
  */
-export const AntdTimeCell = (props: any) => {
+export const AntdTimeCell = (props: any): JSX.Element => {
   return <CellRenderer Cell={AntdInputDate} {...props} />;
 };
 export const antdTimeCellTester: RankedTester = rankWith(2, isDateTimeControl);

@@ -14,11 +14,13 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Spin } from 'antd';
 import { observer } from 'mobx-react-lite';
 import { getSnapshot } from 'mobx-state-tree';
+import { JsObject } from '@agentlab/sparql-jsld-client';
 
 import { JsonSchema7 } from './models/jsonSchema7';
 //import ModalAntd from './antd/util/AntdModal';
 import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
+import { Actions } from './actions';
 import { RankedTester } from './testers';
 import { IViewDescr, IViewDescrElement, IViewKind, IViewKindElement } from './models/uischema';
 
@@ -44,14 +46,6 @@ export interface ControlComponent {
   formData?: any;
 }
 
-export interface FormsRenderer {
-  tester: RankedTester;
-  renderer: React.FC<any>;
-}
-export interface FormsCell {
-  tester: RankedTester;
-  cell: React.FC<any>;
-}
 export interface FormsInitStateProps {
   viewDescrCollId: string;
   viewDescrId: string;
@@ -66,9 +60,10 @@ export interface FormsDispatchProps {
 }
 export interface RenderProps extends FormsDispatchProps {
   viewDescrElement?: IViewDescrElement;
-
+  actions?: Actions;
   id: string;
   schema: JsonSchema7;
+  readOnly?: boolean;
 }
 export interface RenderCellProps extends RenderProps {
   data: any;
@@ -83,7 +78,7 @@ export interface DispatchCellProps extends RenderProps {
   [key: string]: any;
 }
 
-export function mstJsonLdIds(o: any) {
+export function mstJsonLdIds(o: JsObject): JsObject | undefined {
   if (o) return { '@id': o['@id'], '@type': o['@type'] };
   else return undefined;
 }
@@ -133,7 +128,7 @@ export const processViewKindOverride = (
 };
 
 export const FormsDispatch = observer<FormsDispatchProps>((props) => {
-  const { store, renderers } = useContext(MstContext);
+  const { store, renderers, actions } = useContext(MstContext);
   const { viewKind, viewDescr, form, enabled } = props;
 
   const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
@@ -172,6 +167,7 @@ export const FormsDispatch = observer<FormsDispatchProps>((props) => {
           viewDescr={viewDescr}
           viewDescrElement={viewDescrElement}
           schema={schema}
+          actions={actions}
           enabled={enabled}
           form={form}
         />
@@ -180,7 +176,7 @@ export const FormsDispatch = observer<FormsDispatchProps>((props) => {
   }
 });
 
-export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+export function ErrorFallback({ error, resetErrorBoundary }: FallbackProps): JSX.Element {
   return (
     <div role='alert'>
       <p>Something went wrong:</p>
@@ -228,8 +224,8 @@ export const Form = observer<FormsInitStateProps>((props) => {
   }
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-      {viewKindObs.elements.map((el: IViewKindElement) => (
-        <FormsDispatch {...props} viewKind={viewKindObs} viewKindElement={el} viewDescr={viewDescrObs} />
+      {viewKindObs.elements.map((el: IViewKindElement, idx: number) => (
+        <FormsDispatch key={idx} {...props} viewKind={viewKindObs} viewKindElement={el} viewDescr={viewDescrObs} />
       ))}
     </ErrorBoundary>
   );

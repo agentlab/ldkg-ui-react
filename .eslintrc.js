@@ -1,27 +1,30 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: 'module',
-    //project: './tsconfig.json',
-    ecmaFeatures: {
-      jsx: true, // Allows for the parsing of JSX
-    },
+  env: {
+    browser: true,
+    es2021: true,
   },
   settings: {
     react: {
       version: 'detect',
     },
   },
-  plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks', 'prettier'],
   extends: [
     'eslint:recommended',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    //'airbnb-typescript',
-    'react-app',
     'prettier',
     'plugin:prettier/recommended',
+    'plugin:storybook/recommended',
   ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 13,
+    sourceType: 'module',
+  },
+  plugins: ['import', 'flowtype', 'jsx-a11y', 'react', 'react-hooks', '@typescript-eslint', 'prettier'],
   rules: {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
@@ -37,24 +40,17 @@ module.exports = {
         },
       },
     ],
-    'react/jsx-props-no-spreading': 'off',
-    'react/prop-types': 'off',
-    'import/no-anonymous-default-export': 'off',
-    'import/prefer-default-export': 'off',
     '@typescript-eslint/naming-convention': [
       'error',
       {
         selector: 'variableLike',
-        format: ['camelCase', 'PascalCase'],
+        format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
       },
     ],
+    'react/jsx-props-no-spreading': 'off',
+    'react/prop-types': 'off',
+    'react/display-name': 'off',
+    'import/no-anonymous-default-export': 'off',
+    'import/prefer-default-export': 'off',
   },
-  overrides: [
-    {
-      files: ['**/*.stories.*'],
-      rules: {
-        'import/no-anonymous-default-export': 'off',
-      },
-    },
-  ],
 };

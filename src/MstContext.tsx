@@ -8,20 +8,55 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { createContext, PropsWithChildren } from 'react';
-import { FormsCell, FormsRenderer } from './Form';
+import { CellRendererRegistryEntry, RendererRegistryEntry } from './renderers';
+import { registerMstViewDescrSchema, registerMstViewKindSchema } from './models/MstViewDescr';
+import { Actions } from './actions';
 
 export interface MstContextProps {
   store: any;
-  renderers: FormsRenderer[];
-  cells: FormsCell[];
+  renderers: RendererRegistryEntry[];
+  cells: CellRendererRegistryEntry[];
+  actions: Actions;
 }
 
 export const MstContext = createContext<MstContextProps>({
   store: {},
   renderers: [],
   cells: [],
+  actions: {},
 });
 
-export const MstContextProvider = ({ store, renderers, cells = [], children }: PropsWithChildren<any>): JSX.Element => {
-  return <MstContext.Provider value={{ store, renderers, cells }}>{children}</MstContext.Provider>;
+export const MstContextProvider = ({
+  store,
+  renderers,
+  cells = [],
+  children,
+  actions = {},
+}: PropsWithChildren<{
+  store: any;
+  renderers: RendererRegistryEntry[];
+  cells?: CellRendererRegistryEntry[];
+  actions?: Actions;
+}>): JSX.Element => {
+  renderers.forEach((r) => {
+    const mstVkeType = (r as any).mstVkeType;
+    if (mstVkeType) {
+      registerMstViewKindSchema(mstVkeType, true);
+    }
+    const mstVdeType = (r as any).mstVdeType;
+    if (mstVdeType) {
+      registerMstViewDescrSchema(mstVdeType, true);
+    }
+  });
+  cells.forEach((с) => {
+    const mstVkeType = (с as any).mstVkeType;
+    if (mstVkeType) {
+      registerMstViewKindSchema(mstVkeType, true);
+    }
+    const mstVdeType = (с as any).mstVdeType;
+    if (mstVdeType) {
+      registerMstViewDescrSchema(mstVdeType, true);
+    }
+  });
+  return <MstContext.Provider value={{ store, renderers, cells, actions }}>{children}</MstContext.Provider>;
 };

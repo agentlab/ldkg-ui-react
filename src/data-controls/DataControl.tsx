@@ -14,11 +14,13 @@ import { withStoreToDataControlProps, treeify, strcmp } from '../util/ContextToP
 import { TableRenderer } from './TableRenderer';
 import { TreeRenderer } from './TreeRenderer';
 import { GridRenderer } from './GridRenderer';
+import { HorizontalScrollRenderer } from './HorizontalScroll';
 
 const renderType: any = {
   tree: TreeRenderer,
   table: TableRenderer,
   grid: GridRenderer,
+  horizontalScroll: HorizontalScrollRenderer,
 };
 
 export const AntdDataLayout: React.FC<any> = React.memo(
@@ -38,6 +40,7 @@ export const AntdDataLayout: React.FC<any> = React.memo(
       onCreateFolder,
       onDeleteFolder,
       onRename,
+      actionsMap,
     } = props;
     const data = treeify(dataSource, '@id', viewKindElement?.options.treeNodeParentKey || 'parent', 'children', strcmp);
     const onSelect = (selected: { [key: string]: any }) => {
@@ -53,6 +56,7 @@ export const AntdDataLayout: React.FC<any> = React.memo(
         child={data}
         editing={editing}
         onDnD={onDnD}
+        actionsMap={actionsMap}
         viewKind={viewKind}
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
@@ -66,10 +70,10 @@ export const AntdDataLayout: React.FC<any> = React.memo(
       />
     );
   },
-  (prev, next) => {
+  /*(prev, next) => {
     console.log('PREV', prev, 'NEXT', next, prev === next);
     return true;
-  },
+  },*/
 );
 
 export const antdDataControlTester: RankedTester = rankWith(2, uiTypeIs('aldkg:DataControl'));

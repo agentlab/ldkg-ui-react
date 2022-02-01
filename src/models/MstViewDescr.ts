@@ -8,7 +8,18 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { reaction } from 'mobx';
-import { getParent, getRoot, IAnyComplexType, IAnyStateTreeNode, IAnyType, SnapshotIn, types } from 'mobx-state-tree';
+import {
+  getParent,
+  getRoot,
+  IAnyComplexType,
+  IAnyStateTreeNode,
+  IAnyType,
+  IArrayType,
+  IMSTArray,
+  IStateTreeNode,
+  SnapshotIn,
+  types,
+} from 'mobx-state-tree';
 
 import {
   arrDiff,
@@ -45,11 +56,15 @@ export const MstViewKindElement = types.model('MstViewKindElement', {
 
 const mstViewKindSchemas: MstModels = {};
 
-export function registerMstViewKindSchema(mstModel: IAnyComplexType): void {
+export function registerMstViewKindSchema(mstModel: IAnyComplexType, noOverride = false): void {
   const id = getMstLiteralPropValue(mstModel as any, '@type');
   if (id) {
-    console.log('register mstViewKindSchema', { id, mstModel });
-    mstViewKindSchemas[id] = mstModel;
+    if (!noOverride || mstViewKindSchemas[id] === undefined) {
+      console.log('register mstViewKindSchema', { id, mstModel });
+      mstViewKindSchemas[id] = mstModel;
+    } else {
+      console.log('cannot register mstViewKindSchema: noOverride and existed schema', { mstModel });
+    }
   } else {
     console.log('cannot register mstViewKindSchema', { mstModel });
   }
@@ -67,14 +82,14 @@ export const MstViewKindDataType = types.union(
       if (snapshot) {
         const mstModel = mstViewKindSchemas[snapshot['@type']];
         if (mstModel) {
-          console.log('ViewKindDataType, create mstModel for', {
-            snapshotId: snapshot['@id'],
-            mstModelName: mstModel.name,
-          });
+          //console.log('ViewKindDataType, create mstModel for', {
+          //  snapshotId: snapshot['@id'],
+          //  mstModelName: mstModel.name,
+          //});
           return mstModel;
         }
       }
-      console.log('ViewKindDataType, create ViewKindElement for', snapshot['@id']);
+      //console.log('ViewKindDataType, create ViewKindElement for', snapshot['@id']);
       return MstViewKindElement;
     },
   },
@@ -105,14 +120,17 @@ export const MstViewKind = types
     let dispose: any;
     return {
       afterAttach() {
-        console.log('ViewKind afterAttach, @id=', self['@id']);
+        //console.log('ViewKind afterAttach, @id=', self['@id']);
         if (coll.resolveCollConstrs) {
           dispose = reaction(
             () => self.collsConstrs,
-            (newArr: any[], oldArr: any[]) => {
-              console.log('ViewKind reaction, add coll ref, @id=', self['@id']);
+            (
+              newArr: (IMSTArray<any> & IStateTreeNode<IArrayType<any>>) | undefined,
+              oldArr: (IMSTArray<any> & IStateTreeNode<IArrayType<any>>) | undefined,
+            ) => {
+              //console.log('ViewKind reaction, add coll ref, @id=', self['@id']);
               const { deleted, added } = arrDiff(newArr, oldArr);
-              console.log('ViewKind reaction, add coll ref, {deleted,added}=', { deleted, added });
+              //console.log('ViewKind reaction, add coll ref, {deleted,added}=', { deleted, added });
               deleted.forEach((e: any) => rep.colls.delete(e['@id']));
               added.forEach((e: any) => rep.addCollByConstrRef(e));
             },
@@ -121,7 +139,7 @@ export const MstViewKind = types
         }
       },
       beforeDetach() {
-        console.log('ViewKind beforeDetach, @id=', self['@id']);
+        //console.log('ViewKind beforeDetach, @id=', self['@id']);
         if (coll.resolveCollConstrs) {
           if (dispose) dispose();
           self.collsConstrs.forEach((e) => rep.colls.delete(e['@id']));
@@ -161,11 +179,15 @@ export const MstViewDescrElement = types.model('MstViewDescrElement', {
 
 const mstViewDescrSchemas: MstModels = {};
 
-export function registerMstViewDescrSchema(mstModel: IAnyComplexType): void {
+export function registerMstViewDescrSchema(mstModel: IAnyComplexType, noOverride = false): void {
   const id = getMstLiteralPropValue(mstModel as any, '@type');
   if (id) {
-    console.log('register mstViewDescrSchema', { id, mstModel });
-    mstViewDescrSchemas[id] = mstModel;
+    if (!noOverride || mstViewDescrSchemas[id] === undefined) {
+      console.log('register mstViewDescrSchema', { id, mstModel });
+      mstViewDescrSchemas[id] = mstModel;
+    } else {
+      console.log('cannot register mstViewDescrSchema: noOverride and existed schema', { mstModel });
+    }
   } else {
     console.log('cannot register mstViewDescrSchema', { mstModel });
   }
@@ -183,14 +205,14 @@ export const MstViewDescrDataType = types.union(
       if (snapshot) {
         const mstModel = mstViewDescrSchemas[snapshot['@type']];
         if (mstModel) {
-          console.log('ViewDescrDataType, create mstModel for', {
-            snapshotId: snapshot['@id'],
-            mstModelName: mstModel.name,
-          });
+          //console.log('ViewDescrDataType, create mstModel for', {
+          //  snapshotId: snapshot['@id'],
+          //  mstModelName: mstModel.name,
+          //});
           return mstModel;
         }
       }
-      console.log('ViewDescrDataType, create ViewDescrElement for', snapshot['@id']);
+      //console.log('ViewDescrDataType, create ViewDescrElement for', snapshot['@id']);
       return MstViewDescrElement;
     },
   },
@@ -222,14 +244,17 @@ export const MstViewDescr = types
     let dispose: any;
     return {
       afterAttach() {
-        console.log('MstViewDescr afterAttach, @id=', self['@id']);
+        //console.log('MstViewDescr afterAttach, @id=', self['@id']);
         if (coll.resolveCollConstrs) {
           dispose = reaction(
             () => self.collsConstrs,
-            (newArr: any[], oldArr: any[]) => {
-              console.log('MstViewDescr reaction, add coll ref, @id=', self['@id']);
+            (
+              newArr: (IMSTArray<any> & IStateTreeNode<IArrayType<any>>) | undefined,
+              oldArr: (IMSTArray<any> & IStateTreeNode<IArrayType<any>>) | undefined,
+            ) => {
+              //console.log('MstViewDescr reaction, add coll ref, @id=', self['@id']);
               const { deleted, added } = arrDiff(newArr, oldArr);
-              console.log('MstViewDescr reaction, add coll ref, {deleted,added}=', { deleted, added });
+              //console.log('MstViewDescr reaction, add coll ref, {deleted,added}=', { deleted, added });
               deleted.forEach((e: any) => rep.colls.delete(e['@id']));
               added.forEach((e: any) => rep.addCollByConstrRef(e));
             },
@@ -238,7 +263,7 @@ export const MstViewDescr = types
         }
       },
       beforeDetach() {
-        console.log('MstViewDescr beforeDetach, @id=', self['@id']);
+        //console.log('MstViewDescr beforeDetach, @id=', self['@id']);
         if (coll.resolveCollConstrs) {
           if (dispose) dispose();
           self.collsConstrs.forEach((e) => rep.colls.delete(e['@id']));
@@ -257,7 +282,7 @@ export const createUiModelFromState = (
   repId: string,
   client: SparqlClient,
   initialState: any,
-  additionalColls: CollState[] | undefined = undefined,
+  additionalColls?: CollState[],
 ): any => {
   registerMstCollSchema(MstViewKind);
   registerMstCollSchema(MstViewDescr);

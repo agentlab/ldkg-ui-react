@@ -11,10 +11,9 @@ import { isArray } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Image, Row, Col } from 'antd';
+import { Image } from 'antd';
 
 import { spriteSheet } from './iconsGreed';
-import { number } from 'mobx-state-tree/dist/internal';
 interface SpriteProps {
   filename: string;
   x: number;
@@ -37,15 +36,15 @@ export const Sprite: React.FC<SpriteProps> = ({ filename, x = 0, y = 0, width = 
   return <div style={style} />;
 };
 
-export const base = ({ value }: any) => <div style={{ margin: '6px' }}>{value}</div>;
+export const base = ({ value }: any): JSX.Element => <div style={{ margin: '6px' }}>{value}</div>;
 
-export const integer = ({ value }: any) => value.toString();
+export const integer = ({ value }: any): string => value.toString();
 
-export const identifier = ({ value }: any) => (
+export const identifier = ({ value }: any): JSX.Element => (
   <Link to={`/artifacts/${value}`}>{value.toString().padStart(5, '0')}</Link>
 );
 
-export const image = ({ value }: any) => (
+export const image = ({ value }: any): JSX.Element => (
   <div style={{ height: 60, float: 'left', paddingRight: '3px', overflow: 'hidden' }}>
     <Image
       style={{ height: 60, maxWidth: 60, width: 'auto' }}
@@ -54,7 +53,7 @@ export const image = ({ value }: any) => (
   </div>
 );
 
-export const artifactTitle = ({ value, type }: any) => {
+export const artifactTitle = ({ value, type }: any): JSX.Element => {
   const SpriteObj: any = {
     'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Module': 'allocated-requirement',
     'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Text': 'analysis-document',
@@ -78,9 +77,9 @@ export const artifactTitle = ({ value, type }: any) => {
   );
 };
 
-export const dateTime = ({ value }: any) => <span>{moment(value).subtract(10, 'days').calendar()}</span>;
+export const dateTime = ({ value }: any): JSX.Element => <span>{moment(value).subtract(10, 'days').calendar()}</span>;
 
-export const link = ({ value, link, options }: any) => {
+export const link = ({ value, link, options }: any): JSX.Element => {
   const label = options.label || value || link;
   const specialImage = options.specialImage;
   return (
@@ -88,14 +87,39 @@ export const link = ({ value, link, options }: any) => {
       {specialImage ? (
         <Image style={{ display: 'inline', width: '1em', height: '1em' }} src={specialImage} preview={false} />
       ) : null}
-      <a style={{ color: 'black', verticalAlign: 'middle' }} href={link ? link : value}>
+      <a style={{ verticalAlign: 'middle' }} href={link ? link : value}>
         {label}
       </a>
     </React.Fragment>
   );
 };
 
-export const labeledValue = ({ value, options }: any) => {
+export const extlink = ({ value, link, options }: any): JSX.Element => {
+  const label = options.label || value || link;
+  const icon = options.icon;
+  return (
+    <React.Fragment>
+      {icon ? (
+        <>
+          {label}
+          <a
+            style={{ verticalAlign: 'top', padding: '0px 16px 2px 6px ' }}
+            href={link ? link : value}
+            target='_blank'
+            rel='noreferrer'>
+            <Image style={{ display: 'inline', width: '16px', height: '16px' }} src={icon} preview={false} />
+          </a>
+        </>
+      ) : (
+        <a style={{ verticalAlign: 'middle' }} href={link ? link : value} target='_blank' rel='noreferrer'>
+          {label}
+        </a>
+      )}
+    </React.Fragment>
+  );
+};
+
+export const labeledValue = ({ value, options }: any): JSX.Element => {
   const label = options.label || null;
   const specialChar = options.specialChar || '';
   return (
@@ -105,7 +129,7 @@ export const labeledValue = ({ value, options }: any) => {
   );
 };
 
-export const сomparison = ({ value, prevValue, options }: any) => {
+export const сomparison = ({ value, prevValue, options }: any): JSX.Element => {
   const delta: number = value - prevValue;
   const label = options.label;
   return (
