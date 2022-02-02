@@ -44,6 +44,17 @@ export const useTableData = ({ viewKindElement: baseViewKindElement, viewDescr, 
     [coll],
   );
 
+  const getCollConstrJs = useCallback(() => {
+    return getSnapshot(coll.collConstr);
+  }, [coll.collConstr]);
+
+  const setCollConstrJs = useCallback(
+    (collConstr: any) => {
+      applySnapshot(coll.collConstr, collConstr);
+    },
+    [coll.collConstr],
+  );
+
   return {
     sourceData: getSnapshot<any>(coll?.data) || [],
     isLoading: coll.isLoading,
@@ -52,5 +63,7 @@ export const useTableData = ({ viewKindElement: baseViewKindElement, viewDescr, 
     handleEndReached,
     onSelect,
     setData,
+    getCollConstrJs,
+    setCollConstrJs,
   };
 };

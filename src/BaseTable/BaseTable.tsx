@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import React from 'react';
+import React, { useState } from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
 import BaseTable, { AutoResizer } from 'react-base-table';
 import { InitTinyMCE, ContextMenu, Overlay } from './components';
@@ -25,7 +25,17 @@ interface EditableTableProps<T> {
 
 export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
   ({ viewKind, viewKindElement, viewDescr, viewDescrElement, schema, actions }) => {
-    const { sourceData, viewOptions, actionsMap, isLoading, handleEndReached, onSelect, setData } = useTableData({
+    const {
+      sourceData,
+      viewOptions,
+      actionsMap,
+      isLoading,
+      handleEndReached,
+      onSelect,
+      setData,
+      getCollConstrJs,
+      setCollConstrJs,
+    } = useTableData({
       viewKindElement,
       viewDescr,
       actions,
@@ -55,6 +65,48 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
       order: viewOptions.order,
     });
 
+    const [sortState, setSortState] = useState<any>({});
+    const onSort = (property: string, sortDir: any) => {
+      const collCnstr: any = getCollConstrJs();
+      const orderBy = collCnstr.orderBy;
+      let newOrder = undefined;
+      //console.log({ property, sortDir, sortState, collCnstr });
+      if (sortState[property] === 'desc') {
+        //console.log('reset sorting order');
+        // reset sorting order
+        sortDir = null;
+        if (Array.isArray(orderBy)) {
+          const idx = orderBy.findIndex((e: any) => e.variable === property);
+          //console.log({ idx, orderBy });
+          if (idx !== -1) {
+            newOrder = [...orderBy];
+            newOrder.splice(idx, 1);
+            if (newOrder.length === 0) newOrder = undefined;
+          }
+        }
+      } else {
+        const isDesc = sortDir === 'desc' ? true : false;
+        const sortQuery = { variable: property, descending: isDesc };
+        //console.log('NO reset sorting order', sortQuery);
+        if (!orderBy) {
+          newOrder = [sortQuery];
+        } else if (Array.isArray(orderBy)) {
+          newOrder = [...orderBy];
+          const idx = orderBy.findIndex((e: any) => e.variable === property);
+          if (idx !== -1) {
+            newOrder[idx] = sortQuery;
+          } else {
+            newOrder.push(sortQuery);
+          }
+        }
+      }
+      const newCollConstr = { ...collCnstr, orderBy: newOrder };
+      setCollConstrJs(newCollConstr);
+      const newSortState = { ...sortState, [property]: sortDir };
+      //console.log({ newSortState, newCollConstr });
+      setSortState(newSortState);
+    };
+
     return (
       <React.Fragment>
         <InitTinyMCE />
@@ -83,6 +135,10 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
                 onEndReached={handleEndReached}
                 rowEventHandlers={rowEventHandlers}
                 rowProps={rowProps}
+                sortState={sortState}
+                onColumnSort={(args) => {
+                  if (typeof args.key === 'string') onSort(args.key, args.order);
+                }}
               />
             </DraggableContainer>
           )}
