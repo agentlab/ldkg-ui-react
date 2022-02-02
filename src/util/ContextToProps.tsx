@@ -17,6 +17,7 @@ import { observer } from 'mobx-react-lite';
 import { createLabelDescriptionFrom } from './label';
 import { LayoutComponent } from '../layouts/LayoutComponent';
 import { IViewKindElement, IViewKind } from '../models/uischema';
+import { values } from 'mobx';
 import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } from '../Form';
 //import { FilterType } from '../complex/Query';
 import { validators } from '../validation';
@@ -401,123 +402,6 @@ export const withStoreToCollapseProps = (Component: React.FC<any>): React.FC<any
         viewKindElement={viewKindElement}
         viewDescr={viewDescr}
         viewDescrElement={viewDescrElement}
-      />
-    );
-  });
-
-const ComponentCachingSubRenderer = (props: any) => {
-  console.log('ChartSubRenderer');
-  const [allState, setAllState] = useState<any>(null);
-  useEffect(() => {
-    if (!props.dataIsLoading) {
-      //console.log('setDelayedConfig');
-      setAllState(props);
-    }
-  }, [props]);
-  return <props.comp {...allState} />;
-};
-
-export const withStoreToArrayProps = (Component: React.FC<any>): React.FC<any> =>
-  observer<any>(({ ...props }: any) => {
-    const { viewKind, viewDescr, schema, actions } = props;
-    const { store } = useContext(MstContext);
-    //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
-    //  store.setSaveLogic(viewKindElement.resultsScope);
-    //}
-
-    const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
-      props,
-      store,
-    );
-    const options = useMemo(() => viewKindElement.options || {}, [viewKindElement]);
-    let targetIri = options?.target?.iri;
-    let targetData: any = null;
-    if (targetIri) {
-      if (viewDescr.collsConstrs) {
-        const extCollConstr = viewDescr.collsConstrs?.find((el: any) => compareByIri(el['@parent'], targetIri));
-        if (extCollConstr) {
-          targetIri = extCollConstr['@id'] || '';
-        }
-      }
-      const targetColl = store.getColl(targetIri);
-      targetData = targetColl?.data;
-    }
-    const coll = store.getColl(collIriOverride);
-    let dataIsLoading = false;
-
-    const actionsMap = useMemo(
-      () => mapViewKindPropsToActions({ actions, viewKindActionProps: options.selectActions, coll, root: store }),
-      [coll, actions, options],
-    );
-
-    let data: any[] = [];
-    if (!coll.isLoading) {
-      data = coll?.data;
-      if (!data) {
-        data = [];
-      } else {
-        data = getSnapshot(data as any);
-      }
-    } else {
-      dataIsLoading = true;
-    }
-
-    const loadMoreData = async () => {
-      //coll.loadMore();
-    };
-
-    const withConnections = options.connections;
-    const addDataToTarget = (data: any) => {
-      if (targetData) {
-        const snapData = getSnapshot(targetData) as any;
-        const newData = [...snapData, ...data];
-        applySnapshot(targetData, newData);
-      }
-    };
-    const onDeleteRows = (del: any) => {
-      if (data) {
-        const newData = data.filter((el: any) => del.filter((e: any) => e['@id'] === el['@id']).length === 0);
-        applySnapshot(coll?.data, newData);
-      }
-    };
-    const onSelect = (data: any) => {
-      if (data && isArray(data)) {
-        if (data.length === 1) {
-          store.setSelectedData(collIriOverride, data[0]);
-          withConnections && store.editConn(withConnections, data[0]);
-        } else {
-          store.setSelectedData(collIriOverride, null);
-          withConnections && store.editConn(withConnections, null);
-        }
-      }
-    };
-    const loadExpandedData = (subject: string) => {
-      //const newQuery = store.queries[viewKindElement.resultsScope];
-      //newQuery.shapes[0].conditions = { ...newQuery.shapes[0].conditions, parentBinding: subject };
-      return data; //store.getDataByQuery(newQuery);
-    };
-    return (
-      <ComponentCachingSubRenderer
-        dataIsLoading={dataIsLoading}
-        comp={Component}
-        viewKind={viewKind}
-        viewKindElement={viewKindElement}
-        viewDescr={viewDescr}
-        viewDescrElement={viewDescrElement}
-        addDataToTarget={addDataToTarget}
-        schema={schema}
-        loadExpandedData={loadExpandedData}
-        actionsMap={actionsMap}
-        sortDir={{} /*store.queries[scope].orderBy*/}
-        uri={id}
-        onDeleteRows={onDeleteRows}
-        loadMoreData={loadMoreData}
-        onSort={(property: string, sortDir: any) => {
-          /*store.onSort(scope, property, sortDir)*/
-        }}
-        data={data}
-        options={options}
-        onSelect={onSelect}
       />
     );
   });

@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
@@ -114,19 +113,36 @@ const viewKinds = [
               resizeableHeader: true,
               style: { height: '100%' },
               multiSelect: true,
-              order: ['imageUrl', 'name', 'amountValueMoving30', 'commentsCount', 'price'],
+              order: [
+                'imageUrl',
+                'name',
+                'amountValueMoving30',
+                'revenueMoving30',
+                'price',
+                'commentsCount',
+                'firstParsedAt',
+                'parsedAt',
+              ],
               imageUrl: {
-                width: 100,
+                width: 70,
                 formatter: 'image',
                 editable: false,
               },
               name: {
                 width: 340,
                 formatter: 'extlink',
-                dataToFormatter: {
-                  link: '@id',
-                },
+                dataToFormatter: { link: '@id' },
                 icon: 'img/icons8-external-link-16.png',
+                sortable: true,
+                editable: false,
+              },
+              amountValueMoving30: {
+                width: 80,
+                sortable: true,
+                editable: false,
+              },
+              revenueMoving30: {
+                width: 80,
                 sortable: true,
                 editable: false,
               },
@@ -135,22 +151,20 @@ const viewKinds = [
                 sortable: true,
                 editable: false,
               },
-              amountValueMoving30: {
-                width: 100,
-                sortable: true,
-                editable: false,
-              },
               commentsCount: {
                 width: 100,
                 sortable: true,
                 editable: false,
               },
-              identifier: {
-                formatter: 'link',
-                //dataToFormatter: { link: 'identifier' },
+              firstParsedAt: {
+                width: 100,
                 sortable: true,
                 editable: false,
-                disabled: true,
+              },
+              parsedAt: {
+                width: 100,
+                sortable: true,
+                editable: false,
               },
             },
           },
