@@ -77,7 +77,7 @@ export const artifactTitle = ({ value, type }: any): JSX.Element => {
   );
 };
 
-export const dateTime = ({ value }: any): JSX.Element => <span>{moment(value).subtract(10, 'days').calendar()}</span>;
+export const dateTime = ({ value }: any): JSX.Element => <span>{moment(value).calendar()}</span>;
 
 export const link = ({ value, link, options }: any): JSX.Element => {
   const label = options.label || value || link;

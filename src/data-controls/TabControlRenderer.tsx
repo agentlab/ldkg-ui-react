@@ -80,7 +80,7 @@ export const AntdTabControlWithStore = observer<any>((props) => {
     }
   };
   return (
-    <div style={{ width: 'auto', display: 'flex', alignItems: 'center' }}>
+    <div style={{ width: 'auto', display: 'flex', alignItems: 'left' }}>
       {options.title ? (
         <Col>
           <h2 style={{ margin: '0 24px 0 0' }}>{options.title}</h2>
