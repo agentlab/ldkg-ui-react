@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React from 'react';
-import { Story, Meta } from '@storybook/react/types-6-0';
+import { Story, Meta } from '@storybook/react';
 
 import { AntdDataLayout } from '../src/data-controls/DataControl';
 import { artifactSchema } from '../test/schema/TestSchemas';
