@@ -65,7 +65,17 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
       order: viewOptions.order,
     });
 
-    const [sortState, setSortState] = useState<any>({});
+    const collCnstr: any = getCollConstrJs();
+    const initSortState = collCnstr?.orderBy
+      ? collCnstr.orderBy.reduce((obj: any, item: any) => {
+          return {
+            ...obj,
+            [item.variable]: item.descending ? 'desc' : 'asc',
+          };
+        }, {})
+      : {};
+
+    const [sortState, setSortState] = useState<any>(initSortState);
     const onSort = (property: string, sortDir: any) => {
       const collCnstr: any = getCollConstrJs();
       const orderBy = collCnstr.orderBy;
@@ -128,7 +138,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
                 expandColumnKey={viewOptions.expandColumnKey || ROW_KEY}
                 estimatedRowHeight={50}
                 rowKey={ROW_KEY}
-                onEndReachedThreshold={20}
+                onEndReachedThreshold={300}
                 overlayRenderer={<Overlay isLoading={isLoading} />}
                 columns={visibleColumns}
                 data={sourceData}

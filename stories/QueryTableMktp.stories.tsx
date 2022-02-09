@@ -58,6 +58,9 @@ const Template: Story = (args: any) => {
   );
 };
 
+const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
+
 const viewKinds = [
   {
     '@id': 'rm:TableViewKind',
@@ -83,15 +86,18 @@ const viewKinds = [
               firstParsedAt: null,
               parsedAt: null,
             },*/
-            /*conditions: {
-               '@id': 'rm:CollectionView_Artifacts_Coll_Shape0_Condition',
-               '@type': 'rm:QueryCondition',
-               assetFolder: 'folders:samples_collection', //'folders:root',
-             },*/
+            conditions: {
+              '@id': 'mktp:ProductCards_in_Category_Coll_Ent_Cond',
+              amountValueMoving30: {
+                relation: 'between-incl-both',
+                value: [20000, 60000],
+              },
+            },
+            service: mktpSchemaRepoIri,
           },
         ],
-        //orderBy: [{ expression: variable('identifier0'), descending: false }],
-        limit: 50,
+        orderBy: [{ variable: 'amountValueMoving30', descending: true }],
+        limit: 500,
       },
     ],
     elements: [

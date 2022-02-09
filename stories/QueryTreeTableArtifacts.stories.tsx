@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
