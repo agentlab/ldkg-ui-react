@@ -13,7 +13,7 @@ import { JsObject } from '@agentlab/sparql-jsld-client';
 import './index.css';
 
 interface ContextMenuProps {
-  record: JsObject;
+  record?: JsObject;
   selection: any[];
   visible: boolean;
   x: number | string;
@@ -32,7 +32,8 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ record, selection, vis
             onClick={() => {
               action(selection);
               onClick();
-            }}>
+            }}
+          >
             {title}
           </li>
         ))}

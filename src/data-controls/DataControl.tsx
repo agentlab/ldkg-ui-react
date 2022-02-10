@@ -12,7 +12,7 @@ import React from 'react';
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { withStoreToDataControlProps, treeify, strcmp } from '../util/ContextToProps';
 import { TableRenderer } from './TableRenderer';
-import { TreeRenderer } from './TreeRenderer';
+import { TreeRenderer } from './VirtualTree';
 import { GridRenderer } from './GridRenderer';
 import { HorizontalScrollRenderer } from './HorizontalScroll';
 
