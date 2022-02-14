@@ -69,11 +69,11 @@ const viewKinds = [
     description: 'Big table View with form',
     collsConstrs: [
       {
-        '@id': 'rm:ProductCard_Coll',
+        '@id': 'mktp:ProductCards_in_Category_Coll',
         '@type': 'aldkg:CollConst',
         entConstrs: [
           {
-            '@id': 'rm:ProductCard_Coll_Shape0',
+            '@id': 'mktp:ProductCards_in_Category_Coll_Shape0',
             '@type': 'aldkg:EntConstr',
             schema: 'als:ProductCardShape',
             /*variables: {
@@ -103,22 +103,30 @@ const viewKinds = [
     elements: [
       {
         '@id': 'rm:_934jHd67',
-        '@type': 'aldkg:PanelLayout',
+        '@type': 'aldkg:SplitPaneLayout',
         options: {
+          grow: '1',
+          width: '100%',
           style: {
-            height: '100%',
             width: '100%',
+            height: '100%',
           },
+          collapseDirection: 'left',
+          initialSizes: [10, 83],
         },
         elements: [
           {
             '@id': 'mktp:QueryComponent',
-            '@type': 'aldkg:Query',
+            '@type': 'aldkg:QueryForm',
+            resultsScope: 'mktp:ProductCards_in_Category_Coll',
+            options: {
+              connections: [{ toObj: 'mktp:ProductCards_in_Category_Coll_Ent_Cond' }],
+            },
           },
           {
             '@id': 'ProductCardTable',
             '@type': 'aldkg:Array',
-            resultsScope: 'rm:ProductCard_Coll',
+            resultsScope: 'mktp:ProductCards_in_Category_Coll',
             options: {
               draggable: true,
               resizeableHeader: true,

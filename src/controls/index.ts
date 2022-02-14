@@ -20,6 +20,7 @@ import { tinyMCEControlTester, TinyMCEControlWithStore } from './TinyMCEControl'
 import { antdImageControlTester, AntdImageControlWithStore } from './AntdImageControl';
 import { antdQueryTester, AntQueryWithStore } from './query/Query';
 import { panelWithTextControlTester, PanelWithText } from './PanelWithTextControl';
+import { antdQueryFormTester, QueryForm } from './QueryForm';
 
 export const antdControlRenderers: RendererRegistryEntry[] = [
   { tester: antdBooleanControlTester, renderer: AntdBooleanControlWithStore },
@@ -41,6 +42,7 @@ export const antdControlRenderers: RendererRegistryEntry[] = [
 
   { tester: tinyMCEControlTester, renderer: TinyMCEControlWithStore },
   { tester: antdQueryTester, renderer: AntQueryWithStore },
+  { tester: antdQueryFormTester, renderer: QueryForm },
 ];
 
 export * from './AntdBooleanControl';
@@ -55,3 +57,4 @@ export * from './AntdTextControl';
 export * from './TinyMCEControl';
 export * from './AntdImageControl';
 export * from './query/Query';
+export * from './QueryForm';
