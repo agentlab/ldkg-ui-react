@@ -153,7 +153,7 @@ export default {
 const Template: Story<any> = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
   const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires

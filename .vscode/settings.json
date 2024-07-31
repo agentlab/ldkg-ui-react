@@ -10,13 +10,12 @@
     "typescriptreact"
   ],
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
-  "eslint.packageManager": "yarn",
   "eslint.lintTask.enable": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.endOfLine": "lf",
-  "jest.autoRun": "off",
+  "jest.runMode": "on-demand",
   "cSpell.words": [
     "A",
     "Aртефакт",
@@ -56,5 +55,6 @@
     "uuidv"
   ],
   "cSpell.language": "en,ru",
-  "terminal.integrated.scrollback": 10000
+  "terminal.integrated.scrollback": 10000,
+  "eslint.useFlatConfig": true
 }

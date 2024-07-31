@@ -47,8 +47,8 @@ export const Empty: Story<{}> = () => {
   ];
 
   const client = new SparqlClientImpl(
-    'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
+    'http://localhost:8181/rdf4j-server',
+    'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
@@ -65,7 +65,7 @@ export const Empty: Story<{}> = () => {
   );
 };
 
-const mktpSchemaRepoIri = 'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema';
+const mktpSchemaRepoIri = 'http://localhost:8181/rdf4j-server/repositories/mktp-schema';
 const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
 
 const viewKinds = [

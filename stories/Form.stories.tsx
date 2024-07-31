@@ -10,7 +10,7 @@
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Meta, Story, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
@@ -151,10 +151,19 @@ export default {
   parameters: { docs: { source: { type: 'code' } } },
 } as Meta;
 
+/*const meta: Meta<typeof Form> = {
+  title: 'Form/ArtifactForm',
+  component: Form,
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
+};
+export default meta;
+type Story = StoryObj<typeof Form>;*/
+
 const Template: Story<any> = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
 
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
   const rootStore = createUiModelFromState(
     'reqs2',
     client,
@@ -167,7 +176,7 @@ const Template: Story<any> = (args: any) => {
   return (
     <Provider store={store}>
       <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-        <div style={{ height: '1000px' }}>
+        <div style={{ width: '300px', height: '200px', border: '1px solid #000' }}>
           <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
         </div>
       </MstContextProvider>

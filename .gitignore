@@ -18,3 +18,5 @@
 .env.production.local
 .eslintcache
 *.log
+
+*storybook.log

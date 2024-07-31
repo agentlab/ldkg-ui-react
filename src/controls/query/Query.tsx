@@ -10,7 +10,6 @@ import { rankWith, RankedTester, uiTypeIs } from '../../testers';
 
 import { CreateFilterModal } from './CreateFilterModal';
 import { FilterType } from './type';
-import { isArray } from 'lodash-es';
 
 const localeRus = {
   add: 'Добавить',
@@ -165,9 +164,9 @@ export const AntQueryWithStore = observer<any>((props) => {
           const value =
             tag.valueName && tag.valueName.length > 0
               ? tag.valueName.join(', ')
-              : isArray(tag.value)
-              ? tag.value.join(', ')
-              : tag.value;
+              : Array.isArray(tag.value)
+                ? tag.value.join(', ')
+                : tag.value;
           const isLongTag = value.length > 200;
           const tagElem = (
             <Tag style={tagStyle} key={tag.property} closable onClose={() => handleCloseTag(tag)}>

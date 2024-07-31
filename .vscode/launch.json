@@ -8,16 +8,21 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Storybook in Chrome",
-            "breakOnLoad": true,
-            "url": "http://localhost:6006/?path=/story/several-controls-tree-table-form--mktp-categories",
+            //"breakOnLoad": true,
+            "url": "http://localhost:6006/?path=/story/form-artifactform--read-only-remote-data",
             "sourceMaps": true,
             "webRoot": "${workspaceFolder}",
-            "sourceMapPathOverrides": {
-                "webpack:///*": "${webRoot}/*",
-                "webpack:///./*": "${webRoot}/*",
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///./~/*": "${webRoot}/node_modules/*"
-            }
+            //"sourceMapPathOverrides": {
+            //    "webpack://agentlab/sparql-jsld-client_latest_2/src/*": "${webRoot}/node_modules/@agentlab/sparql-jsld-client/src/*",
+            //},
+            //"sourceMapPathOverrides": {
+            //    "webpack:///*": "${webRoot}/*",
+            //    "webpack:///./*": "${webRoot}/*",
+            //    "webpack:///src/*": "${webRoot}/*",
+            //    "webpack:///./~/*": "${webRoot}/node_modules/*"
+            //},
+            "runtimeExecutable": "C:\\PortableApps\\GoogleChromePortable64\\App\\Chrome-bin\\chrome.exe",
+            "userDataDir": "C:\\PortableApps\\GoogleChromePortable64\\Data\\profile\\"
         }
     ]
 }

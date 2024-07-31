@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
+import { namedNode, triple, variable } from '@rdfjs/data-model';
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 
@@ -31,10 +31,10 @@ import { tableRenderers } from '../src';
 
 const viewKinds = [
   {
-    '@id': 'rm:CollectionViewKind',
+    '@id': 'rm:ModuleViewViewKind',
     '@type': 'aldkg:ViewKind',
     title: 'Набор',
-    description: 'Big table View with form',
+    description: 'Big TreeTable View',
     collsConstrs: [
       {
         '@id': 'rm:Folders_Coll',
@@ -81,22 +81,123 @@ const viewKinds = [
         ],
       },
       {
-        '@id': 'rm:Artifacts_Coll',
+        '@id': 'rm:ModuleArtifacts_Coll',
         '@type': 'aldkg:CollConstr',
         entConstrs: [
           {
-            '@id': 'rm:Artifacts_Coll_Ent',
+            '@id': 'rm:UsedInModuleLink_Shape0',
+            '@type': 'aldkg:EntConstr',
+            schema: 'rmUserTypes:UsedInModuleShape',
+            conditions: {
+              '@id': 'rmUserTypes:my_link',
+              '@type': 'aldkg:Condition',
+              object: 'file:///urn-s2-iisvvt-infosystems-classifier-45950.xml',
+              subject: '?eIri1',
+              parentBinding: 'file:///urn-s2-iisvvt-infosystems-classifier-45950.xml',
+            },
+          },
+          {
+            '@id': 'rm:ModuleArtifacts_Coll_Ent',
             '@type': 'aldkg:EntConstr',
             schema: 'rm:ArtifactShape',
-            conditions: {
-              '@id': 'rm:Artifacts_Coll_Cond',
-              '@type': 'aldkg:Condition',
-              assetFolder: 'folders:samples_collection', //'folders:root',
+            /*schema: {
+              $schema: 'http://json-schema.org/draft-07/schema#',
+              //$id: 'rm:Artifact',
+              '@id': 'rm:ArtifactShape',
+              '@type': 'sh:NodeShape',
+              title: 'Требование',
+              description: 'Тип ресурса',
+              targetClass: 'rm:Artifact',
+              type: 'object',
+              '@context': {
+                '@type': 'rdf:type',
+                identifier: {
+                  '@id': 'dcterms:identifier',
+                  '@type': 'xsd:integer',
+                },
+                modifiedBy: {
+                  '@id': 'oslc:modifiedBy',
+                  '@type': 'pporoles:User',
+                },
+                modified: {
+                  '@id': 'dcterms:modified',
+                  '@type': 'xsd:dateTime',
+                },
+                xhtmlText: {
+                  '@id': 'rm:xhtmlText',
+                  '@type': 'xsd:string', //'rdf:HTML',
+                },
+              },
+              properties: {
+                '@id': {
+                  title: 'URI',
+                  type: 'string',
+                  format: 'iri',
+                },
+                '@type': {
+                  title: 'Тип',
+                  type: 'string',
+                  format: 'iri',
+                },
+                identifier: {
+                  title: 'Идентификатор',
+                  description: 'Числовой идентификатор требования, уникальный только в пределах этой системы',
+                  type: 'integer',
+                  shapeModifiability: 'system',
+                  //valueModifiability: 'system',
+                },
+                modifiedBy: {
+                  title: 'Кем изменен',
+                  description: 'Пользователь, изменивший требование',
+                  type: 'string',
+                  format: 'iri',
+                  shapeModifiability: 'system',
+                  //valueModifiability: 'system',
+                },
+                modified: {
+                  title: 'Когда изменен',
+                  description: 'Когда требование было изменено',
+                  type: 'string',
+                  format: 'date-time',
+                  shapeModifiability: 'system',
+                  //valueModifiability: 'system',
+                },
+                xhtmlText: {
+                  title: 'Форматированный текст',
+                  type: 'string',
+                  //contentMediaType: 'text/html',
+                  shapeModifiability: 'system',
+                },
+                hasChild: {
+                  title: 'Имеет потомков',
+                  description: 'Имеет потомков',
+                  type: 'boolean',
+                  shapeModifiability: 'system',
+                },
+              },
+              required: ['@id', '@type', 'title', 'hasChild'],
             },
+            conditions: {
+              '@id': 'rm:ModuleArtifacts_Coll_Cond',
+              '@type': 'aldkg:Condition',
+              // context-less property calculated by EXISTS function
+              hasChild: {
+                bind: {
+                  relation: 'exists',
+                  triples: [
+                    triple(
+                      variable('eIri2'),
+                      namedNode('http://cpgu.kbpm.ru/ns/rm/user-types#parentBinding'),
+                      variable('eIri1'),
+                    ),
+                  ],
+                },
+              },
+            },*/
           },
         ],
         orderBy: [{ expression: variable('identifier0'), descending: false }],
-        limit: 50,
+        limit: 500,
       },
     ],
     elements: [
@@ -110,25 +211,15 @@ const viewKinds = [
         },
         elements: [
           {
-            '@id': 'ArtifactTable',
+            '@id': 'ModuleTable',
             '@type': 'aldkg:Array',
-            resultsScope: 'rm:Artifacts_Coll',
+            resultsScope: 'rm:ModuleArtifacts_Coll',
             options: {
               draggable: true,
               resizeableHeader: true,
               style: { height: '100%' },
-              order: [
-                'identifier',
-                'title',
-                '@type',
-                'artifactFormat',
-                'description',
-                'xhtmlText',
-                'modified',
-                'modifiedBy',
-                '@id',
-                'assetFolder',
-              ],
+              //expandColumnKey: 'xhtmlText',
+              order: ['identifier', 'xhtmlText', 'modified', 'modifiedBy', 'title'],
               identifier: {
                 width: 140,
                 sortable: true,
@@ -137,22 +228,23 @@ const viewKinds = [
                 dataToFormatter: { link: '@id' },
               },
               title: {
-                formatter: 'artifactTitle',
-                dataToFormatter: { type: 'artifactFormat' },
-              },
-              '@type': {
                 width: 140,
-                formatter: 'dataFormatter',
-                query: 'rm:ArtifactClasses_Coll',
+                //formatter: 'artifactTitle',
+                //dataToFormatter: { type: 'artifactFormat' },
               },
-              artifactFormat: {
-                formatter: 'dataFormatter',
-                query: 'rm:ArtifactFormats_Coll',
-              },
-              description: {
-                //formatter: 'tinyMCE',
-                sortable: true,
-              },
+              //'@type': {
+              //  width: 140,
+              //  formatter: 'dataFormatter',
+              //  query: 'rm:ArtifactClasses_Coll',
+              //},
+              //artifactFormat: {
+              //  formatter: 'dataFormatter',
+              //  query: 'rm:ArtifactFormats_Coll',
+              //},
+              //description: {
+              //  //formatter: 'tinyMCE',
+              //  sortable: true,
+              //},
               xhtmlText: {
                 formatter: 'tinyMCE',
                 tinyWidth: 'emptySpace' /** emptySpace, content*/,
@@ -168,13 +260,13 @@ const viewKinds = [
                 query: 'rm:Users_Coll',
                 key: 'name',
               },
-              '@id': {
-                width: 220,
-              },
-              assetFolder: {
-                formatter: 'dataFormatter',
-                query: 'rm:Folders_Coll',
-              },
+              //'@id': {
+              //  width: 220,
+              //},
+              //assetFolder: {
+              //  formatter: 'dataFormatter',
+              //  query: 'rm:Folders_Coll',
+              //},
               //creator: {
               //  formatter: 'userName',
               //},
@@ -192,9 +284,9 @@ const viewKinds = [
 
 const viewDescrs = [
   {
-    '@id': 'rm:CollectionViewDescr',
+    '@id': 'rm:ModuleViewDescr',
     '@type': 'aldkg:ViewDescr',
-    viewKind: 'rm:CollectionViewKind',
+    viewKind: 'rm:ModuleViewViewKind',
     title: 'CardCellGrid',
     description: 'CardCellGrid',
     collsConstrs: [],
@@ -228,7 +320,7 @@ const additionalColls: CollState[] = [
 ];
 
 export default {
-  title: 'Table/Remote Artifacts',
+  title: 'Table/Remote Artifacts Module',
   component: Form,
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
@@ -237,7 +329,7 @@ export default {
 const Template: Story = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
 
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
   const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires

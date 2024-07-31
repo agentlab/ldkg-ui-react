@@ -68,7 +68,7 @@ const viewKinds = [
             options: {
               renderType: 'horizontalScroll',
               templateStyle: {
-                width: '260px',
+                width: '180px',
               },
               elementTemplate: [
                 {
@@ -76,8 +76,8 @@ const viewKinds = [
                   '@type': 'aldkg:CardLayout',
                   options: {
                     style: {
-                      maxWidth: 340,
-                      minWidth: 220,
+                      maxWidth: 240,
+                      minWidth: 140,
                     },
                   },
                   elements: [
@@ -325,8 +325,8 @@ export const Full: Story<{}> = () => {
   ];
 
   const client = new SparqlClientImpl(
-    'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema20/namespaces',
+    'http://localhost:8181/rdf4j-server',
+    'http://localhost:8181/rdf4j-server/repositories/mktp-schema20/namespaces',
   );
   const rootStore = createUiModelFromState('mktp-fed20', client, rootModelInitialState, additionalColls);
   console.log('rootStore', rootStore);

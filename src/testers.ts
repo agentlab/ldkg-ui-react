@@ -7,12 +7,10 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { find, includes, isArray, isEmpty } from 'lodash-es';
+import { find, includes, isEmpty } from 'lodash-es';
 
 import { JsonSchema7 } from './models/jsonSchema7';
 import { IViewKindElement } from './models/uischema';
-
-/* eslint-disable @typescript-eslint/naming-convention */
 
 /**
  * Constant that indicates that a tester is not capable of handling
@@ -110,7 +108,7 @@ const deriveTypes = (jsonSchema: JsonSchema7): string[] => {
   if (!isEmpty(jsonSchema.type) && typeof jsonSchema.type === 'string') {
     return [jsonSchema.type];
   }
-  if (isArray(jsonSchema.type)) {
+  if (Array.isArray(jsonSchema.type)) {
     return jsonSchema.type;
   }
   if (!isEmpty(jsonSchema.properties) || !isEmpty(jsonSchema.additionalProperties)) {

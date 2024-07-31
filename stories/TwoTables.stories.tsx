@@ -47,7 +47,7 @@ const Template: Story = (args: any) => {
     ...tableRenderers,
   ];
 
-  const client = new SparqlClientImpl('https://rdf4j.agentlab.ru/rdf4j-server');
+  const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
   const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
   // eslint-disable-next-line @typescript-eslint/no-var-requires

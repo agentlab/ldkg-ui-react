@@ -1,5 +1,13 @@
-module.exports = {
-  stories: ['../stories/**/*.stories.@(ts|tsx|js|jsx)'],
+const config = {
+  framework: {
+    name: '@storybook/react-webpack5',
+    options: {}
+  },
+
+  stories: ['../src/**/*.stories.@(ts|tsx|js|jsx)'],
+  staticDirs: ['../stories/public'],
+
+
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
@@ -18,10 +26,15 @@ module.exports = {
         },
       },
     },
+    '@storybook/addon-webpack5-compiler-babel'
   ],
+
   // https://storybook.js.org/docs/react/configure/typescript#mainjs-configuration
   typescript: {
     check: false, // type-check stories during Storybook build
     reactDocgen: false, //'react-docgen-typescript',
   },
+  docs: {}
 };
+
+export default config;

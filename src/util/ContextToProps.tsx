@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { cloneDeep, get, isArray, isEqual, omit } from 'lodash-es';
+import { cloneDeep, get, isEqual, omit } from 'lodash-es';
 
 import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { Spin } from 'antd';
@@ -473,7 +473,7 @@ const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }:
   const labelDesc = createLabelDescriptionFrom(viewKindElement as any, schema);
   const label = labelDesc.show ? (labelDesc.text as string) : '';
   const key = pathSegments[1];
-  const enabled = data[key] !== undefined && data[key] !== null ? editable ?? true : false;
+  const enabled = data[key] !== undefined && data[key] !== null ? (editable ?? true) : false;
   return {
     description,
     label,

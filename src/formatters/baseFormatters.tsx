@@ -7,7 +7,6 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { isArray } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -48,7 +47,7 @@ export const image = ({ value }: any): JSX.Element => (
   <div style={{ height: 60, float: 'left', paddingRight: '3px', overflow: 'hidden' }}>
     <Image
       style={{ height: 60, maxWidth: 60, width: 'auto' }}
-      src={isArray(value) ? (value.length > 0 ? value[0] : '') : value}
+      src={Array.isArray(value) ? (value.length > 0 ? value[0] : '') : value}
     />
   </div>
 );

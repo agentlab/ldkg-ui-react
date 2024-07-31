@@ -18,7 +18,7 @@ import { MstViewKindElement } from '../models/MstViewDescr';
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { MstContext } from '../MstContext';
 import { processViewKindOverride } from '../Form';
-import { MstJsObject } from '@agentlab/sparql-jsld-client/es/models/MstCollConstr';
+import { MstJsObject } from '@agentlab/sparql-jsld-client';
 import { IViewKindElement } from '../models/uischema';
 
 export type IMstVkeTabControl = IViewKindElement & {

@@ -16,3 +16,4 @@ export const decorators = [(Story) => <ConfigProvider locale={ruRu}>{Story()}</C
 
 moment.locale('ru');
 moment.defaultFormat = 'LLL';
+export const tags = ['autodocs'];

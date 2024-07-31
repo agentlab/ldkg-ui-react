@@ -56,8 +56,8 @@ const Template: Story = (args: any) => {
   const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
 
   const client = new SparqlClientImpl(
-    'https://rdf4j.agentlab.ru/rdf4j-server',
-    'https://rdf4j.agentlab.ru/rdf4j-server/repositories/mktp-schema/namespaces',
+    'http://localhost:8181/rdf4j-server',
+    'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
   );
 
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);

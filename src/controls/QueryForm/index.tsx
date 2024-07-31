@@ -1,5 +1,3 @@
-import { cloneDeep, isArray } from 'lodash-es';
-
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Button, DatePicker, Form, Input, InputNumber } from 'antd';
@@ -24,7 +22,7 @@ export const QueryForm = observer<any>((props) => {
     console.log('QueryForm Success:', values);
     if (!viewKindElement.options) return;
     const conn = viewKindElement.options.connections;
-    if (!isArray(conn) || conn.length == 0) return;
+    if (!Array.isArray(conn) || conn.length == 0) return;
     const cond = conn[0]?.toObj;
     if (!cond) return;
     const coll = store.getColl(collIri);
