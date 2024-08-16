@@ -9,11 +9,12 @@
  ********************************************************************************/
 import moment from 'moment';
 import React from 'react';
-import { Story, Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState } from '@agentlab/sparql-jsld-client';
+import * as remotedev from 'remotedev';
+import { CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -30,45 +31,41 @@ import { createUiModelFromState } from '../src/models/MstViewDescr';
 export default {
   title: 'Complex Control/Cards Grid List',
   component: Form,
-  argTypes: {
-    backgroundColor: { control: 'color' },
+  render: (args: any) => {
+    const antdRenderers: RendererRegistryEntry[] = [
+      ...antdControlRenderers,
+      ...antdLayoutRenderers,
+      ...antdDataControlRenderers,
+    ];
+    const client = new SparqlClientImpl(
+      'http://localhost:8181/rdf4j-server',
+      'http://localhost:8181/rdf4j-server/repositories/mktp-schema20/namespaces',
+    );
+    const rootStore = createUiModelFromState('mktp-fed20', client, rootModelInitialState, additionalColls);
+    const store: any = asReduxStore(rootStore);
+    connectReduxDevtools(remotedev, rootStore);
+    return (
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+          <div
+            style={{
+              //height: '1000px',
+              width: '100%',
+              backgroundColor: 'rgba(230, 235, 242, 0.5)',
+              margin: '0 auto',
+              padding: '5px',
+            }}>
+            <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+          </div>
+        </MstContextProvider>
+      </Provider>
+    );
   },
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
-} as Meta;
+} as Meta<typeof Form>;
 
-export const Full: Story<{}> = () => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-  ];
-
-  const client = new SparqlClientImpl(
-    'http://localhost:8181/rdf4j-server',
-    'http://localhost:8181/rdf4j-server/repositories/mktp-schema20/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed20', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <Provider store={store}>
-      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-        <div
-          style={{
-            //height: '1000px',
-            width: '100%',
-            backgroundColor: 'rgba(230, 235, 242, 0.5)',
-            margin: '0 auto',
-            padding: '5px',
-          }}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </div>
-      </MstContextProvider>
-    </Provider>
-  );
-};
+type Story = StoryObj<any>; // StoryObj<typeof Form>;
 
 const viewKinds = [
   {
@@ -352,3 +349,5 @@ const additionalColls: CollState[] = [
     },
   },
 ];
+
+export const Full: Story = {};

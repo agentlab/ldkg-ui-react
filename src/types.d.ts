@@ -11,16 +11,6 @@ declare module 'uuid62';
 
 declare module 'react-split-pane/lib/Pane';
 
-declare module '*.less' {
-  const content: any;
-  export default content;
-}
-
-declare module '*.module.less' {
-  const classes: { [className: string]: string };
-  export default classes;
-}
-
 declare module '*.module.scss' {
   const classes: { [className: string]: string };
   export default classes;
@@ -37,3 +27,5 @@ declare module '*.css' {
 }
 
 declare module 'react-base-table';
+
+declare module 'remotedev';

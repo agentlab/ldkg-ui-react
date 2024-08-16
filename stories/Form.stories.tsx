@@ -10,11 +10,12 @@
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
-import { Meta, Story, StoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { SparqlClientImpl, rootModelInitialState, CollState, JsObject } from '@agentlab/sparql-jsld-client';
+import * as remotedev from 'remotedev';
+import { factory, CollState, JsObject, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
   RendererRegistryEntry,
@@ -26,6 +27,36 @@ import {
 } from '../src';
 import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
 import { createUiModelFromState } from '../src/models/MstViewDescr';
+
+export default {
+  title: 'Form/ArtifactForm',
+  component: Form,
+  render: (args: any) => {
+    const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
+    const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
+    const rootStore = createUiModelFromState(
+      'reqs2',
+      client,
+      rootModelInitialState,
+      createAdditionalColls(args.viewKinds, args.data),
+    );
+    const store: any = asReduxStore(rootStore);
+    connectReduxDevtools(remotedev, rootStore);
+    return (
+      <Provider store={store}>
+        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+          <div style={{ width: '300px', height: '200px', border: '1px solid #000' }}>
+            <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+          </div>
+        </MstContextProvider>
+      </Provider>
+    );
+  },
+  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
+  parameters: { docs: { source: { type: 'code' } } },
+} as Meta<typeof Form>;
+
+type Story = StoryObj<any>; // StoryObj<typeof Form>;
 
 const viewKinds = [
   {
@@ -45,7 +76,7 @@ const viewKinds = [
             schema: 'rm:ArtifactShape',
           },
         ],
-        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+        //orderBy: [{ expression: factory.variable('identifier0'), descending: false }],
       },
     ],
     elements: [
@@ -141,99 +172,63 @@ const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): Co
   return additionalColls;
 };
 
-export default {
-  title: 'Form/ArtifactForm',
-  component: Form,
-  argTypes: {
-    backgroundColor: { control: 'color' },
+export const EditableRemoteData: Story = {
+  args: {
+    viewKinds,
   },
-  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
-  parameters: { docs: { source: { type: 'code' } } },
-} as Meta;
-
-/*const meta: Meta<typeof Form> = {
-  title: 'Form/ArtifactForm',
-  component: Form,
-  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
-  parameters: { docs: { source: { type: 'code' } } },
-};
-export default meta;
-type Story = StoryObj<typeof Form>;*/
-
-const Template: Story<any> = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers];
-
-  const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
-  const rootStore = createUiModelFromState(
-    'reqs2',
-    client,
-    rootModelInitialState,
-    createAdditionalColls(args.viewKinds, args.data),
-  );
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <Provider store={store}>
-      <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-        <div style={{ width: '300px', height: '200px', border: '1px solid #000' }}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </div>
-      </MstContextProvider>
-    </Provider>
-  );
 };
 
-export const EditableRemoteData = Template.bind({});
-EditableRemoteData.args = {
-  viewKinds,
-};
-
-export const ReadOnlyRemoteData = Template.bind({});
 const readOnlyFormViewKinds = cloneDeep(viewKinds);
 readOnlyFormViewKinds[0].elements[0].options.readOnly = true;
-ReadOnlyRemoteData.args = {
-  viewKinds: readOnlyFormViewKinds,
+export const ReadOnlyRemoteData: Story = {
+  args: {
+    viewKinds: readOnlyFormViewKinds,
+  },
 };
 
-export const EditableObjectWithNullProperty = Template.bind({});
-EditableObjectWithNullProperty.args = {
-  viewKinds,
-  data: [
-    {
-      creator: null,
-      assetFolder: null,
-      description: 'TestDescr',
-    },
-  ],
+export const EditableObjectWithNullProperty: Story = {
+  args: {
+    viewKinds,
+    data: [
+      {
+        creator: null,
+        assetFolder: null,
+        description: 'TestDescr',
+      },
+    ],
+  },
 };
 
-export const ReadOnlyObjectWithNullProperty = Template.bind({});
-ReadOnlyObjectWithNullProperty.args = {
-  viewKinds: readOnlyFormViewKinds,
-  data: [
-    {
-      creator: null,
-      assetFolder: null,
-      description: 'TestDescr',
-    },
-  ],
+export const ReadOnlyObjectWithNullProperty: Story = {
+  args: {
+    viewKinds: readOnlyFormViewKinds,
+    data: [
+      {
+        creator: null,
+        assetFolder: null,
+        description: 'TestDescr',
+      },
+    ],
+  },
 };
 
-export const EditableEmptyObject = Template.bind({});
-EditableEmptyObject.args = {
-  viewKinds,
-  data: [{}],
+export const EditableEmptyObject: Story = {
+  args: {
+    viewKinds,
+    data: [{}],
+  },
 };
 
-export const ReadOnlyEmptyObject = Template.bind({});
-ReadOnlyEmptyObject.args = {
-  viewKinds: readOnlyFormViewKinds,
-  data: [{}],
+export const ReadOnlyEmptyObject: Story = {
+  args: {
+    viewKinds: readOnlyFormViewKinds,
+    data: [{}],
+  },
 };
 
-export const ReadOnlyNoObject = Template.bind({});
-ReadOnlyNoObject.args = {
-  viewKinds, // form should be read-only even if viewKind is not read-only
-  data: [],
+export const ReadOnlyNoObject: Story = {
+  args: {
+    viewKinds, // form should be read-only even if viewKind is not read-only
+    data: [],
+  },
 };

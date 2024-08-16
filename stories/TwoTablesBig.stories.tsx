@@ -8,13 +8,13 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { rootModelInitialState, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
+import * as remotedev from 'remotedev';
+import { factory, CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
@@ -34,29 +34,29 @@ import {
 export default {
   title: 'Several Controls/TwoTablesBig',
   component: Form,
+  render: (args: any) => {
+    const client = new SparqlClientImpl(
+      'http://localhost:8181/rdf4j-server',
+      'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
+    );
+    const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
+    const store: any = asReduxStore(rootStore);
+    connectReduxDevtools(remotedev, rootStore);
+    return (
+      <div style={{ height: 'calc(100vh - 32px)' }}>
+        <Provider store={store}>
+          <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells} actions={actions}>
+            <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
+          </MstContextProvider>
+        </Provider>
+      </div>
+    );
+  },
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
-} as Meta;
+} as Meta<typeof Form>;
 
-const Template: Story<any> = (args) => {
-  const client = new SparqlClientImpl(
-    'http://localhost:8181/rdf4j-server',
-    'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={args.renderers} cells={args.cells} actions={actions}>
-          <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
+type Story = StoryObj<any>; // StoryObj<typeof Form>;
 
 const antdRenderers: RendererRegistryEntry[] = [
   ...antdControlRenderers,
@@ -87,7 +87,7 @@ const viewKinds = [
             service: mktpSchemaRepoIri,
           },
         ],
-        orderBy: [{ expression: variable('rank0'), descending: false }],
+        orderBy: [{ expression: factory.variable('rank0'), descending: false }],
       },
       /// Marketplace categories & cards
       {
@@ -671,11 +671,12 @@ const additionalColls: CollState[] = [
   },
 ];
 
-export const RemoteData = Template.bind({});
-RemoteData.args = {
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
-  additionalColls: additionalColls,
-  renderers: antdRenderers,
-  cells: antdCells,
+export const RemoteData: Story = {
+  args: {
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+    additionalColls: additionalColls,
+    renderers: antdRenderers,
+    cells: antdCells,
+  },
 };

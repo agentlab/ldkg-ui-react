@@ -9,11 +9,12 @@
  ********************************************************************************/
 import moment from 'moment';
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { rootModelInitialState, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
+import * as remotedev from 'remotedev';
+import { factory, CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 import {
   antdCells,
   antdControlRenderers,
@@ -31,31 +32,30 @@ import { tableRenderers } from '../src';
 export default {
   title: 'Table/Remote Mktp',
   component: Form,
+  render: (args: any) => {
+    const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
+    const client = new SparqlClientImpl(
+      'http://localhost:8181/rdf4j-server',
+      'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
+    );
+    const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+    const store: any = asReduxStore(rootStore);
+    connectReduxDevtools(remotedev, rootStore);
+    return (
+      <div style={{ height: 'calc(100vh - 32px)' }}>
+        <Provider store={store}>
+          <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+            <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
+          </MstContextProvider>
+        </Provider>
+      </div>
+    );
+  },
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
-} as Meta;
+} as Meta<typeof Form>;
 
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
-
-  const client = new SparqlClientImpl(
-    'http://localhost:8181/rdf4j-server',
-    'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={viewDescrs[0]['@id']} viewDescrCollId={viewDescrCollConstr['@id']} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
+type Story = StoryObj<any>; // StoryObj<typeof Form>;
 
 const mktpSchemaRepoIri = 'http://localhost:8181/rdf4j-server/repositories/mktp-schema';
 const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
@@ -92,7 +92,7 @@ const viewKinds = [
             service: mktpSchemaRepoIri,
           },
         ],
-        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+        //orderBy: [{ expression: factory.variable('identifier0'), descending: false }],
         limit: 100,
       },
     ],
@@ -211,5 +211,4 @@ const additionalColls: CollState[] = [
   },
 ];
 
-export const RemoteData = Template.bind({});
-RemoteData.args = {};
+export const RemoteData: Story = {};

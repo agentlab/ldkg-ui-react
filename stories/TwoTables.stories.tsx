@@ -9,13 +9,13 @@
  ********************************************************************************/
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
-import { variable } from '@rdfjs/data-model';
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
-import { rootModelInitialState, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
+import * as remotedev from 'remotedev';
+import { factory, CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 import {
   antdCells,
   antdControlRenderers,
@@ -35,33 +35,32 @@ import { tableRenderers } from '../src';
 export default {
   title: 'Several Controls/TwoTables RemoteData',
   component: Form,
+  render: (args: any) => {
+    const antdRenderers: RendererRegistryEntry[] = [
+      ...antdControlRenderers,
+      ...antdLayoutRenderers,
+      ...antdDataControlRenderers,
+      ...tableRenderers,
+    ];
+    const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
+    const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, args.additionalColls);
+    const store: any = asReduxStore(rootStore);
+    connectReduxDevtools(remotedev, rootStore);
+    return (
+      <div style={{ height: 'calc(100vh - 32px)' }}>
+        <Provider store={store}>
+          <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells} actions={actions}>
+            <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
+          </MstContextProvider>
+        </Provider>
+      </div>
+    );
+  },
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
-} as Meta;
+} as Meta<typeof Form>;
 
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-    ...tableRenderers,
-  ];
-
-  const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
-  const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, args.additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells} actions={actions}>
-          <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
+type Story = StoryObj<any>; // StoryObj<typeof Form>;
 
 /*const css = {
     height: '1px',
@@ -155,7 +154,7 @@ const viewKinds = [
             },
           },
         ],
-        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+        //orderBy: [{ expression: factory.variable('identifier0'), descending: false }],
       },
     ],
     elements: [
@@ -744,50 +743,53 @@ const additionalColls: CollState[] = [
 //////////////////////////////////////////////////////
 //   Without VerticalLayout AND without Form
 //////////////////////////////////////////////////////
-export const NoVerticalLayout100Height = Template.bind({});
-NoVerticalLayout100Height.args = {
-  additionalColls,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const NoVerticalLayout100Height: Story = {
+  args: {
+    additionalColls,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
-export const NoVerticalLayout50Height = Template.bind({});
 const additionalCollsNoVerticalLayout50Height = cloneDeep(additionalColls);
 additionalCollsNoVerticalLayout50Height[0].data[0].elements[0].options.style.height = '50%';
-NoVerticalLayout50Height.args = {
-  additionalColls: additionalCollsNoVerticalLayout50Height,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const NoVerticalLayout50Height: Story = {
+  args: {
+    additionalColls: additionalCollsNoVerticalLayout50Height,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
 //////////////////////////////////////////////////////
 //   Without VerticalLayout AND with Form
 //////////////////////////////////////////////////////
-export const NoVerticalLayout100HeightForm = Template.bind({});
 const additionalCollsNoVerticalLayout100HeightForm = cloneDeep(additionalColls);
 additionalCollsNoVerticalLayout100HeightForm[0].data[0].elements = [
   ...additionalCollsNoVerticalLayout100HeightForm[0].data[0].elements,
   cardForm,
 ];
-NoVerticalLayout100HeightForm.args = {
-  additionalColls: additionalCollsNoVerticalLayout100HeightForm,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const NoVerticalLayout100HeightForm: Story = {
+  args: {
+    additionalColls: additionalCollsNoVerticalLayout100HeightForm,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
-export const NoVerticalLayout50HeightForm = Template.bind({});
 const additionalColls50HeightForm = cloneDeep(additionalCollsNoVerticalLayout100HeightForm);
 additionalColls50HeightForm[0].data[0].elements[0].options.style.height = '50%';
-NoVerticalLayout50HeightForm.args = {
-  additionalColls: additionalColls50HeightForm,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const NoVerticalLayout50HeightForm: Story = {
+  args: {
+    additionalColls: additionalColls50HeightForm,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
 //////////////////////////////////////////////////////
 //   With VerticalLayout AND without Form
 //////////////////////////////////////////////////////
-export const VerticalLayout100Height = Template.bind({});
 const additionalCollsVerticalLayout100Height = cloneDeep(additionalColls);
 // wrap elements in VerticalLayout
 additionalCollsVerticalLayout100Height[0].data[0].elements = [
@@ -800,25 +802,27 @@ additionalCollsVerticalLayout100Height[0].data[0].elements = [
     elements: additionalCollsVerticalLayout100Height[0].data[0].elements,
   },
 ];
-VerticalLayout100Height.args = {
-  additionalColls: additionalCollsVerticalLayout100Height,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const VerticalLayout100Height: Story = {
+  args: {
+    additionalColls: additionalCollsVerticalLayout100Height,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
-export const VerticalLayout50Height = Template.bind({});
 const additionalCollsVerticalLayout50Height = cloneDeep(additionalCollsVerticalLayout100Height);
 additionalCollsVerticalLayout50Height[0].data[0].elements[0].elements[0].options.style.height = '50%';
-VerticalLayout50Height.args = {
-  additionalColls: additionalCollsVerticalLayout50Height,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const VerticalLayout50Height: Story = {
+  args: {
+    additionalColls: additionalCollsVerticalLayout50Height,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
 //////////////////////////////////////////////////////
 //   With VerticalLayout AND with Form
 //////////////////////////////////////////////////////
-export const VerticalLayout100HeightForm = Template.bind({});
 const additionalCollsVerticalLayout100HeightForm = cloneDeep(additionalColls);
 // wrap elements in VerticalLayout
 additionalCollsVerticalLayout100HeightForm[0].data[0].elements = [
@@ -831,17 +835,20 @@ additionalCollsVerticalLayout100HeightForm[0].data[0].elements = [
     elements: [...additionalCollsVerticalLayout100HeightForm[0].data[0].elements, cardForm],
   },
 ];
-VerticalLayout100HeightForm.args = {
-  additionalColls: additionalCollsVerticalLayout100HeightForm,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const VerticalLayout100HeightForm: Story = {
+  args: {
+    additionalColls: additionalCollsVerticalLayout100HeightForm,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
-export const VerticalLayout50HeightForm = Template.bind({});
 const additionalCollsVerticalLayout50HeightForm = cloneDeep(additionalCollsVerticalLayout100HeightForm);
 additionalCollsVerticalLayout50HeightForm[0].data[0].elements[0].elements[0].options.style.height = '50%';
-VerticalLayout50HeightForm.args = {
-  additionalColls: additionalCollsVerticalLayout50HeightForm,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const VerticalLayout50HeightForm: Story = {
+  args: {
+    additionalColls: additionalCollsVerticalLayout50HeightForm,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };

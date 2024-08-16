@@ -52,7 +52,7 @@ export interface IconProps extends CoreIconProps {
   component?: React.ComponentType<CustomIconComponentProps | React.SVGProps<SVGSVGElement>>;
 }
 
-export interface IconComponent<P> extends React.SFC<P> {
+export interface IconComponent<P> extends React.FC<P> {
   createFromIconfontCN: typeof createFromIconfontCN;
   getTwoToneColor: typeof getTwoToneColor;
   setTwoToneColor: typeof setTwoToneColor;

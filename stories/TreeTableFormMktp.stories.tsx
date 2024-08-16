@@ -10,11 +10,13 @@
 import { cloneDeep } from 'lodash-es';
 import moment from 'moment';
 import React from 'react';
-import { Story, Meta } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
+import * as remotedev from 'remotedev';
 import {
+  factory,
   CollState,
   JsStrObj,
   Results,
@@ -39,41 +41,37 @@ import { createUiModelFromState } from '../src/models/MstViewDescr';
 export default {
   title: 'Several Controls/Tree-Table-Form',
   component: Form,
-  argTypes: {
-    backgroundColor: { control: 'color' },
+  render: (args: any) => {
+    const antdRenderers: RendererRegistryEntry[] = [
+      ...antdControlRenderers,
+      ...antdLayoutRenderers,
+      ...antdDataControlRenderers,
+      ...tableRenderers,
+    ];
+    //const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
+    //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
+    const client = new SparqlClientImpl(
+      'http://localhost:8181/rdf4j-server',
+      'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
+    );
+    const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
+    const store: any = asReduxStore(rootStore);
+    connectReduxDevtools(remotedev, rootStore);
+    return (
+      <div style={{ height: 'calc(100vh - 32px)' }}>
+        <Provider store={store}>
+          <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
+            <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
+          </MstContextProvider>
+        </Provider>
+      </div>
+    );
   },
   // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
   parameters: { docs: { source: { type: 'code' } } },
-} as Meta;
+} as Meta<typeof Form>;
 
-const Template: Story = (args: any) => {
-  const antdRenderers: RendererRegistryEntry[] = [
-    ...antdControlRenderers,
-    ...antdLayoutRenderers,
-    ...antdDataControlRenderers,
-    ...tableRenderers,
-  ];
-
-  //const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
-  //const rootStore = createUiModelFromState('mktp', client, rootModelInitialState, additionalColls);
-  const client = new SparqlClientImpl(
-    'http://localhost:8181/rdf4j-server',
-    'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
-  );
-  const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
-  const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  connectReduxDevtools(require('remotedev'), rootStore);
-  return (
-    <div style={{ height: 'calc(100vh - 32px)' }}>
-      <Provider store={store}>
-        <MstContextProvider store={rootStore} renderers={antdRenderers} cells={antdCells}>
-          <Form viewDescrId={args.viewDescrId} viewDescrCollId={args.viewDescrCollId} />
-        </MstContextProvider>
-      </Provider>
-    </div>
-  );
-};
+type Story = StoryObj<any>; // StoryObj<typeof Form>;
 
 const mktpSchemaRepoIri = 'http://localhost:8181/rdf4j-server/repositories/mktp-schema';
 const mktpOntopRepoIri = 'http://192.168.1.33:8090/sparql';
@@ -153,7 +151,7 @@ const viewKinds = [
             service: mktpSchemaRepoIri,
           },
         ],
-        //orderBy: [{ expression: variable('identifier0'), descending: false }],
+        //orderBy: [{ expression: factory.variable('identifier0'), descending: false }],
       },
     ],
     // child ui elements configs
@@ -470,18 +468,20 @@ const additionalColls: CollState[] = [
   },
 ];
 
-export const MktpCategories100Percent = Template.bind({});
-MktpCategories100Percent.args = {
-  additionalColls,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const MktpCategories100Percent: Story = {
+  args: {
+    additionalColls,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
 
-export const MktpCategories50Percent = Template.bind({});
 const additionalColls50 = cloneDeep(additionalColls);
 additionalColls50[0].data[0].elements[0].options.style.height = '50%';
-MktpCategories50Percent.args = {
-  additionalColls: additionalColls50,
-  viewDescrId: viewDescrs[0]['@id'],
-  viewDescrCollId: viewDescrCollConstr['@id'],
+export const MktpCategories50Percent: Story = {
+  args: {
+    additionalColls: additionalColls50,
+    viewDescrId: viewDescrs[0]['@id'],
+    viewDescrCollId: viewDescrCollConstr['@id'],
+  },
 };
