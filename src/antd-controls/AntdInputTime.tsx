@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import moment from 'moment';
+import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import { TimePicker } from 'antd';
 
@@ -18,7 +18,7 @@ export const AntdInputTime = React.memo((props: any /*CellProps & WithClassname*
   return (
     <TimePicker
       value={data || ''}
-      onChange={(time, timeString) => handleChange(path, moment(timeString).format('LTS'))}
+      onChange={(time: Dayjs) => handleChange(path, time ? time.format('LTS') : '')}
       className={className}
       disabled={!enabled}
     />

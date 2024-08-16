@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import moment, { Moment } from 'moment';
+import dayjs, { Dayjs } from 'dayjs';
 import React, { useState, useEffect } from 'react';
 import { DatePicker, Col, Row } from 'antd';
 
@@ -17,12 +17,12 @@ import { ControlComponent } from '../Form';
 import { withStoreToControlProps } from '../util/ContextToProps';
 
 export interface DateControlProps {
-  momentLocale?: Moment;
+  dateLocale?: Dayjs;
 }
 export const AntdDateControl: React.FC<ControlComponent & DateControlProps> = (props) => {
-  const { id, label, editing, enabled, required, handleChange, data, momentLocale, uiOptions = {} } = props;
+  const { id, label, editing, enabled, required, handleChange, data, dateLocale, uiOptions = {} } = props;
   const defaultLabel = label as string;
-  const localeDateTimeFormat = momentLocale ? `${momentLocale.localeData().longDateFormat('L')}` : 'YYYY-MM-DD';
+  const localeDateTimeFormat = dateLocale ? `${(dateLocale as any).localeData().longDateFormat('L')}` : 'YYYY-MM-DD';
   const [currentData, setCurrentData] = useState(data);
 
   let labelText;
@@ -32,9 +32,10 @@ export const AntdDateControl: React.FC<ControlComponent & DateControlProps> = (p
   } else {
     labelText = defaultLabel;
   }
-  const onChange = (datetime: any) => {
-    setCurrentData(datetime ? moment(datetime).format(localeDateTimeFormat) : 'YYYY-MM-DD');
-    handleChange(datetime ? moment(datetime).format(localeDateTimeFormat) : 'YYYY-MM-DD');
+  const onChange = (date: Dayjs) => {
+    const dateNonNullStr = date ? date.format(localeDateTimeFormat) : 'YYYY-MM-DD';
+    setCurrentData(dateNonNullStr);
+    handleChange(dateNonNullStr);
   };
   useEffect(() => {
     if (!editing) {
@@ -51,7 +52,7 @@ export const AntdDateControl: React.FC<ControlComponent & DateControlProps> = (p
       <Col span={16}>
         <DatePicker
           // id={id + '-input'}
-          value={moment(currentData) || null}
+          value={dayjs(currentData) || null}
           onChange={onChange}
           format={localeDateTimeFormat}
           disabled={!enabled}

@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import moment, { Moment } from 'moment';
+import dayjs, { Dayjs } from 'dayjs';
 import React, { useState, useEffect } from 'react';
 import { DatePicker, Col, Row } from 'antd';
 
@@ -17,13 +17,15 @@ import { ControlComponent } from '../Form';
 import { withStoreToControlProps } from '../util/ContextToProps';
 
 export interface DateTimeControlProps {
-  momentLocale?: Moment;
+  dateLocale?: Dayjs;
 }
 
 export const AntdDateTimeControl: React.FC<ControlComponent & DateTimeControlProps> = (props) => {
-  const { id, label, editing, enabled, required, handleChange, data, momentLocale, uiOptions = {} } = props;
+  const { id, label, editing, enabled, required, handleChange, data, dateLocale, uiOptions = {} } = props;
   const defaultLabel = label as string;
-  const localeDateTimeFormat = momentLocale ? `${momentLocale.localeData().longDateFormat('L')}` : 'YYYY-MM-DD h:mm a';
+  const localeDateTimeFormat = dateLocale
+    ? `${(dateLocale as any).localeData().longDateFormat('L')}`
+    : 'YYYY-MM-DD h:mm a';
   const [currentData, setCurrentData] = useState(data);
 
   let labelText;
@@ -33,9 +35,10 @@ export const AntdDateTimeControl: React.FC<ControlComponent & DateTimeControlPro
   } else {
     labelText = defaultLabel;
   }
-  const onChange = (datetime: any) => {
-    setCurrentData(datetime ? moment(datetime).format(localeDateTimeFormat) : 'YYYY-MM-DD h:mm a');
-    handleChange(datetime ? moment(datetime).format(localeDateTimeFormat) : 'YYYY-MM-DD h:mm a');
+  const onChange = (datetime: Dayjs) => {
+    const datetimeNonNullStr = datetime ? datetime.format(localeDateTimeFormat) : 'YYYY-MM-DD h:mm a';
+    setCurrentData(datetimeNonNullStr);
+    handleChange(datetimeNonNullStr);
   };
   useEffect(() => {
     if (!editing) {
@@ -52,7 +55,7 @@ export const AntdDateTimeControl: React.FC<ControlComponent & DateTimeControlPro
       <Col span={16}>
         <DatePicker
           // id={id + '-input'}
-          value={moment(currentData) || null}
+          value={dayjs(currentData) || null}
           onChange={onChange}
           format={localeDateTimeFormat}
           disabled={!enabled}

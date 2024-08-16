@@ -7,9 +7,9 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
-import { Meta, Story } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
 
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
@@ -51,7 +51,7 @@ const Template: Story = (args: any) => {
   );
   const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
   const store: any = asReduxStore(rootStore);
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   connectReduxDevtools(require('remotedev'), rootStore);
   return (
     <div style={{ height: 'calc(100vh - 32px)' }}>
@@ -430,7 +430,7 @@ const additionalColls: CollState[] = [
     data: viewKinds,
     opt: {
       updPeriod: undefined,
-      lastSynced: moment.now(),
+      lastSynced: dayjs().valueOf(),
       //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
     },
   },
@@ -440,7 +440,7 @@ const additionalColls: CollState[] = [
     data: viewDescrs,
     opt: {
       updPeriod: undefined,
-      lastSynced: moment.now(),
+      lastSynced: dayjs().valueOf(),
       //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
       // for viewDescrs.collConstrs (it loads lazily -- after the first access)
     },

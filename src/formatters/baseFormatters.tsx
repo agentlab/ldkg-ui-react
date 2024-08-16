@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Image } from 'antd';
@@ -76,7 +76,7 @@ export const artifactTitle = ({ value, type }: any): JSX.Element => {
   );
 };
 
-export const dateTime = ({ value }: any): JSX.Element => <span>{moment(value).format('DD.MM.YYYY')}</span>;
+export const dateTime = ({ value }: any): JSX.Element => <span>{dayjs(value).format('DD.MM.YYYY')}</span>;
 
 export const link = ({ value, link, options }: any): JSX.Element => {
   const label = options.label || value || link;

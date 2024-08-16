@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { cloneDeep } from 'lodash-es';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import React from 'react';
 import { Meta, StoryObj } from '@storybook/react';
 
@@ -141,7 +141,7 @@ const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): Co
       data: viewKinds,
       opt: {
         updPeriod: undefined,
-        lastSynced: moment.now(),
+        lastSynced: dayjs().valueOf(),
         //resolveCollConstrs: false, // disable data loading from the server for viewKinds.collConstrs
       },
     },
@@ -151,7 +151,7 @@ const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): Co
       data: viewDescrs,
       opt: {
         updPeriod: undefined,
-        lastSynced: moment.now(),
+        lastSynced: dayjs().valueOf(),
         //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
         // for viewDescrs.collConstrs (it loads lazily -- after the first access)
       },
@@ -163,7 +163,7 @@ const createAdditionalColls = (viewKinds: any, data: JsObject[] | undefined): Co
       data,
       opt: {
         updPeriod: undefined,
-        lastSynced: moment.now(),
+        lastSynced: dayjs().valueOf(),
         //resolveCollConstrs: false, // 'true' here (by default) triggers data loading from the server
         // for viewDescrs.collConstrs (it loads lazily -- after the first access)
       },

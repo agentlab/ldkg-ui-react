@@ -1,7 +1,8 @@
+import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { DatePicker, Select, Radio, InputNumber } from 'antd';
-import moment, { Moment } from 'moment';
 import { RadioChangeEvent } from 'antd/es/radio';
+
 import { ValueOfFilter } from '../type';
 
 const localeRus = {
@@ -29,7 +30,7 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
   useEffect(() => {
     let newValue: any = {};
     if (firstValueInThreeVariant && secondValueInThreeVariant) {
-      let timeOption: moment.unitOfTime.DurationConstructor = 'days';
+      let timeOption: dayjs.ManipulateType = 'days';
       if (secondValueInThreeVariant.localeCompare(timeValue[0]) === 0) {
         timeOption = 'days';
       } else if (secondValueInThreeVariant.localeCompare(timeValue[1]) === 0) {
@@ -37,11 +38,10 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
       } else if (secondValueInThreeVariant.localeCompare(timeValue[2]) === 0) {
         timeOption = 'years';
       }
-      const date = moment().subtract(firstValueInThreeVariant, timeOption);
-      const foundDate = date.format('YYYY-MM-DD');
+      const foundDate = dayjs().subtract(parseInt(firstValueInThreeVariant), timeOption).format('YYYY-MM-DD');
       newValue = {
         value: [`${foundDate}T00:00:00`],
-        valueName: [moment(foundDate, 'YYYY-MM-DD').fromNow()],
+        valueName: [(dayjs(foundDate, 'YYYY-MM-DD') as any).fromNow()],
       };
     } else {
       newValue = { value: [], valueName: [] };
@@ -54,16 +54,14 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
     const { value } = e.target;
     setCheckedOption(value);
     if (value === 1) {
-      const date = moment();
-      const today = `${date.format('YYYY-MM-DD')}T00:00:00`;
+      const today = `${dayjs().format('YYYY-MM-DD')}T00:00:00`;
       handleChange({ value: [today], valueName: [localeRus.today] });
     } else if (value === 2) {
-      const date = moment().subtract(1, 'days');
-      const yesterday = `${date.format('YYYY-MM-DD')}T00:00:00`;
+      const yesterday = `${dayjs().subtract(1, 'days').format('YYYY-MM-DD')}T00:00:00`;
       handleChange({ value: [yesterday], valueName: [localeRus.yesterday] });
     } else if (value === 3) {
       if (firstValueInThreeVariant && secondValueInThreeVariant) {
-        let timeOption: moment.unitOfTime.DurationConstructor = 'days';
+        let timeOption: dayjs.ManipulateType = 'days';
         if (secondValueInThreeVariant.localeCompare(timeValue[0]) === 0) {
           timeOption = 'days';
         } else if (secondValueInThreeVariant.localeCompare(timeValue[1]) === 0) {
@@ -71,12 +69,10 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
         } else if (secondValueInThreeVariant.localeCompare(timeValue[2]) === 0) {
           timeOption = 'years';
         }
-        const date = moment().subtract(firstValueInThreeVariant, timeOption);
-        const foundDate = date.format('YYYY-MM-DD');
-
+        const foundDate = dayjs().subtract(parseInt(firstValueInThreeVariant), timeOption).format('YYYY-MM-DD');
         handleChange({
           value: [`${foundDate}T00:00:00`],
-          valueName: [moment(foundDate, 'YYYY-MM-DD').fromNow()],
+          valueName: [(dayjs(foundDate, 'YYYY-MM-DD') as any).fromNow()],
         });
       } else {
         handleChange({ value: [], valueName: [] });
@@ -90,12 +86,17 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
     return (
       <DatePicker
         showTime
-        defaultValue={defaultValues.value[0] as Moment}
-        format={moment.defaultFormat}
+        defaultValue={defaultValues.value[0] as Dayjs}
+        format={(dayjs as any).defaultFormat}
         style={{ marginTop: 25 }}
         onChange={(date, dateString) => {
           handleChange({
-            value: dateString === '' ? [] : [moment(dateString, moment.defaultFormat).format('YYYY-MM-DDThh:mm:ss')],
+            value:
+              dateString === ''
+                ? []
+                : Array.isArray(dateString)
+                  ? []
+                  : [dayjs(dateString, (dayjs as any).defaultFormat).format('YYYY-MM-DDThh:mm:ss')],
             valueName: [dateString],
           });
         }}
@@ -149,12 +150,16 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
               <DatePicker
                 showTime
                 style={{ marginLeft: 10 }}
-                defaultValue={defaultValues.value[0] as Moment}
-                format={moment.defaultFormat}
+                defaultValue={defaultValues.value[0] as Dayjs}
+                format={(dayjs as any).defaultFormat}
                 onChange={(date, dateString) => {
                   handleChange({
                     value:
-                      dateString === '' ? [] : [moment(dateString, moment.defaultFormat).format('YYYY-MM-DDThh:mm:ss')],
+                      dateString === ''
+                        ? []
+                        : Array.isArray(dateString)
+                          ? []
+                          : [dayjs(dateString, (dayjs as any).defaultFormat).format('YYYY-MM-DDThh:mm:ss')],
                     valueName: [],
                   });
                 }}
@@ -170,14 +175,16 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
       <DatePicker.RangePicker
         showTime
         style={{ marginTop: 25 }}
-        defaultValue={defaultValues.value as [Moment, Moment]}
-        format={moment.defaultFormat}
+        defaultValue={defaultValues.value as [Dayjs, Dayjs]}
+        format={(dayjs as any).defaultFormat}
         onChange={(date, dateString) => {
           handleChange({
             value:
               dateString[0] === '' || dateString[1] === ''
                 ? []
-                : dateString.map((rangeDate) => moment(rangeDate, moment.defaultFormat).format('YYYY-MM-DDThh:mm:ss')),
+                : dateString.map((rangeDate) =>
+                    dayjs(rangeDate, (dayjs as any).defaultFormat).format('YYYY-MM-DDThh:mm:ss'),
+                  ),
             valueName: [],
           });
         }}

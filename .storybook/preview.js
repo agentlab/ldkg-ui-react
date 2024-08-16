@@ -1,9 +1,30 @@
 import React from 'react';
 
-import * as moment from 'moment';
+import * as dayjs from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import LocaleData from 'dayjs/plugin/localeData';
+import RelativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/ru';
+
 import { ConfigProvider, theme } from 'antd';
 import ruRu from 'antd/es/locale/ru_RU';
 
+dayjs.extend(LocalizedFormat); // for longDateFormat
+dayjs.extend(LocaleData); // for localeData()
+dayjs.extend(RelativeTime); // for fromNow()
+
+dayjs.locale('ru');
+
+// for dayjs.defaultFormat
+// see https://stackoverflow.com/questions/72681674/how-to-set-the-default-format-in-dayjs
+const defaultFormat = 'LLL';
+dayjs.extend((option, dayjsClass, dayjsFactory) => {
+  const oldFormat = dayjsClass.prototype.format;
+
+  dayjsClass.prototype.format = function (formatString) {
+    return oldFormat.bind(this)(formatString ?? defaultFormat);
+  };
+});
 
 // https://storybook.js.org/docs/react/writing-stories/parameters#global-parameters
 export const parameters = {
@@ -34,6 +55,4 @@ export const decorators = [
   ),
 ];
 
-moment.locale('ru');
-moment.defaultFormat = 'LLL';
 export const tags = ['autodocs'];

@@ -1,10 +1,10 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Row, Col, Select, Typography } from 'antd';
-import { FilterType, Relation, ValueOfFilter } from './type';
-import { JSONSchema6DefinitionForRdfProperty, JsObject } from '@agentlab/sparql-jsld-client';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { JSONSchema6, JSONSchema6Definition } from 'json-schema';
+import { JSONSchema6DefinitionForRdfProperty, JsObject } from '@agentlab/sparql-jsld-client';
+import { Row, Col, Select, Typography } from 'antd';
 
+import { FilterType, Relation, ValueOfFilter } from './type';
 import { BodyOfListFilter } from './filtersBody/BodyOfListFilter';
 import { BodyOfIntegerFilter, equalTypesOfRelations } from './filtersBody/BodyOfIntegerFilter';
 import { BodyOfDateTimeFilter } from './filtersBody/BodyOfDateTimeFilter';
@@ -166,12 +166,12 @@ export const Filter: FunctionComponent<FilterProp> = ({
     if (typeOfFilter.type === 'date-time') {
       if (equalTypesOfRelations(typeOfCurrentRelation, 'twoDate')) {
         defaultValue = {
-          value: [moment().subtract(1, 'days'), moment()],
+          value: [dayjs().subtract(1, 'days'), dayjs()],
           valueName: [localeRus.fromYesterdayToToday],
         };
       } else {
         defaultValue = {
-          value: [moment()],
+          value: [dayjs()],
           valueName: [localeRus.today],
         };
       }
@@ -185,7 +185,7 @@ export const Filter: FunctionComponent<FilterProp> = ({
         defaultValue.valueName = prevFilter.valueName || [];
 
         if (typeOfFilter.type === 'date-time') {
-          defaultValue.value = prevFilter.value.map((value) => moment(value, 'YYYY-MM-DDThh:mm:ss'));
+          defaultValue.value = prevFilter.value.map((value) => dayjs(value, 'YYYY-MM-DDThh:mm:ss'));
         }
       }
     }
