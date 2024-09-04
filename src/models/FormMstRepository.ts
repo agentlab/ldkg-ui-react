@@ -7,17 +7,18 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
+import dayjs from 'dayjs';
 import { values, when } from 'mobx';
 import { types, getSnapshot, applySnapshot, getEnv, Instance, SnapshotIn, SnapshotOut } from 'mobx-state-tree';
 
 import { CollState, JsObject, MstRepository, registerMstCollSchema, SparqlClient } from '@agentlab/sparql-jsld-client';
 import { MstViewDescr, MstViewKind } from './MstViewDescr';
 import { viewDescrCollConstr, viewKindCollConstr } from './ViewCollConstrs';
-import dayjs from 'dayjs';
 
 export const FormMstRepository = types
   .model('FormMstRepository', {
     rep: MstRepository,
+    locale: types.map(types.frozen<any>()),
     editingData: types.map(types.boolean),
     selectedData: types.map(types.frozen<any>()),
   })
@@ -36,6 +37,10 @@ export const FormMstRepository = types
           if (data) return getSnapshot<JsObject>(data);
         }
         return undefined;
+      },
+      getLocaleJs(iri: string) {
+        if (!iri) return undefined;
+        return self.locale.get(iri);
       },
     };
   })

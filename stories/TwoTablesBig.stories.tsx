@@ -234,7 +234,7 @@ const viewKinds = [
                   selectActions: [
                     {
                       '@id': 'action3',
-                      '@type': 'ldkg:addConectionToTarget',
+                      '@type': 'ldkg:addConnectionToTarget',
                       title: 'Добавить в правую таблицу',
                       options: {
                         target: 'mktp:ProductCards_in_Product_Coll',
@@ -242,7 +242,7 @@ const viewKinds = [
                     },
                   ],
                   draggable: true,
-                  resizeableHeader: true,
+                  resizableHeader: true,
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

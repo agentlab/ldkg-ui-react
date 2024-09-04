@@ -258,14 +258,14 @@ const viewKinds = [
                     },
                     {
                       '@id': 'action3',
-                      '@type': 'ldkg:addConectionToTarget',
+                      '@type': 'ldkg:addConnectionToTarget',
                       title: 'Добавить в правую таблицу',
                       options: {
                         target: 'mktp:ProductCards_in_Product_Coll',
                       },
                     },
                   ],
-                  resizeableHeader: true,
+                  resizableHeader: true,
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

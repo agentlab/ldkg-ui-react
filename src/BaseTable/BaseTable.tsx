@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) 2021 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
 import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { SortableContainer } from 'react-sortable-hoc';
@@ -11,7 +20,7 @@ import './BaseTable.scss';
 const DraggableContainer = SortableContainer(({ children }: any) => children);
 
 interface EditableTableProps<T> {
-  resizeableHeader: boolean;
+  resizableHeader: boolean;
   tableMenu?: any;
   isMenu: boolean;
   onChangeMenu: Function;
@@ -65,9 +74,9 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
       order: viewOptions.order,
     });
 
-    const collCnstr: any = getCollConstrJs();
-    const initSortState = collCnstr?.orderBy
-      ? collCnstr.orderBy.reduce((obj: any, item: any) => {
+    const collConstr: any = getCollConstrJs();
+    const initSortState = collConstr?.orderBy
+      ? collConstr.orderBy.reduce((obj: any, item: any) => {
           return {
             ...obj,
             [item.variable]: item.descending ? 'desc' : 'asc',
@@ -77,10 +86,10 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
 
     const [sortState, setSortState] = useState<any>(initSortState);
     const onSort = (property: string, sortDir: any) => {
-      const collCnstr: any = getCollConstrJs();
-      const orderBy = collCnstr.orderBy;
+      const collConstr: any = getCollConstrJs();
+      const orderBy = collConstr.orderBy;
       let newOrder = undefined;
-      //console.log({ property, sortDir, sortState, collCnstr });
+      //console.log({ property, sortDir, sortState, collConstr });
       if (sortState[property] === 'desc') {
         //console.log('reset sorting order');
         // reset sorting order
@@ -110,7 +119,7 @@ export const EditableTable: React.FC<EditableTableProps<any>> = observer<any>(
           }
         }
       }
-      const newCollConstr = { ...collCnstr, orderBy: newOrder };
+      const newCollConstr = { ...collConstr, orderBy: newOrder };
       setCollConstrJs(newCollConstr);
       const newSortState = { ...sortState, [property]: sortDir };
       //console.log({ newSortState, newCollConstr });

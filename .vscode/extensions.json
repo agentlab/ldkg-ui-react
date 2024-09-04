@@ -14,7 +14,11 @@
     "syler.sass-indented",
     "streetsidesoftware.code-spell-checker",
     "streetsidesoftware.code-spell-checker-russian",
-    "github.vscode-pull-request-github"
+    "github.vscode-pull-request-github",
+    "streetsidesoftware.code-spell-checker-portuguese-brazilian",
+    "streetsidesoftware.code-spell-checker-portuguese",
+    "streetsidesoftware.code-spell-checker-italian",
+    "streetsidesoftware.code-spell-checker-german"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
   "unwantedRecommendations": []

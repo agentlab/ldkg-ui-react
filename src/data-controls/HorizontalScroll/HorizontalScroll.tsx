@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) 2020 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
 import React, { useState, useEffect } from 'react';
 import { TMstViewKindElement } from '../../models/MstViewDescr';
 import { Card } from './Card';
@@ -94,9 +103,9 @@ export const HorizontalScrollRenderer: React.FC<any> = (props) => {
 };
 
 function onWheel(apiObj: scrollVisibilityApiType, ev: React.WheelEvent): void {
-  const isThouchpad = Math.abs(ev.deltaX) !== 0 || Math.abs(ev.deltaY) < 15;
+  const isTouchpad = Math.abs(ev.deltaX) !== 0 || Math.abs(ev.deltaY) < 15;
 
-  if (isThouchpad) {
+  if (isTouchpad) {
     ev.stopPropagation();
     return;
   }

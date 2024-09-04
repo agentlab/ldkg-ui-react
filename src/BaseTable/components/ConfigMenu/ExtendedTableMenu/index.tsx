@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) 2021 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
 import difference from 'lodash-es/difference';
 import React, { useState, useEffect } from 'react';
 import { Transfer, Table, Modal } from 'antd';
@@ -10,10 +19,10 @@ export const ExtendedTableMenu = ({
   onChange,
   ...restProps
 }: any): JSX.Element => {
-  const [transferVisisble, setTransferVisisble] = useState(false);
+  const [transferVisible, setTransferVisible] = useState(false);
   const [targetKeys, setTargetKeys] = useState<any>([]);
   const onSave = () => {
-    setTransferVisisble(false);
+    setTransferVisible(false);
     const idxs = dataSource.reduce((res: any, e: any, idx: number) => {
       if (targetKeys.includes(e.key)) {
         res.push({ idx, hidden: true });
@@ -25,7 +34,7 @@ export const ExtendedTableMenu = ({
     onChange(idxs);
   };
   const onCancel = () => {
-    setTransferVisisble(false);
+    setTransferVisible(false);
     const newData = dataSource.reduce((res: any, e: any) => {
       if (e[sortKey]) {
         res.push(e.key);

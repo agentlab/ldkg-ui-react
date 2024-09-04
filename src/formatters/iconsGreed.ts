@@ -297,7 +297,7 @@ export const spriteSheet: SpriteSheet = {
         y: 438,
       },
     },
-    'focus-gruop-feedback': {
+    'focus-group-feedback': {
       x: 275,
       y: 363,
       small: {
@@ -466,7 +466,7 @@ export const spriteSheet: SpriteSheet = {
         y: 455,
       },
     },
-    'orange-diargram': {
+    'orange-diagram': {
       x: 371,
       y: 150,
       small: {
@@ -490,7 +490,7 @@ export const spriteSheet: SpriteSheet = {
         y: 455,
       },
     },
-    'perfomance-requirement': {
+    'performance-requirement': {
       x: 396,
       y: 350,
       small: {
@@ -562,7 +562,7 @@ export const spriteSheet: SpriteSheet = {
         y: 438,
       },
     },
-    'purple-supheading': {
+    'purple-subheading': {
       x: 421,
       y: 325,
       small: {
@@ -714,7 +714,7 @@ export const spriteSheet: SpriteSheet = {
         y: 68,
       },
     },
-    storyboatd: {
+    storyboard: {
       x: 421,
       y: 225,
       small: {

@@ -14,9 +14,9 @@ import { DispatchCell } from '../../../DispatchCell';
 
 import './JsonAntdTable.css';
 
-const type = 'DragableBodyRow';
+const type = 'DraggableBodyRow';
 
-export const DragableRow = ({ index, moveRow, className, style, ...restProps }: any): JSX.Element => {
+export const DraggableRow = ({ index, moveRow, className, style, ...restProps }: any): JSX.Element => {
   const ref = React.useRef<HTMLTableRowElement>();
   const [{ isOver, dropClassName }, drop] = useDrop({
     accept: type,

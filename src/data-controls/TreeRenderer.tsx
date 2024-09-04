@@ -11,7 +11,7 @@ import { sortBy } from 'lodash-es';
 import React, { useState, useEffect } from 'react';
 import { Tree, Input } from 'antd';
 
-import { SaveReqDialoglWithStore } from '../util/OnSaveDialog';
+import { SaveReqDialogWithStore } from '../util/OnSaveDialog';
 import { NodeRenderer } from './NodeRenderer';
 import { TreeContextMenu } from './TreeContextMenu';
 import { ContextMenu } from '../components';
@@ -275,7 +275,7 @@ export const TreeRenderer: React.FC<any> = (props) => {
         onSelect={onChange}
         treeData={searchEdit(treeData)}
       />
-      <SaveReqDialoglWithStore
+      <SaveReqDialogWithStore
         visible={visible}
         onOk={() => setVisible(false)}
         schemaUri={viewKindElement.resultsScope}

@@ -1,3 +1,12 @@
+/********************************************************************************
+ * Copyright (c) 2020 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
@@ -76,8 +85,8 @@ const localeRus = {
   startWith: 'начинается с',
   endWith: 'заканчивается на',
   regEx: 'регулярное выражение',
-  exists: 'сущестует',
-  notExists: 'не сущестует',
+  exists: 'существует',
+  notExists: 'не существует',
   unassigned: 'не назначен',
   any: 'любой из',
   notAny: 'ни один из',

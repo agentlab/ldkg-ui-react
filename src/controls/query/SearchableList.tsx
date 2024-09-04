@@ -1,26 +1,35 @@
+/********************************************************************************
+ * Copyright (c) 2020 Agentlab and others.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the GNU General Public License v. 3.0 which is available at
+ * https://www.gnu.org/licenses/gpl-3.0.html.
+ *
+ * SPDX-License-Identifier: GPL-3.0-only
+ ********************************************************************************/
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Input, Table } from 'antd';
 import { JsObject } from '@agentlab/sparql-jsld-client';
 
-const positionIndependentComp = (lowval: string) => (a: any, b: any) => {
+const positionIndependentComp = (lowVal: string) => (a: any, b: any) => {
   if (a === b) {
     return 0;
   }
-  const bind = b.toLowerCase().indexOf(lowval);
-  const aind = a.toLowerCase().indexOf(lowval);
-  if (bind === -1 && aind === -1) {
+  const bInd = b.toLowerCase().indexOf(lowVal);
+  const aInd = a.toLowerCase().indexOf(lowVal);
+  if (bInd === -1 && aInd === -1) {
     return a.localeCompare(b);
   }
-  if (bind === -1) {
+  if (bInd === -1) {
     return -1;
   }
-  if (aind === -1) {
+  if (aInd === -1) {
     return 1;
   }
-  if (aind < bind) {
+  if (aInd < bInd) {
     return -1;
   }
-  if (aind > bind) {
+  if (aInd > bInd) {
     return 1;
   }
   return 0;
@@ -39,7 +48,7 @@ export const SearchableList: React.FC<SearchableListProps> = ({
 }) => {
   const [optionList, setOptionList] = useState<{ [key: string]: string }[]>(dataSource);
   const [selectedItem, setSelectedItem] = useState<string>(defaultSelectedKey);
-  const [previousSreachValue, setPreviousSreachValue] = useState<string | null>(null);
+  const [previousSearchValue, setPreviousSearchValue] = useState<string | null>(null);
 
   const columns = [
     {
@@ -58,13 +67,13 @@ export const SearchableList: React.FC<SearchableListProps> = ({
   ];
 
   const onInputSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    const lowval = event.target.value.toLowerCase();
-    if (previousSreachValue == null) {
-      setPreviousSreachValue(lowval);
+    const lowVal = event.target.value.toLowerCase();
+    if (previousSearchValue == null) {
+      setPreviousSearchValue(lowVal);
     }
 
     let sortedOptionList = [];
-    if (previousSreachValue && (!lowval.startsWith(previousSreachValue) || lowval === previousSreachValue)) {
+    if (previousSearchValue && (!lowVal.startsWith(previousSearchValue) || lowVal === previousSearchValue)) {
       sortedOptionList = dataSource;
     } else {
       sortedOptionList = optionList.slice();
@@ -72,12 +81,12 @@ export const SearchableList: React.FC<SearchableListProps> = ({
 
     sortedOptionList = sortedOptionList
       .filter((word) => {
-        return word.title.toLowerCase().indexOf(lowval) !== -1;
+        return word.title.toLowerCase().indexOf(lowVal) !== -1;
       })
-      .sort((a, b) => positionIndependentComp(lowval)(a.title, b.title));
+      .sort((a, b) => positionIndependentComp(lowVal)(a.title, b.title));
 
     if (sortedOptionList && sortedOptionList.length) {
-      setPreviousSreachValue(lowval);
+      setPreviousSearchValue(lowVal);
     }
     setOptionList(sortedOptionList);
   };

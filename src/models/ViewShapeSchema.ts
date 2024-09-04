@@ -7,9 +7,9 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { JSONSchema6forRdf } from '@agentlab/sparql-jsld-client';
+import { JSONSchema7LD } from '@agentlab/sparql-jsld-client';
 
-export const ViewShapeSchema: JSONSchema6forRdf = {
+export const ViewShapeSchema: JSONSchema7LD = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   '@id': 'aldkg:ViewShape',
   '@type': 'sh:NodeShape',
@@ -27,7 +27,7 @@ export const ViewShapeSchema: JSONSchema6forRdf = {
       format: 'iri',
     },
     '@type': {
-      title: 'Тип',
+      title: 'Class',
       type: 'string',
       format: 'iri',
     },
@@ -35,7 +35,7 @@ export const ViewShapeSchema: JSONSchema6forRdf = {
   required: ['@id', '@type'],
 };
 
-export const ViewKindShapeSchema: JSONSchema6forRdf = {
+export const ViewKindShapeSchema: JSONSchema7LD = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   '@id': 'aldkg:ViewShape',
   '@type': 'sh:NodeShape',
@@ -53,7 +53,7 @@ export const ViewKindShapeSchema: JSONSchema6forRdf = {
       format: 'iri',
     },
     '@type': {
-      title: 'Тип',
+      title: 'Class',
       type: 'string',
       format: 'iri',
     },

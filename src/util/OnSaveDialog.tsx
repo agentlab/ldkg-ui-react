@@ -36,4 +36,4 @@ export const SaveReqDialog: React.FC<SaveReqDialogProps> = ({
   );
 };
 
-export const SaveReqDialoglWithStore = withStoreToSaveDialogProps(SaveReqDialog);
+export const SaveReqDialogWithStore = withStoreToSaveDialogProps(SaveReqDialog);
