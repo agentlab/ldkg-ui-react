@@ -13,7 +13,7 @@ import { FormsDispatch } from '../Form';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { withLayoutProps } from '../util/ContextToProps';
 import { LayoutComponent } from './LayoutComponent';
-import { IViewKindElement } from '../models/uischema';
+import { TMstViewKindElement } from '../models/MstViewDescr';
 
 export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   viewKindElement,
@@ -29,7 +29,7 @@ export const SplitPaneLayoutRenderer: React.FC<LayoutComponent> = ({
   const panes = useMemo(
     () =>
       elements
-        ? elements.map((el: IViewKindElement, idx: number) => (
+        ? elements.map((el: TMstViewKindElement, idx: number) => (
             <div key={idx} style={{ width: '100%', height: '100%', position: 'relative' }}>
               <FormsDispatch viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />
             </div>

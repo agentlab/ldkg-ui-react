@@ -22,7 +22,8 @@ import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
 import { Actions } from './actions';
 import { RankedTester } from './testers';
-import { IViewDescr, IViewDescrElement, IViewKind, IViewKindElement } from './models/uischema';
+import { TMstViewDescr, TMstViewDescrElement, TMstViewKind, TMstViewKindElement } from './models/MstViewDescr';
+import { RendererRegistryEntry } from './renderers';
 
 export interface ControlComponent {
   data: any;
@@ -51,15 +52,15 @@ export interface FormsInitStateProps {
   viewDescrId: string;
 }
 export interface FormsDispatchProps {
-  viewKind: IViewKind;
-  viewKindElement: IViewKindElement;
-  viewDescr: IViewDescr;
+  viewKind: TMstViewKind;
+  viewKindElement: TMstViewKindElement;
+  viewDescr: TMstViewDescr;
 
   enabled?: boolean;
   form?: string;
 }
 export interface RenderProps extends FormsDispatchProps {
-  viewDescrElement?: IViewDescrElement;
+  viewDescrElement?: TMstViewDescrElement;
   actions?: Actions;
   id: string;
   schema: JsonSchema7;
@@ -96,9 +97,9 @@ export function compareByIri(iri1: string | any, iri2: string | any): boolean {
 }
 
 export const processViewKindOverride = (
-  props: { viewKindElement: IViewKindElement; viewDescr: IViewDescr },
+  props: { viewKindElement: TMstViewKindElement; viewDescr: TMstViewDescr },
   store: any,
-): [string, string, string, string, IViewKindElement, IViewDescrElement | undefined] => {
+): [string, string, string, string, TMstViewKindElement, TMstViewDescrElement | undefined] => {
   const { viewKindElement, viewDescr } = props;
   // if ViewElement extend-override exists
   const viewDescrElement = viewDescr.elements?.find((el) => {
@@ -138,19 +139,22 @@ export const FormsDispatch = observer<FormsDispatchProps>((props) => {
 
   let schema: any;
   if (collIri !== collIriOverride) {
-    const parentColl = collIri ? store.getColl(collIri) : undefined;
-    const parentSchema = parentColl?.collConstr.entConstrs[0]?.schemaJs;
-    const childColl = collIriOverride ? store.getColl(collIriOverride) : undefined;
-    const childSchema = childColl?.collConstr.entConstrs[0]?.schemaJs;
+    const parentColl = collIri ? store.rep.getColl(collIri) : undefined;
+    const parentSchema = parentColl?.collConstr?.entConstrs[0]?.schemaJs;
+    const childColl = collIriOverride ? store.rep.getColl(collIriOverride) : undefined;
+    const childSchema = childColl?.collConstr?.entConstrs[0]?.schemaJs;
     schema = childSchema ? childSchema : parentSchema;
   } else {
-    const coll = collIri ? store.getColl(collIri) : undefined;
-    schema = coll?.collConstr.entConstrs[0]?.schemaJs;
+    const coll = collIri ? store.rep.getColl(collIri) : undefined;
+    const collConstr = coll?.collConstr;
+    //console.log('FormsDispatch1', { collConstr, collConstrSnap: collConstr ? getSnapshot(collConstr) : undefined });
+    const entConstr = collConstr?.entConstrs[0];
+    schema = entConstr?.schemaJs;
   }
   if ((collIri || collIriOverride) && !schema) return <Spin />;
   if (inCollPath && inCollPath.length > 0) schema = schema.properties[inCollPath];
 
-  const renderer = maxBy(renderers, (r) => r.tester(viewKindElement, schema));
+  const renderer = maxBy(renderers, (r: RendererRegistryEntry) => r.tester(viewKindElement, schema));
   //const isModal = viewKindElement.options && viewKindElement.options.modal;
   if (renderer === undefined || renderer.tester(viewKindElement, schema) === -1) {
     return (
@@ -192,7 +196,7 @@ export const Form = observer<FormsInitStateProps>((props) => {
     console.log('!store', store);
     return <Spin />;
   }
-  if (Object.keys(store.ns.currentJs).length < 6) {
+  if (Object.keys(store.rep.ns.currentJs).length < 6) {
     console.log('!ns');
     return <Spin />;
   }
@@ -200,31 +204,31 @@ export const Form = observer<FormsInitStateProps>((props) => {
   const { viewDescrId, viewDescrCollId } = props;
   console.log('Form', { viewDescrId, viewDescrCollId });
 
-  const collWithViewDescrsObs = store.getColl(viewDescrCollId);
+  const collWithViewDescrsObs = store.rep.getColl(viewDescrCollId);
   if (!collWithViewDescrsObs) {
     console.log('!collWithViewDescrsObs', viewDescrCollId);
     return <Spin />;
   }
 
-  const viewDescrObs = collWithViewDescrsObs?.dataByIri(viewDescrId);
+  const viewDescrObs = collWithViewDescrsObs?.dataByIri(viewDescrId) as TMstViewDescr | undefined;
   if (!viewDescrObs) {
     console.log('!viewDescrObs', viewDescrId);
     return <Spin />;
   }
 
-  //const collWithViewKindsObs = store.getColl(viewKindCollId);
+  //const collWithViewKindsObs = store.rep.getColl(viewKindCollId);
   //if (!collWithViewKindsObs) {
   //  console.log('!collWithViewKindsObs', viewKindCollId);
   //  return <Spin />;
   //}
-  const viewKindObs = viewDescrObs.viewKind;
+  const viewKindObs = viewDescrObs.viewKind as TMstViewKind | undefined;
   if (!viewKindObs) {
     console.log('!viewKindObs for viewDescr', getSnapshot(viewDescrObs));
     return <Spin />;
   }
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback} onReset={() => {}}>
-      {viewKindObs.elements.map((el: IViewKindElement, idx: number) => (
+      {viewKindObs.elements.map((el: TMstViewKindElement, idx: number) => (
         <FormsDispatch key={idx} {...props} viewKind={viewKindObs} viewKindElement={el} viewDescr={viewDescrObs} />
       ))}
     </ErrorBoundary>

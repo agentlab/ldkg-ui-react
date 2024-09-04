@@ -10,7 +10,7 @@
 import { find, includes, isEmpty } from 'lodash-es';
 
 import { JsonSchema7 } from './models/jsonSchema7';
-import { IViewKindElement } from './models/uischema';
+import { TMstViewKindElement } from './models/MstViewDescr';
 
 /**
  * Constant that indicates that a tester is not capable of handling
@@ -21,7 +21,7 @@ export const NOT_APPLICABLE = -1;
 /**
  * A tester is a function that receives an UI schema and a JSON schema and returns a boolean.
  */
-export type Tester = (viewKindElement: IViewKindElement, schema: JsonSchema7) => boolean;
+export type Tester = (viewKindElement: TMstViewKindElement, schema: JsonSchema7) => boolean;
 
 /**
  * A tester that allow composing other testers by && them.
@@ -30,7 +30,7 @@ export type Tester = (viewKindElement: IViewKindElement, schema: JsonSchema7) =>
  */
 export const and =
   (...testers: Tester[]): Tester =>
-  (viewKindElement: IViewKindElement, schema: JsonSchema7) =>
+  (viewKindElement: TMstViewKindElement, schema: JsonSchema7) =>
     testers.reduce<boolean>((acc, tester) => acc && tester(viewKindElement, schema), true);
 
 /**
@@ -40,7 +40,7 @@ export const and =
  */
 export const or =
   (...testers: Tester[]): Tester =>
-  (viewKindElement: IViewKindElement, schema: JsonSchema7) =>
+  (viewKindElement: TMstViewKindElement, schema: JsonSchema7) =>
     testers.reduce<boolean>((acc, tester) => acc || tester(viewKindElement, schema), false);
 
 /**
@@ -52,7 +52,7 @@ export const or =
  */
 export const rankWith =
   (rank: number, tester: Tester) =>
-  (viewKindElement: IViewKindElement, schema: JsonSchema7): number => {
+  (viewKindElement: TMstViewKindElement, schema: JsonSchema7): number => {
     if (tester(viewKindElement, schema)) {
       return rank;
     }
@@ -67,7 +67,7 @@ export const rankWith =
  */
 export const uiTypeIs =
   (expected: string): Tester =>
-  (viewKindElement: IViewKindElement): boolean =>
+  (viewKindElement: TMstViewKindElement): boolean =>
     !isEmpty(viewKindElement) && viewKindElement['@type'] === expected;
 
 /**
@@ -80,7 +80,7 @@ export const uiTypeIs =
  */
 export const optionIs =
   (optionName: string, optionValue: any): Tester =>
-  (viewKindElement: IViewKindElement): boolean => {
+  (viewKindElement: TMstViewKindElement): boolean => {
     if (isEmpty(viewKindElement)) {
       return false;
     }
@@ -92,7 +92,7 @@ export const optionIs =
 /**
  * A ranked tester associates a tester with a number.
  */
-export declare type RankedTester = (viewKindElement: IViewKindElement, schema: JsonSchema7) => number;
+export declare type RankedTester = (viewKindElement: TMstViewKindElement, schema: JsonSchema7) => number;
 
 export const hasType = (jsonSchema: JsonSchema7, expected: string): boolean => {
   return includes(deriveTypes(jsonSchema), expected);
@@ -141,7 +141,7 @@ const deriveTypes = (jsonSchema: JsonSchema7): string[] => {
  */
 export const schemaMatches =
   (predicate: (schema: JsonSchema7) => boolean): Tester =>
-  (viewKindElement: IViewKindElement, schema: JsonSchema7): boolean => {
+  (viewKindElement: TMstViewKindElement, schema: JsonSchema7): boolean => {
     if (isEmpty(viewKindElement) /*|| !isControl(uischema)*/) {
       return false;
     }

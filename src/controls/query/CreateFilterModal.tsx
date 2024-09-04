@@ -5,7 +5,7 @@ import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons'
 import { SearchableList } from './SearchableList';
 
 import { FilterType } from './type';
-import { JSONSchema6DefinitionForRdfProperty, JsObject } from '@agentlab/sparql-jsld-client';
+import { JSONSchema7LDPropertyDefinition, JsObject } from '@agentlab/sparql-jsld-client';
 import { Filter } from './Filter';
 import { MstContext } from '../../MstContext';
 
@@ -120,7 +120,7 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
   const [modalIsMount, setModalIsMount] = useState(false);
 
   const [allProperties, setAllProperties] = useState<{
-    properties: { [key: string]: JSONSchema6DefinitionForRdfProperty };
+    properties: { [key: string]: JSONSchema7LDPropertyDefinition };
     contexts: JsObject;
   }>({ properties: {}, contexts: {} });
 

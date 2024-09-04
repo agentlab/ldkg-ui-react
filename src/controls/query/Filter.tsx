@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
-import { JSONSchema6, JSONSchema6Definition } from 'json-schema';
-import { JSONSchema6DefinitionForRdfProperty, JsObject } from '@agentlab/sparql-jsld-client';
+import { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+import { JSONSchema7LDPropertyDefinition, JsObject } from '@agentlab/sparql-jsld-client';
 import { Row, Col, Select, Typography } from 'antd';
 
 import { FilterType, Relation, ValueOfFilter } from './type';
@@ -45,10 +45,7 @@ interface TypeOfFilter {
   isArray: boolean;
 }
 
-export const genFormattedTypeOfFilter = (
-  propName: string,
-  property: JSONSchema6DefinitionForRdfProperty,
-): TypeOfFilter => {
+export const genFormattedTypeOfFilter = (propName: string, property: JSONSchema7LDPropertyDefinition): TypeOfFilter => {
   const formattedType: TypeOfFilter = {
     type: 'none',
     isArray: false,
@@ -57,7 +54,7 @@ export const genFormattedTypeOfFilter = (
   if (property.type === 'array' && property.items) {
     formattedType.isArray = true;
 
-    const items = property.items as JSONSchema6Definition as JSONSchema6;
+    const items = property.items as JSONSchema7Definition as JSONSchema7;
     formattedType.type = genFormattedTypeName(propName, items.type as string, items.format);
   } else {
     formattedType.type = genFormattedTypeName(propName, property.type as string, property.format);
@@ -100,7 +97,7 @@ interface FilterProp {
   setFilter: (filter: FilterType) => void;
   prevFilterData?: FilterType;
   propName: string;
-  property: JSONSchema6DefinitionForRdfProperty;
+  property: JSONSchema7LDPropertyDefinition;
   context: JsObject;
   isRequired: boolean;
   modalIsMount?: boolean;

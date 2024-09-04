@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 import { List } from 'antd';
-import { IViewKindElement } from '../models/uischema';
+import { TMstViewKindElement } from '../models/MstViewDescr';
 
 import { DispatchCell } from '../DispatchCell';
 
@@ -23,7 +23,7 @@ export const GridRenderer: React.FC<any> = (props) => {
 
   const createCell = (data: any, id: string | number) =>
     template ? (
-      template.map((e: IViewKindElement, idx: number) => (
+      template.map((e: TMstViewKindElement, idx: number) => (
         <DispatchCell
           id={String(id) + String(idx)}
           key={String(id) + String(idx)}

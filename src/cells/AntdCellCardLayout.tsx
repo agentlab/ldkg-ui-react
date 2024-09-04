@@ -12,7 +12,7 @@ import React from 'react';
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { get } from 'lodash-es';
 
-import { IViewKindElement } from '../models/uischema';
+import { TMstViewKindElement } from '../models/MstViewDescr';
 import { Card } from 'antd';
 import { DispatchCell } from '../DispatchCell';
 import './cell.css';
@@ -22,7 +22,7 @@ export const AntdCellCardLayout = (props: any): JSX.Element => {
   const style = viewKindElement?.options?.style || {};
   const createCardChilds = () =>
     viewKindElement.elements
-      ? viewKindElement.elements.map((e: IViewKindElement, idx: number) => {
+      ? viewKindElement.elements.map((e: TMstViewKindElement, idx: number) => {
           const newSchema = e.scope ? get(schema, 'properties.' + e.scope.replace(/\//, '.properties.')) : schema;
           return (
             <DispatchCell

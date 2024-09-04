@@ -25,10 +25,11 @@ export const QueryForm = observer<any>((props) => {
     if (!Array.isArray(conn) || conn.length == 0) return;
     const cond = conn[0]?.toObj;
     if (!cond) return;
-    const coll = store.getColl(collIri);
-    console.log('QueryForm - coll', coll.collConstr['@id']);
+    const coll = store.rep.getColl(collIri);
+    console.log('QueryForm - coll', coll ? coll['@id'] : undefined);
     if (!coll) return;
-    console.log('QueryForm - entConstrs', coll.collConstr.entConstrs);
+    console.log('QueryForm - entConstrs', coll.collConstr?.entConstrs);
+    if (!coll.collConstr) return;
     console.log('QueryForm - cond', coll.collConstr.entConstrs[0].conditions);
     const cond2: any = getSnapshot(coll.collConstr.entConstrs[0].conditions);
     const newCond: any = { '@id': cond2['@id'] };

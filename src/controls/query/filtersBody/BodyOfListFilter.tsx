@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Input, Tree } from 'antd';
-import { JSONSchema6DefinitionForRdfProperty, JsObject } from '@agentlab/sparql-jsld-client';
+import { JSONSchema7LDPropertyDefinition, JsObject } from '@agentlab/sparql-jsld-client';
 import { ValueOfFilter } from '../type';
 import { MstContext } from '../../../MstContext';
 
@@ -47,7 +47,7 @@ const localeRus = {
 interface BodyOfListFilterProps {
   handleChange: (value: JsObject) => void;
   defaultValues: ValueOfFilter;
-  property: JSONSchema6DefinitionForRdfProperty;
+  property: JSONSchema7LDPropertyDefinition;
   context: JsObject | string;
   type?: string;
 }

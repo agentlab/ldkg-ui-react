@@ -11,16 +11,17 @@ import React, { createContext, PropsWithChildren } from 'react';
 import { CellRendererRegistryEntry, RendererRegistryEntry } from './renderers';
 import { registerMstViewDescrSchema, registerMstViewKindSchema } from './models/MstViewDescr';
 import { Actions } from './actions';
+import { TFormMstRepository } from './models/FormMstRepository';
 
 export interface MstContextProps {
-  store: any;
+  store: TFormMstRepository;
   renderers: RendererRegistryEntry[];
   cells: CellRendererRegistryEntry[];
   actions: Actions;
 }
 
 export const MstContext = createContext<MstContextProps>({
-  store: {},
+  store: undefined!,
   renderers: [],
   cells: [],
   actions: {},
@@ -33,7 +34,7 @@ export const MstContextProvider = ({
   children,
   actions = {},
 }: PropsWithChildren<{
-  store: any;
+  store: TFormMstRepository;
   renderers: RendererRegistryEntry[];
   cells?: CellRendererRegistryEntry[];
   actions?: Actions;

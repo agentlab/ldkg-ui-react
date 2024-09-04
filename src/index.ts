@@ -17,8 +17,7 @@ export * from './formatters';
 export * from './icons';
 export * from './layouts';
 
-export * from './models/uischema';
-
+export * from './models/FormMstRepository';
 export * from './models/MstViewDescr';
 export * from './models/ViewCollConstrs';
 export * from './models/ViewShapeSchema';

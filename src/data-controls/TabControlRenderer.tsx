@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React, { useContext } from 'react';
 import { Tabs, Col, Spin } from 'antd';
-import { getSnapshot, types } from 'mobx-state-tree';
+import { getSnapshot, Instance, SnapshotIn, SnapshotOut, types } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
 import { JsObject } from '@agentlab/sparql-jsld-client';
 
@@ -17,13 +17,8 @@ import { MstViewKindElement } from '../models/MstViewDescr';
 
 import { rankWith, RankedTester, uiTypeIs } from '../testers';
 import { MstContext } from '../MstContext';
-import { processViewKindOverride } from '../Form';
+import { processViewKindOverride, RenderProps } from '../Form';
 import { MstJsObject } from '@agentlab/sparql-jsld-client';
-import { IViewKindElement } from '../models/uischema';
-
-export type IMstVkeTabControl = IViewKindElement & {
-  tabs: JsObject[];
-};
 
 export const MstVkeTabControl = types.compose(
   'MstVkeTabControl',
@@ -34,7 +29,11 @@ export const MstVkeTabControl = types.compose(
   }),
 );
 
-export const AntdTabControlWithStore = observer<any>((props) => {
+export type TMstVkeTabControl = Instance<typeof MstVkeTabControl>;
+export type TMstVkeTabControlSnapshotIn = SnapshotIn<typeof MstVkeTabControl>;
+export type TMstVkeTabControlSnapshotOut = SnapshotOut<typeof MstVkeTabControl>;
+
+export const AntdTabControlWithStore = observer<RenderProps>((props) => {
   const { schema, viewKind, viewDescr } = props;
   const { store } = useContext(MstContext);
   //if (viewKindElement.resultsScope && !store.saveLogicTree[viewKindElement.resultsScope]) {
@@ -47,28 +46,32 @@ export const AntdTabControlWithStore = observer<any>((props) => {
   );
   const options = viewKindElement.options || {};
 
-  const coll = store.getColl(collIriOverride);
-  let data = coll?.data;
+  const coll = store.rep.getColl(collIriOverride);
+  const data = coll?.data;
   if (!data) {
     return <Spin />;
   }
-  data = getSnapshot(data);
   const withConnections = options.connections;
-  let tabs: JsObject[] = data;
+  let tabs: JsObject[] = getSnapshot(data);
 
   //if (tabs && tabs[0] && tabs[0].rank) {
   //  tabs = tabs.slice().sort((t1, t2) => t1.rank - t2.rank);
   //}
 
-  let additionalTabs = (viewKindElement as IMstVkeTabControl).tabs;
+  const viewKindElementJs = /*getSnapshot(*/ viewKindElement; /*)*/
+  let additionalTabs = (viewKindElementJs as any).tabs;
   if (additionalTabs) {
-    additionalTabs = additionalTabs.slice().sort((t1, t2) => t1.rank - t2.rank);
-    tabs = [...additionalTabs.filter((t) => t.rank <= 100), ...tabs, ...additionalTabs.filter((t) => t.rank > 100)];
+    additionalTabs = additionalTabs.slice().sort((t1: JsObject, t2: JsObject) => t1.rank - t2.rank);
+    tabs = [
+      ...additionalTabs.filter((t: JsObject) => t.rank <= 100),
+      ...tabs,
+      ...additionalTabs.filter((t: JsObject) => t.rank > 100),
+    ];
   }
 
-  const handleChange = (data: any) => {
-    store.setSelectedData(collIriOverride, data);
-    if (withConnections) store.editConn(withConnections, data);
+  const handleChange = (data2: any) => {
+    store.setSelectedData(collIriOverride, data2);
+    if (withConnections) store.rep.editConn(withConnections, data2);
   };
 
   const onSelect = (key: string) => {

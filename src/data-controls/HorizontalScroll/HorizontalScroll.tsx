@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IViewKindElement } from '../../models/uischema';
+import { TMstViewKindElement } from '../../models/MstViewDescr';
 import { Card } from './Card';
 import { DispatchCell } from '../../DispatchCell';
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
@@ -40,7 +40,7 @@ export const HorizontalScrollRenderer: React.FC<any> = (props) => {
 
   const createCell = (data: any, id: string | number) =>
     template ? (
-      template.map((e: IViewKindElement, idx: number) => (
+      template.map((e: TMstViewKindElement, idx: number) => (
         <DispatchCell
           id={String(id) + String(idx)}
           key={String(id) + String(idx)}

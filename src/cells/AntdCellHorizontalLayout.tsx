@@ -12,7 +12,7 @@ import { Row, Col } from 'antd';
 
 import { DispatchCell } from '../DispatchCell';
 import { DispatchCellProps } from '../Form';
-import { IViewKindElement } from '../models/uischema';
+import { TMstViewKindElement } from '../models/MstViewDescr';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
 import { get } from 'lodash-es';
 
@@ -67,7 +67,7 @@ export const AntdCellHorizontalLayoutRenderer: React.FC<DispatchCellProps> = ({
   if (viewKindElement.options && viewKindElement.options.width === 'all-empty-space') rowStyle.width = '100%';
   return (
     <Row justify={justify} style={rowStyle} align={'middle'}>
-      {(viewKindElement.elements || []).map((e: IViewKindElement, idx: number) => (
+      {(viewKindElement.elements || []).map((e: TMstViewKindElement, idx: number) => (
         <Render
           key={idx}
           viewKind={viewKind}

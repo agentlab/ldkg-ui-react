@@ -41,7 +41,7 @@ export const AntQueryWithStore = observer<any>((props) => {
     store,
   );
 
-  const coll = store.getColl(collIriOverride);
+  const coll = store.rep.getColl(collIriOverride);
   const conditionsJs = coll?.collConstr.entConstrs[0].conditionsJs;
 
   const loading = false;

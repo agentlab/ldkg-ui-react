@@ -9,7 +9,7 @@
  ********************************************************************************/
 import React from 'react';
 
-import { IViewKindElement } from '../models/uischema';
+import { TMstViewKindElement } from '../models/MstViewDescr';
 import { FormsDispatchProps } from '../Form';
 
 export declare type Idx = {
@@ -17,7 +17,7 @@ export declare type Idx = {
 };
 
 export interface RenderLayoutProps extends FormsDispatchProps {
-  viewKindElement: IViewKindElement;
+  viewKindElement: TMstViewKindElement;
   Render: React.FC<FormsDispatchProps & Idx>;
   readOnly?: boolean;
 }
@@ -34,7 +34,7 @@ export const renderLayoutElements = ({
   //const id = viewKind['@id'];
   //const sort = id ? viewKind.properties && viewKind.properties[id] && viewKind.properties[id].order : undefined;
   if (!elements || elements.length === 0) return <></>;
-  return elements.map((el: IViewKindElement, idx: number) => {
+  return elements.map((el: TMstViewKindElement, idx: number) => {
     el = { ...el, options: { readOnly, ...el.options } };
     return (
       <Render key={idx} idx={idx} viewKind={viewKind} viewKindElement={el} viewDescr={viewDescr} enabled={enabled} />

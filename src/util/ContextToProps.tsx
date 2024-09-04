@@ -9,14 +9,13 @@
  ********************************************************************************/
 import { cloneDeep, get, isEqual, omit } from 'lodash-es';
 
-import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { Spin } from 'antd';
 import { getSnapshot, applySnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
 
 import { createLabelDescriptionFrom } from './label';
 import { LayoutComponent } from '../layouts/LayoutComponent';
-import { IViewKindElement, IViewKind } from '../models/uischema';
 import { values } from 'mobx';
 import { compareByIri, ControlComponent, processViewKindOverride, RenderProps } from '../Form';
 //import { FilterType } from '../complex/Query';
@@ -24,6 +23,7 @@ import { validators } from '../validation';
 import { MstContext } from '../MstContext';
 import { FilterType } from '../controls/query/type';
 import { mapViewKindPropsToActions } from '../actions';
+import { TMstViewKind, TMstViewKindElement } from '../models/MstViewDescr';
 
 declare type Property = 'editable' | 'visible';
 declare type JsObject = { [key: string]: any };
@@ -68,25 +68,24 @@ export const withStoreToControlProps = (Component: React.FC<ControlComponent>): 
       store,
     );
 
-    const coll = collIriOverride ? store.getColl(collIriOverride) : undefined;
-    let collData = coll?.data;
-    if (collData) collData = getSnapshot(collData);
-    const data = collData.length !== 0 ? collData[0] : {};
-    const controlProps = mapStateToControlProps({ ...props, data: data || {} });
+    const coll = collIriOverride ? store.rep.getColl(collIriOverride) : undefined;
+    const dataArray = coll ? coll.dataJs : [];
+    const data: JsObject = dataArray.length > 0 ? dataArray[0] : {};
+    const controlProps = mapStateToControlProps({ ...props, data: data });
     const onValidate = (data: any) => {
       if (viewKindElement.options && Array.isArray(viewKindElement.options.validation)) {
         const validation = viewKindElement.options.validation;
         const idx = validation.findIndex((el: any) => !validators[el.validator](data, el.propsToValidator));
         if (idx !== -1) {
           const { validateStatus, help } = validation[idx];
-          store.setOnValidate(form, viewKindElement.resultsScope, false);
+          store.setOnValidate(form || '', viewKindElement.resultsScope || '', false);
           setValidateObj({
             validateStatus,
             help,
           });
         } else {
           setValidateObj(successValidation);
-          store.setOnValidate(form, viewKindElement.resultsScope, true);
+          store.setOnValidate(form || '', viewKindElement.resultsScope || '', true);
         }
       }
     };
@@ -166,7 +165,7 @@ export const withStoreToViewProps = (Component: React.FC<any>): React.FC<any> =>
       props,
       store,
     );
-    const coll = store.getColl(collIriOverride);
+    const coll = store.rep.getColl(collIriOverride);
     let data = coll?.data;
     if (!data) {
       //if (scope === 'rm:dataModelView') {
@@ -250,7 +249,7 @@ export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<
       props,
       store,
     );
-    const coll = store.getColl(collIriOverride);
+    const coll = store.rep.getColl(collIriOverride);
     if (!coll) return <Spin />;
 
     let data: any[] = [];
@@ -262,7 +261,7 @@ export const withStoreToDataControlProps = (Component: React.FC<any>): React.FC<
     const onSelect = (data: any) => {
       if (data) {
         store.setSelectedData(collIriOverride, data);
-        withConnections && store.editConn(withConnections, data);
+        withConnections && store.rep.editConn(withConnections, data);
       }
     };
     const getData = (parentId: string) => {
@@ -320,7 +319,7 @@ export const withStoreToSelectControlProps = (Component: React.FC<any>): React.F
     const { store } = useContext(MstContext);
     const id = viewKind['@id'];
     const scope = viewKindElement.resultsScope;
-    const coll = store.getColl(scope);
+    const coll = store.rep.getColl(scope);
     let data = coll?.data;
     if (!data) {
       return <Spin />;
@@ -365,7 +364,7 @@ export const withStoreToMenuProps = (Component: React.FC<any>): React.FC<any> =>
     );
     const options = viewKindElement.options || {};
 
-    const coll = store.getColl(collIriOverride);
+    const coll = store.rep.getColl(collIriOverride);
     let data = coll?.data;
     if (!data) {
       return <Spin />;
@@ -487,7 +486,12 @@ const mapStateToControlProps = ({ id, schema, viewKindElement, viewKind, data }:
   };
 };
 
-const checkProperty = (property: Property, path: string, viewKindElement: IViewKindElement, viewKind: IViewKind) => {
+const checkProperty = (
+  property: Property,
+  path: string,
+  viewKindElement: TMstViewKindElement,
+  viewKind: TMstViewKind,
+) => {
   const viewClassProp = viewKindElement.options;
   const viewProp = get(viewKind, path);
   if (viewClassProp && viewClassProp[property]) {

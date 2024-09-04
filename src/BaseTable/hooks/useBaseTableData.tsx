@@ -12,7 +12,7 @@ export const useTableData = ({ viewKindElement: baseViewKindElement, viewDescr, 
   );
 
   const viewOptions = useMemo(() => viewKindElement.options || {}, [viewKindElement]);
-  const coll = useMemo(() => store.getColl(collIriOverride), [collIriOverride, store]);
+  const coll = useMemo(() => store.rep.getColl(collIriOverride), [collIriOverride, store]);
 
   const actionsMap = useMemo(
     () => mapViewKindPropsToActions({ actions, viewKindActionProps: viewOptions.selectActions, coll, root: store }),

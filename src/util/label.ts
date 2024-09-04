@@ -9,7 +9,6 @@
  ********************************************************************************/
 import { startCase } from 'lodash-es';
 
-//import { ControlElement, LabelDescription } from '../models/uischema';
 import { JsonSchema7 as JsonSchema } from '../models/jsonSchema7';
 
 const deriveLabel = (controlElement: any /*ControlElement*/, schemaElement?: JsonSchema): string => {

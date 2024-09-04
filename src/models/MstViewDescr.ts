@@ -9,28 +9,27 @@
  ********************************************************************************/
 import { reaction } from 'mobx';
 import {
-  getParent,
-  getRoot,
   IAnyComplexType,
   IAnyStateTreeNode,
   IAnyType,
   IArrayType,
   IMSTArray,
+  Instance,
   IStateTreeNode,
   SnapshotIn,
+  SnapshotOut,
   types,
 } from 'mobx-state-tree';
 
 import {
   arrDiff,
-  CollState,
-  createModelFromState,
   getMstLiteralPropValue,
+  getParentOfName,
   MstCollConstr,
   MstJsObject,
   MstModels,
-  registerMstCollSchema,
-  SparqlClient,
+  TMstCollConstrSnapshotIn,
+  TMstCollConstrSnapshotOut,
 } from '@agentlab/sparql-jsld-client';
 
 /***********************
@@ -53,6 +52,10 @@ export const MstViewKindElement = types.model('MstViewKindElement', {
   // Container-specific (e.g. Layout, type: 'xxxLayout')
   elements: types.maybe(types.array(types.late((): IAnyType => MstViewKindDataType))),
 });
+
+export type TMstViewKindElement = Instance<typeof MstViewKindElement>;
+export type TMstViewKindElementSnapshotIn = SnapshotIn<typeof MstViewKindElement>;
+export type TMstViewKindElementSnapshotOut = SnapshotOut<typeof MstViewKindElement>;
 
 const mstViewKindSchemas: MstModels = {};
 
@@ -115,8 +118,10 @@ export const MstViewKind = types
     collsConstrs: types.array(MstCollConstr), // former 'queries'
   })
   .actions((self) => {
-    const rep: IAnyStateTreeNode = getRoot(self);
-    const coll: IAnyStateTreeNode = getParent(self, 2);
+    const rep: IAnyStateTreeNode = getParentOfName(self, 'MstRepository');
+    //console.log('MstViewRind-rep', rep);
+    const coll: IAnyStateTreeNode = getParentOfName(self, 'MstColl');
+    //console.log('MstViewRind-coll', coll);
     let dispose: any;
     return {
       afterAttach() {
@@ -152,7 +157,13 @@ export const MstViewKind = types
     };
   });
 
-export type IViewKindSnapshotIn = SnapshotIn<typeof MstViewKind>;
+export type TMstViewKind = Instance<typeof MstViewKind>;
+export type TMstViewKindSnapshotIn = Omit<SnapshotIn<typeof MstViewKind>, 'collsConstrs'> & {
+  collsConstrs: TMstCollConstrSnapshotIn[];
+};
+export type TMstViewKindSnapshotOut = Omit<SnapshotOut<typeof MstViewKind>, 'collsConstrs'> & {
+  collsConstrs: TMstCollConstrSnapshotOut[];
+};
 
 /***********************
  * View Description
@@ -176,6 +187,10 @@ export const MstViewDescrElement = types.model('MstViewDescrElement', {
   // Container-specific (e.g. Layout, type: 'xxxLayout')
   elements: types.maybe(types.array(types.late((): IAnyType => MstViewDescrDataType))),
 });
+
+export type TMstViewDescrElement = Instance<typeof MstViewDescrElement>;
+export type TMstViewDescrElementSnapshotIn = SnapshotIn<typeof MstViewDescrElement>;
+export type TMstViewDescrElementSnapshotOut = SnapshotOut<typeof MstViewDescrElement>;
 
 const mstViewDescrSchemas: MstModels = {};
 
@@ -239,8 +254,10 @@ export const MstViewDescr = types
     collsConstrs: types.array(MstCollConstr), // former 'queries'
   })
   .actions((self) => {
-    const rep: IAnyStateTreeNode = getRoot(self);
-    const coll: IAnyStateTreeNode = getParent(self, 2);
+    const rep: IAnyStateTreeNode = getParentOfName(self, 'MstRepository');
+    //console.log('MstViewDescr-re', rep);
+    const coll: IAnyStateTreeNode = getParentOfName(self, 'MstColl');
+    //console.log('MstViewDescr-coll', coll);
     let dispose: any;
     return {
       afterAttach() {
@@ -276,15 +293,12 @@ export const MstViewDescr = types
     };
   });
 
-export type IViewDescrSnapshotIn = SnapshotIn<typeof MstViewDescr>;
-
-export const createUiModelFromState = (
-  repId: string,
-  client: SparqlClient,
-  initialState: any,
-  additionalColls?: CollState[],
-): any => {
-  registerMstCollSchema(MstViewKind);
-  registerMstCollSchema(MstViewDescr);
-  return createModelFromState(repId, client, initialState, additionalColls);
+export type TMstViewDescr = Instance<typeof MstViewDescr>;
+export type TMstViewDescrSnapshotIn = Omit<SnapshotIn<typeof MstViewDescr>, 'collsConstrs' | 'viewKind'> & {
+  collsConstrs: TMstCollConstrSnapshotIn[];
+  viewKind: string | undefined;
+};
+export type TMstViewDescrSnapshotOut = Omit<SnapshotOut<typeof MstViewDescr>, 'collsConstrs' | 'viewKind'> & {
+  collsConstrs: TMstCollConstrSnapshotOut[];
+  viewKind: string | undefined;
 };

@@ -8,19 +8,17 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React, { useContext } from 'react';
-import { getSnapshot } from 'mobx-state-tree';
 import { observer } from 'mobx-react-lite';
 
 import { MstContext } from '../MstContext';
 
 export const StoreDataFormatter: any = observer<any>(({ value, query, propKey }: any) => {
   const { store } = useContext(MstContext);
-  const coll = store.getColl(query);
-  let data = coll?.data;
-  if (data === undefined) {
+  const coll = store.rep.getColl(query);
+  if (coll === undefined) {
     return <span>{value}</span>;
   }
-  data = getSnapshot(data);
+  const data = coll.dataJs;
   const element = data.find((e: any) => e['@id'] === value);
   return <span>{element ? element[propKey || 'title'] : value}</span>;
 });
