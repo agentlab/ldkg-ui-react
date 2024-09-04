@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import babel from '@rollup/plugin-babel';
 import autoprefixer from 'autoprefixer';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';

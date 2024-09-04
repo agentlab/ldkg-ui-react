@@ -39,14 +39,14 @@
   "scripts": {
     "clean": "rimraf dist es lib",
     "start": "rollup -w",
-    "build": "yarn clean && rollup -c",
-    "build-tsc": "yarn tsc --project ./tsconfig-build.json",
+    "build": "pnpm clean && rollup -c",
+    "build-tsc": "pnpm tsc --project ./tsconfig-build.json",
     "test": "cross-env NODE_ENV=--experimental-vm-modules jest",
     "test:ci": "cross-env NODE_ENV=--experimental-vm-modules jest --ci --coverage --maxWorkers=2",
     "cypress:open": "cypress open",
     "lint": "eslint \"{src,test}/**/*.{js,jsx,ts,tsx}\"",
-    "prepare": "husky && yarn build && rimraf stories/public/themes stories/public/skins stories/public/plugins stories/public/icons && cpy ./node_modules/tinymce/themes stories/public/themes && cpy ./node_modules/tinymce/skins stories/public/skins && cpy ./node_modules/tinymce/plugins stories/public/plugins && cpy ./node_modules/tinymce/icons stories/public/icons",
-    "storybook": "storybook dev -p 6006",
+    "prepare": "husky && pnpm build && rimraf stories/public/themes stories/public/skins stories/public/plugins stories/public/icons && cpy node_modules/tinymce/**/themes/** stories/public && cpy ./node_modules/tinymce/**/skins/** stories/public && cpy ./node_modules/tinymce/**/plugins/** stories/public && cpy ./node_modules/tinymce/**/icons/** stories/public",
+    "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
     "format": "./node_modules/.bin/prettier --write \"{src,stories,test}/**/*.{js,jsx,ts,tsx,json,css,less,scss,md}\"",
     "lint-staged": "lint-staged",
@@ -203,5 +203,6 @@
     "{src,test}/**/*.{js,jsx,ts,tsx,json,css,less,scss,md}": [
       "prettier --write"
     ]
-  }
+  },
+  "packageManager": "pnpm@9.9.0"
 }
