@@ -9,12 +9,12 @@
  ********************************************************************************/
 import React from 'react';
 import { Row, Col } from 'antd';
+import { get } from 'lodash-es';
 
 import { DispatchCell } from '../DispatchCell';
 import { DispatchCellProps } from '../Form';
 import { TMstViewKindElement } from '../models/MstViewDescr';
 import { rankWith, uiTypeIs, RankedTester } from '../testers';
-import { get } from 'lodash-es';
 
 import { Idx } from '../util/layout';
 

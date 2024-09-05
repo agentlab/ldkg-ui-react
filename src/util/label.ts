@@ -9,9 +9,9 @@
  ********************************************************************************/
 import { startCase } from 'lodash-es';
 
-import { JsonSchema7 as JsonSchema } from '../models/jsonSchema7';
+import { JSONSchema7 } from 'json-schema';
 
-const deriveLabel = (controlElement: any /*ControlElement*/, schemaElement?: JsonSchema): string => {
+const deriveLabel = (controlElement: any /*ControlElement*/, schemaElement?: JSONSchema7): string => {
   if (schemaElement && typeof schemaElement.title === 'string') {
     return schemaElement.title;
   }
@@ -32,12 +32,12 @@ export const createCleanLabel = (label: string): string => {
 /**
  * Return a label object based on the given control and schema element.
  * @param {ControlElement} withLabel the UI schema to obtain a label object for
- * @param {JsonSchema} schema optional: the corresponding schema element
+ * @param {JSONSchema7} schema optional: the corresponding schema element
  * @returns {LabelDescription}
  */
 export const createLabelDescriptionFrom = (
   withLabel: any /*ControlElement*/,
-  schema?: JsonSchema,
+  schema?: JSONSchema7,
 ): any /*LabelDescription*/ => {
   const labelProperty = withLabel.label;
   if (typeof labelProperty === 'boolean') {

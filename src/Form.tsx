@@ -16,7 +16,7 @@ import { observer } from 'mobx-react-lite';
 import { getSnapshot } from 'mobx-state-tree';
 import { JsObject } from '@agentlab/sparql-jsld-client';
 
-import { JsonSchema7 } from './models/jsonSchema7';
+import { JSONSchema7 } from 'json-schema';
 //import ModalAntd from './antd/util/AntdModal';
 import { MstContext } from './MstContext';
 import { UnknownRenderer } from './UnknownRenderer';
@@ -27,7 +27,7 @@ import { RendererRegistryEntry } from './renderers';
 
 export interface ControlComponent {
   data: any;
-  schema: JsonSchema7;
+  schema: JSONSchema7;
   editing: boolean;
   handleChange: Function;
   id: string;
@@ -63,7 +63,7 @@ export interface RenderProps extends FormsDispatchProps {
   viewDescrElement?: TMstViewDescrElement;
   actions?: Actions;
   id: string;
-  schema: JsonSchema7;
+  schema: JSONSchema7;
   readOnly?: boolean;
 }
 export interface RenderCellProps extends RenderProps {

@@ -8,12 +8,12 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React from 'react';
-
-import { rankWith, RankedTester, uiTypeIs } from '../testers';
+import { Card } from 'antd';
 import { get } from 'lodash-es';
 
+import { rankWith, RankedTester, uiTypeIs } from '../testers';
+
 import { TMstViewKindElement } from '../models/MstViewDescr';
-import { Card } from 'antd';
 import { DispatchCell } from '../DispatchCell';
 import './cell.css';
 
