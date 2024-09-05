@@ -67,7 +67,7 @@ const viewKinds = [
         entConstrs: [
           {
             '@id': 'rm:Folders_Coll_Shape0',
-            '@type': 'raldkgm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'nav:folderShape',
           },
         ],
@@ -116,9 +116,9 @@ const viewKinds = [
             conditions: {
               '@id': 'rmUserTypes:my_link',
               '@type': 'aldkg:Condition',
-              object: 'file:///urn-s2-iisvvt-infosystems-classifier-45950.xml',
+              object: 'file:///myfile.xml',
               subject: '?eIri1',
-              parentBinding: 'file:///urn-s2-iisvvt-infosystems-classifier-45950.xml',
+              parentBinding: 'file:///myfile.xml',
             },
           },
           {
@@ -160,7 +160,7 @@ const viewKinds = [
                   format: 'iri',
                 },
                 '@type': {
-                  title: 'Тип',
+                  title: 'Class',
                   type: 'string',
                   format: 'iri',
                 },
@@ -212,7 +212,7 @@ const viewKinds = [
                   triples: [
                     triple(
                       factory.variable('eIri2'),
-                      namedNode('http://cpgu.kbpm.ru/ns/rm/user-types#parentBinding'),
+                      namedNode('https://agentlab.eu/ns/rm/user-types#parentBinding'),
                       factory.variable('eIri1'),
                     ),
                   ],
@@ -241,7 +241,7 @@ const viewKinds = [
             resultsScope: 'rm:ModuleArtifacts_Coll',
             options: {
               draggable: true,
-              resizeableHeader: true,
+              resizableHeader: true,
               style: { height: '100%' },
               //expandColumnKey: 'xhtmlText',
               order: ['identifier', 'xhtmlText', 'modified', 'modifiedBy', 'title'],

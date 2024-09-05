@@ -200,7 +200,7 @@ const viewKinds = [
                       scope: 'lastMonthSalesAmount',
                       options: {
                         editable: false,
-                        formatter: 'сomparison',
+                        formatter: 'comparison',
                         dataToFormatter: {
                           prevValue: 'prevMonthSalesAmount',
                         },
@@ -220,7 +220,7 @@ const viewKinds = [
                       '@type': 'aldkg:Control',
                       scope: 'lastMonthSalesValue',
                       options: {
-                        formatter: 'сomparison',
+                        formatter: 'comparison',
                         editable: false,
                         dataToFormatter: {
                           prevValue: 'prevMonthSalesValue',

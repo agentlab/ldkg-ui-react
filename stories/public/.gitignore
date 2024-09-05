@@ -1,4 +1,4 @@
-# Ignore TinyMCE static, which will be updated by 'yarn install'
+# Ignore TinyMCE static, which will be updated by 'pnpm install'
 
 /themes
 /skins

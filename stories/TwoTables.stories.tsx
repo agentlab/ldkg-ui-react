@@ -473,7 +473,7 @@ const viewKinds = [
                     },
                   ],
                   draggable: true,
-                  resizeableHeader: true,
+                  resizableHeader: true,
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

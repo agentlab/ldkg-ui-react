@@ -7,19 +7,19 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import { JSONSchema6forRdf, JsObject } from '@agentlab/sparql-jsld-client';
+import { JSONSchema7LD, JsObject } from '@agentlab/sparql-jsld-client';
 
 export const textFormatUri = 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Text';
 export const collectionFormatUri = 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Collection';
 export const moduleFormatUri = 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Module';
 
-export const artifactSchema: JSONSchema6forRdf = {
+export const artifactSchema: JSONSchema7LD = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  //$id: 'http://cpgu.kbpm.ru/ns/rm/rdf#ArtifactShape',
+  //$id: 'https://agentlab.eu/ns/rm/rdf#ArtifactShape',
   '@id': 'rm:ArtifactShape',
   '@type': 'sh:NodeShape',
-  title: 'Требование',
-  description: 'Тип ресурса',
+  title: 'Artifact',
+  description: 'Artifact',
   targetClass: 'rm:Artifact',
   type: 'object',
   '@context': {
@@ -76,115 +76,130 @@ export const artifactSchema: JSONSchema6forRdf = {
       format: 'iri',
     },
     '@type': {
-      title: 'Тип',
+      title: 'Class',
       type: 'string',
       format: 'iri',
+      order: 4,
     },
     identifier: {
-      title: 'Идентификатор',
-      description: 'Числовой идентификатор требования, уникальный только в пределах этой системы',
+      title: 'Identifier',
+      description: 'Numeric identifier, unique within a system',
       type: 'integer',
+      order: 1,
       shapeModifiability: 'system',
       //valueModifiability: 'system',
     },
     title: {
-      title: 'Название',
-      description: 'Краткое название требования',
+      title: 'Title',
+      description: 'Title',
       type: 'string',
+      order: 2,
       shapeModifiability: 'system',
       //valueModifiability: 'user',
     },
     description: {
-      title: 'Описание',
-      description: 'Информация о требовании',
+      title: 'Description',
+      description: 'Description',
       type: 'string',
+      order: 3,
       shapeModifiability: 'system',
       //valueModifiability: 'user',
     },
     creator: {
-      title: 'Кем создан',
-      description: 'Пользователь, создавший требование',
+      title: 'Creator',
+      description: 'An Agent, created a Resource',
       type: 'string',
       format: 'iri',
+      order: 10,
       shapeModifiability: 'system',
       //valueModifiability: 'system',
     },
     created: {
-      title: 'Когда создан',
-      description: 'Когда требование было создано',
+      title: 'Created',
+      description: 'When a Resource was created',
       type: 'string',
       format: 'date-time',
+      order: 11,
       shapeModifiability: 'system',
       //valueModifiability: 'system',
     },
     modifiedBy: {
-      title: 'Кем изменен',
-      description: 'Пользователь, изменивший требование',
+      title: 'Modified By',
+      description: 'An Agent, modified a Resource',
       type: 'string',
       format: 'iri',
+      order: 8,
       shapeModifiability: 'system',
       //valueModifiability: 'system',
     },
     modified: {
-      title: 'Когда изменен',
-      description: 'Когда требование было изменено',
+      title: 'Modified',
+      description: 'When a Resource was modified',
       type: 'string',
       format: 'date-time',
+      order: 9,
       shapeModifiability: 'system',
       //valueModifiability: 'system',
     },
     processArea: {
-      title: 'Проект',
-      description: 'Связано с проектной областью',
+      title: 'Process Area',
+      description: 'Process Area',
       type: 'string',
       format: 'iri',
+      order: 7,
       shapeModifiability: 'system',
       //valueModifiability: 'system',
     },
     assetFolder: {
-      title: 'Папка',
-      description: 'Папка, содержащая требования',
+      title: 'Folder',
+      description: 'Asset folder',
       type: 'string',
       format: 'iri',
+      order: 6,
       shapeModifiability: 'system',
       //valueModifiability: 'user',
     },
     artifactFormat: {
-      title: 'Формат',
-      description: 'Формат заполнения/отображения',
+      title: 'Format',
+      description: 'Artifact Format',
       type: 'string',
       format: 'iri',
+      order: 5,
       shapeModifiability: 'system',
       //valueModifiability: 'user',
     },
     xhtmlText: {
-      title: 'Форматированный текст',
-      description: 'Форматированный текст',
+      title: 'Text',
+      description: 'Formatted Text',
       type: 'string',
       contentMediaType: 'text/html',
+      order: 5,
       shapeModifiability: 'system',
       //valueModifiability: 'user',
     },
   },
-  required: ['@id', '@type', 'title' /*, 'identifier', 'assetFolder', 'artifactFormat'*/],
+  required: ['@id', '@type', 'title'],
 };
 
-export const genericArtifactSchema: JSONSchema6forRdf = {
+export const genericArtifactSchema: JSONSchema7LD = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  //$id: 'http://cpgu.kbpm.ru/ns/rm/cpgu#GenericArtifactShape',
+  //$id: 'https://agentlab.eu/ns/rm/classifier#GenericArtifactShape',
   allOf: [{ $ref: 'rm:ArtifactShape' }],
-  '@id': 'cpgu:GenericArtifactShape',
+  '@id': 'clss:GenericArtifactShape',
   '@type': 'sh:NodeShape',
-  targetClass: 'cpgu:GenericArtifact',
+  targetClass: 'clss:GenericArtifact',
   type: 'object',
   '@context': {
     alternative: {
       '@id': 'dcterms:alternative',
       '@type': 'xsd:string',
     },
-    uri: 'cpgu:uri',
+    uri: {
+      '@id': 'clss:uri',
+      '@type': '@id',
+    },
     status: {
-      '@id': 'cpgu:status',
+      '@id': 'clss:status',
       '@type': 'rmUserTypes:_YwrbNRmREemK5LEaKhoOow',
     },
     abstract: {
@@ -194,30 +209,29 @@ export const genericArtifactSchema: JSONSchema6forRdf = {
   },
   properties: {
     alternative: {
-      title: 'alternative',
+      title: 'PropertyShape Alternative Name',
       type: 'string',
       shapeModifiability: 'user',
       //valueModifiability: 'user',
     },
     uri: {
-      title: 'URI',
-      description: 'Задает идентификатор ресурса',
+      title: 'PropertyShape URI Name',
+      description: 'PropertyShape URI Description',
       type: 'string',
       format: 'iri',
       shapeModifiability: 'user',
       //valueModifiability: 'user',
     },
     status: {
-      title: 'Статус',
-      description:
-        'Определяет состояние ресурса в пакете. Позволяет, например, сообщить о том, что ресурс удален из системы',
+      title: 'PropertyShape Status Name',
+      description: 'PropertyShape Status Description',
       type: 'string',
       format: 'iri',
       shapeModifiability: 'user',
       //valueModifiability: 'user',
     },
     abstract: {
-      title: 'abstract',
+      title: 'PropertyShape Abstract Name',
       type: 'string',
       shapeModifiability: 'user',
       //valueModifiability: 'user',
@@ -225,24 +239,50 @@ export const genericArtifactSchema: JSONSchema6forRdf = {
   },
 };
 
-export const classifierSchema: JSONSchema6forRdf = {
+export const classifierSchema: JSONSchema7LD = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  //$id: 'http://cpgu.kbpm.ru/ns/rm/cpgu#ClassifierShape',
-  allOf: [{ $ref: 'cpgu:GenericArtifactShape' }],
-  '@id': 'cpgu:ClassifierShape',
+  //$id: 'https://agentlab.eu/ns/rm/classifier#ClassifierShape',
+  allOf: [{ $ref: 'clss:GenericArtifactShape' }],
+  '@id': 'clss:ClassifierShape',
   '@type': 'sh:NodeShape',
-  title: 'Классификатор',
-  description: 'Классификатор или справочник. Описывает структуру классификатора (не данные из него)',
-  targetClass: 'cpgu:Classifier',
+  title: 'RequirementClassShape Classifier Title',
+  description: 'RequirementClassShape Classifier Description',
+  targetClass: 'clss:Classifier',
   type: 'object',
   //inCreationMenu: true,
-  //defaultIndividNs: 'cpgu:',
+  //defaultIndividNs: 'clss:',
   //defaultFormat: 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Module',
-  //iconReference: 'http://cpgu.kbpm.ru/ns/rm/images/use-case',
+  //iconReference: 'https://agentlab.eu/ns/rm/images/use-case',
   properties: {},
 };
 
-export const classifierCompleteSchema: JSONSchema6forRdf = {
+export const infoSchema: JSONSchema7LD = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  //$id: 'https://agentlab.eu/ns/rm/classifier#ClassifierShape',
+  allOf: [{ $ref: 'clss:GenericArtifactShape' }],
+  '@id': 'clss:InfoShape',
+  '@type': 'sh:NodeShape',
+  title: 'RequirementClassShape Info Title',
+  description: 'RequirementClassShape Info Description',
+  targetClass: 'clss:Info',
+  type: 'object',
+  //inCreationMenu: true,
+  //defaultIndividNs: 'clss:',
+  //defaultFormat: 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow_Module',
+  //iconReference: 'https://agentlab.eu/ns/rm/images/use-case',
+  properties: {
+    xhtmlText: {
+      title: 'Text',
+      description: 'Formatted text',
+      type: 'string',
+      contentMediaType: 'text/html',
+      shapeModifiability: 'system',
+      //valueModifiability: 'user',
+    },
+  },
+};
+
+export const classifierCompleteSchema: JSONSchema7LD = {
   ...classifierSchema,
   '@context': {
     ...artifactSchema['@context'],
@@ -260,7 +300,7 @@ export const artifactShape: JsObject = {
   '@type': 'sh:NodeShape',
   //defaultFormat: undefined,
   //defaultIndividNs: undefined,
-  description: 'Тип ресурса',
+  description: 'Artifact',
   //iconReference: undefined,
   //inCreationMenu: undefined,
   property: [
@@ -269,10 +309,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       //class: undefined,
       datatype: 'xsd:integer',
-      description: 'Числовой идентификатор требования, уникальный только в пределах этой системы',
+      description: 'Numeric identifier, unique within a system',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Идентификатор',
+      name: 'Identifier',
       //nodeKind: undefined,
       order: 2,
       path: 'dcterms:identifier',
@@ -284,10 +324,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       //class: undefined,
       datatype: 'xsd:string',
-      description: 'Краткое название требования',
+      description: 'Title',
       maxCount: 1,
       minCount: 1,
-      name: 'Название',
+      name: 'Title',
       //nodeKind: undefined,
       order: 3,
       path: 'dcterms:title',
@@ -299,10 +339,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       //class: undefined,
       datatype: 'rdf:HTML',
-      description: 'Форматированный текст',
+      description: 'Formatted text',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Форматированный текст',
+      name: 'Text',
       //nodeKind: undefined,
       order: 4,
       path: 'rm:xhtmlText',
@@ -314,10 +354,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       //class: undefined,
       datatype: 'xsd:string',
-      description: 'Информация о требовании',
+      description: 'Description',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Описание',
+      name: 'Description',
       //nodeKind: undefined,
       order: 4,
       path: 'dcterms:description',
@@ -329,10 +369,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       class: 'pporoles:User',
       //datatype: undefined,
-      description: 'Пользователь, создавший требование',
+      description: 'An Agent, created a Resource',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Кем создан',
+      name: 'Creator',
       nodeKind: 'sh:BlankNodeOrIRI',
       order: 5,
       path: 'dcterms:creator',
@@ -344,10 +384,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       //class: undefined,
       datatype: 'xsd:dateTime',
-      description: 'Когда требование было создано',
+      description: 'When a Resource was created',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Когда создан',
+      name: 'Created',
       //nodeKind: undefined,
       order: 6,
       path: 'dcterms:created',
@@ -359,10 +399,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       class: 'pporoles:User',
       //datatype: undefined,
-      description: 'Пользователь, изменивший требование',
+      description: 'An Agent, modified a Resource',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Кем изменен',
+      name: 'Modified By',
       nodeKind: 'sh:BlankNodeOrIRI',
       order: 7,
       path: 'oslc:modifiedBy',
@@ -374,10 +414,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       //class: undefined,
       datatype: 'xsd:dateTime',
-      description: 'Когда требование было изменено',
+      description: 'When a Resource was modified',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Когда изменен',
+      name: 'Modified',
       //nodeKind: undefined,
       order: 8,
       path: 'dcterms:modified',
@@ -389,10 +429,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       class: 'nav:ProjectArea',
       //datatype: undefined,
-      description: 'Связано с проектной областью',
+      description: 'Process Area',
       maxCount: 1,
       minCount: 0,
-      name: 'Проект',
+      name: 'Process Area',
       nodeKind: 'sh:IRI',
       order: 9,
       path: 'nav:processArea',
@@ -404,10 +444,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       class: 'nav:folder',
       //datatype: undefined,
-      description: 'Папка, содержащая требования',
+      description: 'Asset folder',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Папка',
+      name: 'Folder',
       nodeKind: 'sh:IRI',
       order: 10,
       path: 'rm:assetFolder',
@@ -419,10 +459,10 @@ export const artifactShape: JsObject = {
       '@type': 'sh:PropertyShape',
       class: 'rmUserTypes:_YwcOsRmREemK5LEaKhoOow',
       //datatype: undefined,
-      description: 'Формат заполнения/отображения',
+      description: 'Artifact Format',
       maxCount: 1,
       //minCount: undefined,
-      name: 'Формат',
+      name: 'Format',
       nodeKind: 'sh:IRI',
       order: 11,
       path: 'rm:artifactFormat',
@@ -431,17 +471,17 @@ export const artifactShape: JsObject = {
     },
   ],
   targetClass: 'rm:Artifact',
-  title: 'Требование',
+  title: 'Artifact',
 };
 
-export const linkSchema: JSONSchema6forRdf = {
+export const linkSchema: JSONSchema7LD = {
   $schema: 'http://json-schema.org/draft-07/schema#',
-  //$id: 'http://cpgu.kbpm.ru/ns/rm/user-types#UsedInShape',
+  //$id: 'https://agentlab.eu/ns/rm/user-types#UsedInShape',
   '@id': 'rm:LinkShape',
   '@type': 'sh:NodeShape',
   type: 'object',
-  title: 'Тип связи',
-  description: 'Тип связи.',
+  title: 'Link',
+  description: 'Link.',
   targetClass: 'rm:Link',
   '@context': {
     '@type': 'rdf:type',
@@ -481,43 +521,43 @@ export const linkSchema: JSONSchema6forRdf = {
       format: 'iri',
     },
     '@type': {
-      title: 'Тип',
+      title: 'Class',
       type: 'string',
       format: 'iri',
     },
     creator: {
       type: 'string',
       format: 'iri',
-      title: 'Кем создан',
-      description: 'Пользователь, создавший требование',
+      title: 'Creator',
+      description: 'An Agent, created a Resource',
       shapeModifiability: 'system',
     },
     created: {
       type: 'string',
       format: 'date-time',
-      title: 'Когда создан',
-      description: 'Когда требование было создано',
+      title: 'Created',
+      description: 'When a Resource was created',
       shapeModifiability: 'system',
     },
     modifiedBy: {
       type: 'string',
       format: 'iri',
-      title: 'Кем изменен',
-      description: 'Пользователь, изменивший требование',
+      title: 'Modified By',
+      description: 'An Agent, modified a Resource',
       shapeModifiability: 'system',
     },
     modified: {
       type: 'string',
       format: 'date-time',
-      title: 'Когда изменен',
-      description: 'Когда требование было изменено',
+      title: 'Modified',
+      description: 'When a Resource was modified',
       shapeModifiability: 'system',
     },
     processArea: {
       type: 'string',
       format: 'iri',
-      title: 'Проект',
-      description: 'Связано с проектной областью',
+      title: 'Process Area',
+      description: 'Process Area',
       shapeModifiability: 'system',
     },
     object: {
@@ -538,20 +578,20 @@ export const linkSchema: JSONSchema6forRdf = {
   required: ['@id', '@type', 'object', 'subject'],
 };
 
-export const usedInSchema: JSONSchema6forRdf = {
+export const usedInSchema: JSONSchema7LD = {
   ...linkSchema,
   '@id': 'rmUserTypes:UsedInShape',
-  title: 'Использование',
-  description: 'Собирает информацию о связях между требованиями.',
+  title: 'UsedIn Link',
+  description: 'Connects Artifacts in Collection.',
   targetClass: 'rmUserTypes:UsedIn',
 };
 
-export const usedInModuleSchema: JSONSchema6forRdf = {
+export const usedInModuleSchema: JSONSchema7LD = {
   ...usedInSchema,
   allOf: [{ $ref: 'rmUserTypes:UsedInShape' }],
   '@id': 'rmUserTypes:UsedInModuleShape',
-  title: 'Использование в модуле',
-  description: 'Собирает информацию о связях между требованиями в модуле.',
+  title: 'UsedInModule Link',
+  description: 'Connects Artifacts in Module.',
   targetClass: 'rmUserTypes:UsedInModule',
   '@context': {
     ...usedInSchema['@context'],
@@ -587,26 +627,26 @@ export const usedInModuleSchema: JSONSchema6forRdf = {
     },
     depth: {
       type: 'integer',
-      title: 'Вложенность',
-      description: 'Вложенность',
+      title: 'Depth',
+      description: 'Depth',
       shapeModifiability: 'system',
     },
     bookOrder: {
       type: 'integer',
-      title: 'Порядок',
-      description: 'Порядок',
+      title: 'Book Order',
+      description: 'Book Order',
       shapeModifiability: 'system',
     },
     sectionNumber: {
       type: 'string',
-      title: 'Номер раздела',
-      description: 'Номер раздела',
+      title: 'Section Number',
+      description: 'Section Number',
       shapeModifiability: 'system',
     },
     isHeading: {
       type: 'boolean',
-      title: 'Это заголовок',
-      description: 'Это заголовок',
+      title: 'Is Heading',
+      description: 'Is Heading',
       shapeModifiability: 'system',
     },
   },
@@ -614,3 +654,274 @@ export const usedInModuleSchema: JSONSchema6forRdf = {
 };
 
 export const { property: artifactShapeProperty, ...artifactShapeNoProperty } = artifactShape;
+
+export const ProductCardShapeSchema: JSONSchema7LD = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  '@id': 'iot:ProductCardCardsShape',
+  '@type': 'sh:NodeShape',
+  title: '',
+  description: '',
+  targetClass: 'iot:ProductCard',
+  type: 'object',
+  '@context': {
+    '@type': 'rdf:type',
+    name: {
+      '@id': 'iot:name',
+      '@type': 'xsd:string',
+    },
+    lastMonthSalesValue: {
+      '@id': 'iot:lastMonthSalesValue',
+      '@type': 'xsd:int',
+    },
+    saleValue: {
+      '@id': 'iot:saleValue',
+      '@type': 'xsd:int',
+    },
+    brand: {
+      '@id': 'iot:brand',
+      '@type': 'iot:Brand',
+    },
+    seller: {
+      '@id': 'iot:seller',
+      '@type': 'iot:Seller',
+    },
+    imageUrl: {
+      '@id': 'iot:imageUrl',
+      '@type': '@id',
+    },
+  },
+  properties: {
+    '@id': {
+      title: 'URI',
+      type: 'string',
+      format: 'iri',
+    },
+    '@type': {
+      title: 'Class',
+      type: 'string',
+      format: 'iri',
+    },
+    // mandatory str
+    name: {
+      type: 'string',
+    },
+    // mandatory int
+    lastMonthSalesValue: {
+      type: 'integer',
+    },
+    // optional int
+    saleValue: {
+      title: 'Sale Value',
+      type: 'integer',
+    },
+    // optional reference
+    brand: {
+      title: 'Brand',
+      type: 'string',
+      format: 'iri',
+    },
+    // mandatory ref
+    seller: {
+      title: 'Seller',
+      type: 'string',
+      format: 'iri',
+    },
+    // optional array
+    imageUrl: {
+      title: 'Image URL',
+      type: 'array',
+      items: {
+        type: 'string',
+        format: 'iri',
+      },
+    },
+  },
+  required: ['@id', '@type', 'name', 'lastMonthSalesValue', 'seller'],
+};
+
+export const HSObservationShapeSchema: JSONSchema7LD = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  '@id': 'iot:HSObservationCardsShape',
+  '@type': 'sh:NodeShape',
+  title: '',
+  description: '',
+  targetClass: 'iot:HSObservation',
+  type: 'object',
+  '@context': {
+    '@type': 'rdf:type',
+    product: {
+      '@id': 'iot:product',
+    },
+    parsedAt: {
+      '@id': 'iot:parsedAt',
+      '@type': 'xsd:dateTime',
+    },
+    price: {
+      '@id': 'iot:price',
+      '@type': 'xsd:int',
+    },
+    totalSales: {
+      '@id': 'iot:totalSales',
+      '@type': 'xsd:int',
+    },
+    categoryPopularity: {
+      '@id': 'iot:categoryPopularity',
+      '@type': 'xsd:double',
+    },
+  },
+  properties: {
+    '@id': {
+      title: 'URI',
+      type: 'string',
+      format: 'iri',
+    },
+    '@type': {
+      title: 'Class',
+      type: 'string',
+      format: 'iri',
+    },
+    product: {
+      type: 'object',
+    },
+    parsedAt: {
+      type: 'string',
+      format: 'date-time',
+    },
+    // optional int
+    price: {
+      type: 'integer',
+    },
+    // mandatory int
+    totalSales: {
+      type: 'integer',
+    },
+    // optional double
+    categoryPopularity: {
+      type: 'number',
+    },
+  },
+  required: ['@id', '@type', 'product', 'parsedAt', 'totalSales'],
+};
+
+export const ProductCardShapeSchemaForCardsList: JSONSchema7LD = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  '@id': 'iot:ProductCardShapeForCardsList',
+  '@type': 'sh:NodeShape',
+  title: '',
+  description: '',
+  targetClass: 'iot:ProductCard',
+  type: 'object',
+  '@context': {
+    '@type': 'rdf:type',
+    name: {
+      '@id': 'iot:name',
+      '@type': 'xsd:string',
+    },
+    lastMonthSalesValue: {
+      '@id': 'iot:lastMonthSalesValue',
+      '@type': 'xsd:int',
+    },
+    hasObservations: {
+      '@reverse': 'iot:product',
+    },
+    saleValue: {
+      '@id': 'iot:saleValue',
+      '@type': 'xsd:int',
+    },
+    seller: {
+      '@id': 'iot:seller',
+      '@type': 'iot:Seller',
+    },
+    imageUrl: {
+      '@id': 'iot:imageUrl',
+      '@type': '@id',
+    },
+  },
+  properties: {
+    '@id': {
+      title: 'URI',
+      type: 'string',
+      format: 'iri',
+    },
+    '@type': {
+      title: 'Class',
+      type: 'string',
+      format: 'iri',
+    },
+    name: {
+      type: 'string',
+    },
+    lastMonthSalesValue: {
+      type: 'integer',
+    },
+    // mandatory reverse array
+    hasObservations: {
+      type: 'array',
+      items: {
+        type: 'object',
+      },
+    },
+    // optional int
+    saleValue: {
+      title: 'Sale Value',
+      type: 'integer',
+    },
+    // optional reference
+    seller: {
+      title: 'Seller',
+      type: 'string',
+      format: 'iri',
+    },
+    // array
+    imageUrl: {
+      title: 'Image URL',
+      type: 'array',
+      items: {
+        type: 'string',
+        format: 'iri',
+      },
+    },
+  },
+  required: ['@id', '@type', 'name', 'lastMonthSalesValue', 'hasObservations'],
+};
+
+export const HSObservationShapeSchemaForCardsList: JSONSchema7LD = {
+  $schema: 'http://json-schema.org/draft-07/schema#',
+  '@id': 'iot:HSObservationShapeForCardsList',
+  '@type': 'sh:NodeShape',
+  title: '',
+  description: '',
+  targetClass: 'iot:HSObservation',
+  type: 'object',
+  '@context': {
+    '@type': 'rdf:type',
+    parsedAt: {
+      '@id': 'iot:parsedAt',
+      '@type': 'xsd:dateTime',
+    },
+    price: {
+      '@id': 'iot:price',
+      '@type': 'xsd:int',
+    },
+  },
+  properties: {
+    '@id': {
+      title: 'URI',
+      type: 'string',
+      format: 'iri',
+    },
+    '@type': {
+      title: 'Class',
+      type: 'string',
+      format: 'iri',
+    },
+    parsedAt: {
+      type: 'string',
+      format: 'date-time',
+    },
+    price: {
+      type: 'integer',
+    },
+  },
+  required: ['@id', '@type', 'parsedAt', 'price'],
+};

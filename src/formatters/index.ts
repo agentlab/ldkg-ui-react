@@ -16,10 +16,10 @@ import {
   artifactTitle,
   integer,
   link,
-  extlink,
+  extLink,
   image,
   labeledValue,
-  сomparison,
+  comparison,
 } from './baseFormatters';
 import { StoreDataFormatter } from './StoreDataFormatter';
 import { TinyMCE } from './tinyMCE';
@@ -32,9 +32,9 @@ export const formatters: JsObject = {
   image,
   integer,
   link,
-  extlink,
+  extLink,
   tinyMCE: TinyMCE,
   dataFormatter: StoreDataFormatter,
   labeledValue,
-  сomparison,
+  comparison,
 };

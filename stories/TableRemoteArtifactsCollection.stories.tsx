@@ -67,7 +67,7 @@ const viewKinds = [
         entConstrs: [
           {
             '@id': 'rm:Folders_Coll_Shape0',
-            '@type': 'raldkgm:EntConstr',
+            '@type': 'aldkg:EntConstr',
             schema: 'nav:folderShape',
           },
         ],
@@ -140,7 +140,7 @@ const viewKinds = [
             resultsScope: 'rm:Artifacts_Coll',
             options: {
               draggable: true,
-              resizeableHeader: true,
+              resizableHeader: true,
               style: { height: '100%' },
               order: [
                 'identifier',

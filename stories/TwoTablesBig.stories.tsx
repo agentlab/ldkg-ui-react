@@ -424,7 +424,7 @@ const viewKinds = [
                 resultsScope: 'mktp:ProductCards_in_Product_Coll',
                 options: {
                   draggable: true,
-                  resizeableHeader: true,
+                  resizableHeader: true,
                   style: { height: '100%' },
                   order: [
                     'imageUrl',

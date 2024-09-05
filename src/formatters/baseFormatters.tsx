@@ -93,7 +93,7 @@ export const link = ({ value, link, options }: any): JSX.Element => {
   );
 };
 
-export const extlink = ({ value, link, options }: any): JSX.Element => {
+export const extLink = ({ value, link, options }: any): JSX.Element => {
   const label = options.label || value || link;
   const icon = options.icon;
   return (
@@ -128,7 +128,7 @@ export const labeledValue = ({ value, options }: any): JSX.Element => {
   );
 };
 
-export const сomparison = ({ value, prevValue, options }: any): JSX.Element => {
+export const comparison = ({ value, prevValue, options }: any): JSX.Element => {
   const delta: number = value - prevValue;
   const label = options.label;
   return (

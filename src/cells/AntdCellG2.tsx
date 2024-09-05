@@ -8,10 +8,10 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import React from 'react';
+import { Image } from 'antd';
 
 import { uiTypeIs, rankWith, RankedTester } from '../testers';
 import { withStoreToCellProps } from '../util/ContextToProps';
-import { Image } from 'antd';
 
 const template: any = {
   'https://www.wildberries.ru/catalog/15570386/detail.aspx': '/img/chart_1.png',

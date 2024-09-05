@@ -110,7 +110,7 @@ const viewKinds = [
             resultsScope: 'mktp:ProductCard_Coll',
             options: {
               draggable: true,
-              resizeableHeader: true,
+              resizableHeader: true,
               style: { height: '100%' },
               multiSelect: true,
               order: [
@@ -130,7 +130,7 @@ const viewKinds = [
               },
               name: {
                 width: 340,
-                formatter: 'extlink',
+                formatter: 'extLink',
                 dataToFormatter: { link: '@id' },
                 icon: 'img/icons8-external-link-16.png',
                 sortable: true,

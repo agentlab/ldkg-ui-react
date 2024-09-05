@@ -217,7 +217,7 @@ const viewKinds = [
             options: {
               connections: [{ toObj: 'mktp:Cards_Coll_Ent0_con', toProp: '@_id' }],
               draggable: true,
-              resizeableHeader: true,
+              resizableHeader: true,
               style: { height: '100%' },
               order: ['imageUrl', 'name', 'price', 'saleValue', 'country', 'brand', 'seller', 'identifier'],
               imageUrl: {
