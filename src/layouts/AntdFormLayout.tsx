@@ -26,8 +26,15 @@ const divStyle: React.CSSProperties = {
   padding: '5px',
 };
 
+export const FormLayoutIRI = 'aldkg:FormLayout';
+export interface FormLayoutLocale {
+  btnCancel: string;
+  btnSave: string;
+}
+
 export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onSave }) => {
   const { store } = useContext(MstContext);
+  const locale: FormLayoutLocale = store.getLocaleJs(FormLayoutIRI);
   //const onValidate = Symbol.for('onValidate');
   const activeSave = false;
   //if (store.onSaveData[form] && store.onSaveData[form][onValidate]) {
@@ -44,7 +51,7 @@ export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onS
             ev.stopPropagation();
             onCancel();
           }}>
-          Отмена
+          {locale.btnCancel}
         </Button>
         <Button
           key='ok'
@@ -55,7 +62,7 @@ export const LogicalButton: React.FC<any> = observer<any>(({ form, onCancel, onS
             await onSave();
             onCancel();
           }}>
-          Сохранить
+          {locale.btnSave}
         </Button>
       </ButtonGroup>
     </Row>
@@ -100,5 +107,5 @@ export const AntdFormLayout: React.FC<any> = ({
   );
 };
 
-export const antdFormLayoutTester: RankedTester = rankWith(2, uiTypeIs('aldkg:FormLayout'));
+export const antdFormLayoutTester: RankedTester = rankWith(2, uiTypeIs(FormLayoutIRI));
 export const AntdFormLayoutWithStore = withStoreToFormProps(AntdFormLayout);

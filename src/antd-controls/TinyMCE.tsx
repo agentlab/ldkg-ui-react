@@ -8,16 +8,32 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import { isEqual } from 'lodash-es';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
 import './tinyMCE.css';
+import { MstContext } from '../MstContext';
 
 export const TinyMCE: React.FC<any> = React.memo(
   (props) => {
     const { data, handleChange, onMeasureChange = () => {}, editing } = props;
     const [activeEditor, setActiveEditor] = useState<any>();
-    const i18n = { language: 'ru_RU' };
+    const { store } = useContext(MstContext);
+    const localeId: string = store.getLocaleId();
+    let language: string | undefined = undefined;
+    if (localeId === 'de_DE') language = 'de';
+    else if (localeId === 'it_IT') language = 'it';
+    else if (localeId === 'pt_PT') language = 'pt_PT';
+    else if (localeId === 'pt_BR') language = 'pt_BR';
+    else if (localeId === 'ru_RU') language = 'ru';
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    let language_url: string | undefined = undefined; // en_US by default
+    if (localeId === 'de_DE') language_url = `${process.env.PUBLIC_URL}/lang/de.js`;
+    else if (localeId === 'it_IT') language_url = `${process.env.PUBLIC_URL}/lang/it.js`;
+    else if (localeId === 'pt_PT') language_url = `${process.env.PUBLIC_URL}/lang/pt_PT.js`;
+    else if (localeId === 'pt_BR') language_url = `${process.env.PUBLIC_URL}/lang/pt_BR.js`;
+    else if (localeId === 'ru_RU') language_url = `${process.env.PUBLIC_URL}/lang/ru.js`;
+    console.log('TinyMCE', { localeId, language_url });
 
     const onChange = (ev: any) => {
       onMeasureChange();
@@ -46,9 +62,8 @@ export const TinyMCE: React.FC<any> = React.memo(
             quickbars_insert_toolbar: 'paste quicktable image',
             quickbars_selection_toolbar: 'bold italic | h2 h3 | blockquote quicklink',
             contextmenu: 'inserttable | cell row column deletetable | link image imagetools | codesample',
-
-            language_url: `${process.env.PUBLIC_URL}/lang/ru.js`,
-            language: i18n.language,
+            language_url,
+            language,
             skin: 'oxide',
             skin_url: `${process.env.PUBLIC_URL}/skins/ui/oxide`,
             content_css: `${process.env.PUBLIC_URL}/skins/ui/oxide/content.min.css`,

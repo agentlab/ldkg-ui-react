@@ -7,11 +7,13 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Row } from 'antd';
 
 import { RankedTester, rankWith, uiTypeIs } from '../testers';
 import { withStoreToSaveButtonProps } from '../util/ContextToProps';
+import { FormLayoutLocale, FormLayoutIRI } from '../layouts';
+import { MstContext } from '../MstContext';
 
 const ButtonGroup = Button.Group;
 const divStyle: React.CSSProperties = {
@@ -20,6 +22,8 @@ const divStyle: React.CSSProperties = {
 
 export const SaveControl: React.FC<any> = (props) => {
   const { editing, setEditing, saveData } = props;
+  const { store } = useContext(MstContext);
+  const locale: FormLayoutLocale = store.getLocaleJs(FormLayoutIRI);
   const onCancel = () => {
     setEditing(false);
   };
@@ -28,10 +32,10 @@ export const SaveControl: React.FC<any> = (props) => {
       <Row style={divStyle} justify='end'>
         <ButtonGroup>
           <Button key='cancel' disabled={!editing} onClick={() => onCancel()}>
-            Отмена
+            {locale.btnCancel}
           </Button>
           <Button key='ok' disabled={!editing} type='primary' onClick={saveData}>
-            Сохранить
+            {locale.btnSave}
           </Button>
         </ButtonGroup>
       </Row>

@@ -13,11 +13,13 @@ import { observer } from 'mobx-react-lite';
 
 import { SaveReqDialog } from './OnSaveDialog';
 import { MstContext } from '../MstContext';
+import { FormLayoutLocale, FormLayoutIRI } from '..';
 
 export const AntdModal: React.FC<any> = observer<any>(
   ({ viewKind, viewKindElement, viewDescr, viewDescrElement, id, schema, enabled, cells, childrenId, Render }) => {
     const [visible, setVisible] = useState(false);
     const { store } = useContext(MstContext);
+    const locale: FormLayoutLocale = store.getLocaleJs(FormLayoutIRI);
 
     const onCancel = () => {
       const editing = store.editingData.get(id);
@@ -38,9 +40,9 @@ export const AntdModal: React.FC<any> = observer<any>(
         visible={store.modals[id]}
         onOk={onOk}
         onCancel={onCancel}
-        cancelText='Отмена'
+        cancelText={locale.btnCancel}
         width={1200}
-        okText='Сохранить'>
+        okText={locale.btnSave}>
         <Render
           viewKind={viewKind}
           viewKindElement={viewKindElement}

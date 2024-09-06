@@ -9,18 +9,97 @@
  ********************************************************************************/
 import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { Button, DatePicker, Form, Input, InputNumber } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Button, DatePicker, Form, Input, InputNumber, Typography } from 'antd';
 
 import { MstContext } from '../../MstContext';
 import { RankedTester, rankWith, uiTypeIs } from '../../testers';
 import { processViewKindOverride } from '../../Form';
 import { applySnapshot, getSnapshot } from 'mobx-state-tree';
+import { JSONSchema7LDPropertyDefinition } from '@agentlab/sparql-jsld-client';
+
+const { RangePicker } = DatePicker;
+const { Title } = Typography;
 
 const rangeProps = ['amountValueMoving30', 'revenueMoving30', 'price', 'commentsCount', 'firstParsedAt', 'parsedAt'];
 
+export type JSONSchema7LDPropertyDefinitionWithName = JSONSchema7LDPropertyDefinition & { name: string };
+
+function isInteger(value: any) {
+  return parseInt(value, 10).toString() === value;
+}
+
+function dispatchControl(p: JSONSchema7LDPropertyDefinitionWithName) {
+  if (p.type === 'integer')
+    return (
+      <Form.Item key={`${p.name}`} label={p.title} tooltip={p.description}>
+        <Form.Item
+          key={`${p.name}-Min`}
+          name={`${p.name}-Min`}
+          rules={[
+            {
+              type: 'integer',
+              message: 'Please input integer!',
+              validator: (rule: any, value: string) =>
+                new Promise(
+                  (resolve, reject) =>
+                    value === undefined || value === '' || (isInteger(value) ? resolve(value) : reject(rule.message)),
+                ),
+            },
+          ]}
+          style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
+          <Input style={{ width: '100%' }} />
+        </Form.Item>
+        <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
+        <Form.Item
+          key={`${p.name}-Max`}
+          name={`${p.name}-Max`}
+          rules={[
+            {
+              type: 'integer',
+              message: 'Please input integer!',
+              validator: (rule: any, value: string) =>
+                new Promise(
+                  (resolve, reject) =>
+                    value === undefined || value === '' || (isInteger(value) ? resolve(value) : reject(rule.message)),
+                ),
+            },
+          ]}
+          style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
+          <Input style={{ width: '100%' }} />
+        </Form.Item>
+      </Form.Item>
+    );
+  else if (p.type === 'string') {
+    if (p.format === 'date-time') {
+      return (
+        <Form.Item key={`${p.name}`} label={p.title} tooltip={p.description}>
+          <RangePicker
+            id={{
+              start: `${p.name}-Min`,
+              end: `${p.name}-Max`,
+            }}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+      );
+    }
+    return (
+      <Form.Item key={p.name} name={p.name} label={p.title} tooltip={p.description}>
+        <Input />
+      </Form.Item>
+    );
+  }
+}
+
+export const QueryFormIRI = 'aldkg:QueryForm';
+
+export interface QueryFormLocale {
+  searchBtnTitle: string;
+}
+
 export const QueryForm = observer<any>((props) => {
   const { store } = useContext(MstContext);
+  const locale: QueryFormLocale = store.getLocaleJs(QueryFormIRI);
   const [id, collIri, collIriOverride, inCollPath, viewKindElement, viewDescrElement] = processViewKindOverride(
     props,
     store,
@@ -69,91 +148,43 @@ export const QueryForm = observer<any>((props) => {
         };
     });
     console.log('QueryForm - newCond', newCond);
-
     applySnapshot(coll.collConstr.entConstrs[0].conditions, newCond);
   };
 
+  const hiddenProperties: string[] = viewKindElement.options?.hiddenProperties || [];
+  const coll = store.rep.getColl(collIri);
+  const properties: JSONSchema7LDPropertyDefinitionWithName[] = coll?.collConstr?.entConstrs
+    ? Object.entries(coll.collConstr.entConstrs[0].schema?.propertiesJs || {})
+        .filter((e) => !hiddenProperties.includes(e[0]))
+        .map((e) => ({
+          name: e[0],
+          ...e[1],
+        }))
+        .sort((e1, e2) => {
+          if (e1.order === e2.order) return 0;
+          if (e1.order === undefined) return 1;
+          if (e2.order === undefined) return -1;
+          if (e1.order < e2.order) return -1;
+          return 1;
+        })
+    : [];
+  //console.log('QueryForm', { properties });
+
   return (
-    <div style={{ margin: '10px 10px 0 10px' }}>
-      <Title level={4}>Поиск товаров</Title>
+    <div style={viewKindElement.options?.blockStyle || { margin: '10px' }}>
+      {viewKindElement.options.title !== undefined && <Title level={4}>{viewKindElement.options.title}</Title>}
       <Form
-        layout={'vertical'}
-        size={'small'}
+        style={{ ...(viewKindElement.options?.formStyle || {}) }}
+        layout={viewKindElement.options?.layout || 'vertical'}
+        size={viewKindElement.options?.size || 'small'}
         form={form}
-        initialValues={{ amountValueMoving30Min: 20000, amountValueMoving30Max: 60000 }}
+        initialValues={{ ...(viewKindElement.options?.initialValues || {}) }}
         onFinish={onFinish}>
-        <Form.Item
-          label='Название товара'
-          name='name'
-          tooltip='Фрагмент строки в названии для поиска на английском и/или китайском'>
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label='Продажи на 30 дней'
-          tooltip='Минимальный и максимальный объем продаж товара в шт или кв. метрах'>
-          <Form.Item name='amountValueMoving30Min' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-          <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
-          <Form.Item name='amountValueMoving30Max' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Form.Item>
-
-        <Form.Item label='Выручка на 30 дней' tooltip='Минимальная и максимальная выручка товара в юанях'>
-          <Form.Item name='revenueMoving30Min' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-          <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
-          <Form.Item name='revenueMoving30Max' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Form.Item>
-
-        <Form.Item label='Цена товара, юань' tooltip='Минимальная и максимальная цены товара в юанях'>
-          <Form.Item name='priceMin' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-          <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
-          <Form.Item name='priceMax' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Form.Item>
-
-        <Form.Item label='Кол-во комментариев' tooltip='Минимальное и максимальное количество отзывов о товаре'>
-          <Form.Item name='commentsCountMin' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-          <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
-          <Form.Item name='commentsCountMax' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <InputNumber style={{ width: '100%' }} />
-          </Form.Item>
-        </Form.Item>
-
-        <Form.Item label='Добавлено' tooltip='Диапазон дат первого добавления товара в систему'>
-          <Form.Item name='firstParsedAtMin' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-          <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
-          <Form.Item name='firstParsedAtMax' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-        </Form.Item>
-
-        <Form.Item label='Ообновлено' tooltip='Диапазон дат последнего обновления товара в системе'>
-          <Form.Item name='parsedAtMin' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-          <span style={{ display: 'inline-block', width: '20px', lineHeight: '32px', textAlign: 'center' }}>-</span>
-          <Form.Item name='parsedAtMax' style={{ display: 'inline-block', width: 'calc(50% - 10px)' }}>
-            <DatePicker style={{ width: '100%' }} />
-          </Form.Item>
-        </Form.Item>
+        {properties.map((p) => dispatchControl(p))}
 
         <Form.Item style={{ marginTop: '16px' }}>
           <Button type='primary' htmlType='submit'>
-            Искать товар
+            {locale.searchBtnTitle}
           </Button>
         </Form.Item>
       </Form>
@@ -161,4 +192,4 @@ export const QueryForm = observer<any>((props) => {
   );
 });
 
-export const antdQueryFormTester: RankedTester = rankWith(2, uiTypeIs('aldkg:QueryForm'));
+export const antdQueryFormTester: RankedTester = rankWith(2, uiTypeIs(QueryFormIRI));

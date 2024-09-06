@@ -12,6 +12,15 @@ import { RankedTester, rankWith, uiTypeIs } from '../testers';
 
 import { EditableTable } from './BaseTable';
 
+export const ArrayIRI = 'aldkg:Array';
+
+export interface ArrayLocale {
+  extSettings: string;
+  columnSettings: string;
+  btnCancel: string;
+  btnSave: string;
+}
+
 export const BaseTableArrayControlRenderer = (props: any): JSX.Element => {
   return (props.schema && <EditableTable {...props} />) || <div />;
 };

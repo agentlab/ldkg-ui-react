@@ -8,8 +8,10 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import difference from 'lodash-es/difference';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Transfer, Table, Modal } from 'antd';
+import { MstContext } from '../../../../MstContext';
+import { ArrayIRI, ArrayLocale } from '../../..';
 
 export const ExtendedTableMenu = ({
   dataSource,
@@ -21,6 +23,8 @@ export const ExtendedTableMenu = ({
 }: any): JSX.Element => {
   const [transferVisible, setTransferVisible] = useState(false);
   const [targetKeys, setTargetKeys] = useState<any>([]);
+  const { store } = useContext(MstContext);
+  const locale: ArrayLocale = store.getLocaleJs(ArrayIRI);
   const onSave = () => {
     setTransferVisible(false);
     const idxs = dataSource.reduce((res: any, e: any, idx: number) => {
@@ -57,14 +61,14 @@ export const ExtendedTableMenu = ({
   }, [dataSource, sortKey]);
   return (
     <React.Fragment>
-      <span onClick={() => setTransferVisisble(true)}>Дополнительно</span>
+      <span onClick={() => setTransferVisible(true)}>{locale.extSettings}</span>
       <Modal
-        title='Настройка колонок'
-        visible={transferVisisble}
+        title={locale.columnSettings}
+        visible={transferVisible}
         onOk={onSave}
         onCancel={onCancel}
-        cancelText='Отмена'
-        okText='Сохранить'>
+        cancelText={locale.btnCancel}
+        okText={locale.btnSave}>
         <Transfer dataSource={dataSource} targetKeys={targetKeys} onChange={handleChange} showSelectAll={false}>
           {({
             direction,

@@ -20,10 +20,25 @@ import { rankWith, RankedTester, uiTypeIs } from '../../testers';
 import { CreateFilterModal } from './CreateFilterModal';
 import { FilterType } from './type';
 
-const localeRus = {
-  add: 'Добавить',
-  fullTextSearchValue: 'Содержит текст',
-};
+export const QueryIRI = 'aldkg:Query';
+export interface QueryLocale {
+  add: string;
+  addAndClose: string;
+  artifactType: string;
+  close: string;
+  emptyFilter: string;
+  choiceAttribute: string;
+  choiceValue: string;
+  resultFilter: string;
+  title: string;
+  fullTextSearchValue: string;
+  daysAgo: string;
+  monthsAgo: string;
+  yearsAgo: string;
+  today: string;
+  yesterday: string;
+  date: string;
+}
 
 interface FilterByTagProps {
   expanded?: boolean;
@@ -38,8 +53,8 @@ interface FilterByTagProps {
 
 export const AntQueryWithStore = observer<any>((props) => {
   const { viewKind, viewDescr, schema } = props;
-
   const { store } = useContext(MstContext);
+  const locale: QueryLocale = store.getLocaleJs(QueryIRI);
   const fullTextSearchString = store.fullTextSearchString;
   const setFullTextSearchString = (newValue: string) => {
     store.fullTextSearchString = newValue;
@@ -51,19 +66,19 @@ export const AntQueryWithStore = observer<any>((props) => {
   );
 
   const coll = store.rep.getColl(collIriOverride);
-  const conditionsJs = coll?.collConstr.entConstrs[0].conditionsJs;
+  const conditionsJs = coll?.collConstr?.entConstrs[0].conditionsJs;
 
   const loading = false;
   const onExpand = (isExpand?: boolean) => {};
   const addFilter = (filter: JsObject, location?: string) => {};
   const removeFilter = (filter: JsObject) => {
     if (filter?.property && filter?.relation) {
-      store.editConn(
+      store.rep.editConn(
         { toObj: collIriOverride, toProp: filter.property },
         { value: filter.value, relation: filter.relation.predicate },
       );
     } else if (filter?.property) {
-      store.editConn({ toObj: collIriOverride, toProp: filter.property }, filter.value);
+      store.rep.editConn({ toObj: collIriOverride, toProp: filter.property }, filter.value);
     }
   };
 
@@ -100,7 +115,7 @@ export const AntQueryWithStore = observer<any>((props) => {
       tags = Object.values(filters);
     }
 
-    const fullTextFilter = tagsArray.find((tag) => tag.title === localeRus.fullTextSearchValue);
+    const fullTextFilter = tagsArray.find((tag) => tag.title === locale.fullTextSearchValue);
     if (fullTextFilter) {
       tags = tags.concat(fullTextFilter);
     }
@@ -109,10 +124,10 @@ export const AntQueryWithStore = observer<any>((props) => {
   }, [conditionsJs]);
 
   const handleCloseTag = (removedTag: any) => {
-    if (removedTag.property && removedTag.title !== localeRus.fullTextSearchValue) {
+    if (removedTag.property && removedTag.title !== locale.fullTextSearchValue) {
       removeFilter(removedTag);
     } else {
-      const newTags = tagsArray.filter((tag) => tag.title !== localeRus.fullTextSearchValue);
+      const newTags = tagsArray.filter((tag) => tag.title !== locale.fullTextSearchValue);
       setTags(newTags);
       setFullTextSearchString('');
     }
@@ -142,9 +157,9 @@ export const AntQueryWithStore = observer<any>((props) => {
     let newTags = tagsArray;
     if (inputValue) {
       newTags = [
-        ...newTags.filter((tag) => tag.title !== localeRus.fullTextSearchValue),
+        ...newTags.filter((tag) => tag.title !== locale.fullTextSearchValue),
         {
-          title: localeRus.fullTextSearchValue,
+          title: locale.fullTextSearchValue,
           value: [inputValue],
           property: 'search',
           relation: {
@@ -202,7 +217,7 @@ export const AntQueryWithStore = observer<any>((props) => {
         onPressEnter={handleInputConfirm}
       />
       <Tag onClick={showModal} style={{ background: '#fff', borderStyle: 'dashed' }}>
-        <PlusOutlined /> {localeRus.add}
+        <PlusOutlined /> {locale.add}
       </Tag>
 
       {modalVisible && (
@@ -248,4 +263,4 @@ export const AntQueryWithStore = observer<any>((props) => {
   );
 });
 
-export const antdQueryTester: RankedTester = rankWith(2, uiTypeIs('aldkg:Query'));
+export const antdQueryTester: RankedTester = rankWith(2, uiTypeIs(QueryIRI));

@@ -2,10 +2,10 @@ import type { Locale } from '.';
 import { QueryFormIRI } from '../controls/QueryForm';
 import { enUS } from './en_US';
 
-export const ptPT: Locale = {
+export const deDE: Locale = {
   ...enUS,
-  locale: 'pt_PT',
+  locale: 'de_DE',
   [QueryFormIRI]: {
-    searchBtnTitle: 'Procurar',
+    searchBtnTitle: 'Suchen',
   },
 };

@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React, { useState, useEffect, FunctionComponent } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Modal, Row, Col, Button, Typography } from 'antd';
 import { CheckCircleTwoTone, ExclamationCircleTwoTone } from '@ant-design/icons';
 
@@ -17,6 +17,7 @@ import { FilterType } from './type';
 import { JSONSchema7LDPropertyDefinition, JsObject } from '@agentlab/sparql-jsld-client';
 import { Filter } from './Filter';
 import { MstContext } from '../../MstContext';
+import { QueryLocale, QueryIRI } from './Query';
 
 interface CreateFilterModalProps {
   loading: boolean;
@@ -26,25 +27,15 @@ interface CreateFilterModalProps {
   tags: FilterType[];
 }
 
-const localeRus = {
-  title: 'Создание фильтра',
-  add: 'Добавить',
-  addAndClose: 'Добавить и закрыть',
-  close: 'Отмена',
-  artifactType: 'Тип требования',
-  emptyFilter: 'Пусто',
-  choiceAtribute: 'Выберите атрибут',
-  choiceValue: 'Выберите значение',
-  resultFilter: 'Итоговый фильтр',
-};
-
-export const CreateFilterModal: FunctionComponent<CreateFilterModalProps> = ({
+export const CreateFilterModal: React.FC<CreateFilterModalProps> = ({
   loading,
   handleCancel,
   handleOk,
   handleAdd,
   tags,
 }) => {
+  const { store } = useContext(MstContext);
+  const locale: QueryLocale = store.getLocaleJs(QueryIRI);
   const [filter, setFilter] = useState<FilterType>({
     value: [],
     valueName: [],
@@ -70,14 +61,15 @@ export const CreateFilterModal: FunctionComponent<CreateFilterModalProps> = ({
 
   return (
     <Modal
-      title={localeRus.title}
+      title={locale.title}
       visible
+      height='80%'
       width='80%'
       onOk={() => handleOk(filter)}
       onCancel={handleCancel}
       footer={[
         <Button key='add' type='primary' loading={loading} onClick={() => handleAdd(filter)} disabled={!isValidFilter}>
-          {localeRus.add}
+          {locale.add}
         </Button>,
         <Button
           key='submit'
@@ -85,10 +77,10 @@ export const CreateFilterModal: FunctionComponent<CreateFilterModalProps> = ({
           loading={loading}
           onClick={() => handleOk(filter)}
           disabled={!isValidFilter}>
-          {localeRus.addAndClose}
+          {locale.addAndClose}
         </Button>,
         <Button key='back' onClick={handleCancel}>
-          {localeRus.close}
+          {locale.close}
         </Button>,
       ]}>
       <CreateFilter
@@ -110,21 +102,16 @@ interface CreateFilterProps {
   tags: FilterType[];
 }
 
-const CreateFilter: FunctionComponent<CreateFilterProps> = ({
-  setFilter,
-  filter,
-  isValidFilter,
-  setIsValidFilter,
-  tags,
-}) => {
-  const { store } = React.useContext(MstContext);
+const CreateFilter: React.FC<CreateFilterProps> = ({ setFilter, filter, isValidFilter, setIsValidFilter, tags }) => {
+  const { store } = useContext(MstContext);
+  const locale: QueryLocale = store.getLocaleJs(QueryIRI);
   const [selectedSchema] = useState<JsObject>();
 
   // useEffect(() => {
   //   setSelectedSchema(artifactTypes[0]);
   // }, [artifactTypes]);
 
-  const artifactTypeFilterItem = { key: '@type', title: localeRus.artifactType };
+  const artifactTypeFilterItem = { key: '@type', title: locale.artifactType };
   const [selectedFilterType, setSelectedFilterType] = useState<string>(artifactTypeFilterItem.key);
   const [modalIsMount, setModalIsMount] = useState(false);
 
@@ -135,8 +122,9 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
 
   useEffect(() => {
     const loadProperties = async () => {
-      const artifactTypes: JsObject[] = await store.getData('rm:ArtifactClasses');
-      const [properties, contexts] = await store.getAllProperties('rm:Artifact');
+      const artifactTypes: JsObject[] = store.rep.getColl('ArtifactClasses_Coll')?.dataJs || []; //getData('rm:ArtifactClasses');
+      const properties = { ...(store.rep.schemas.getOrLoadSchemaByClassIri('rm:Artifact')?.propertiesJs || {}) };
+      const contexts = store.rep.schemas.getOrLoadSchemaByClassIri('rm:Artifact')?.['@context'] || {};
       if (properties['@id']) {
         delete properties['@id'];
       }
@@ -147,7 +135,7 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
         }),
         format: 'iri',
         '@id': 'rdf:type',
-        title: localeRus.artifactType,
+        title: locale.artifactType,
       };
       setAllProperties({ properties, contexts });
     };
@@ -156,14 +144,14 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
   }, []);
 
   const [filterTypes, setFilterTypes] = useState<{ [key: string]: string }[]>([
-    { key: '@type', title: localeRus.artifactType },
+    { key: '@type', title: locale.artifactType },
   ]);
 
   useEffect(() => {
     const newFilterTypes: { [key: string]: string }[] = [];
     Object.keys(allProperties.properties).forEach((val: string) => {
       if (val !== '@type') {
-        newFilterTypes.push({ key: val, title: allProperties.properties[val].title || val });
+        newFilterTypes.push({ key: val, title: (allProperties.properties[val] as any)?.title || val });
       }
     });
     setFilterTypes([...filterTypes, ...newFilterTypes]);
@@ -181,7 +169,7 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
   }, []);
 
   const parseFilter = () => {
-    let result = <Typography.Text>{localeRus.emptyFilter}</Typography.Text>;
+    let result = <Typography.Text>{locale.emptyFilter}</Typography.Text>;
 
     if (filter) {
       const { title } = filter;
@@ -211,10 +199,10 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
   };
 
   return (
-    <>
+    <div style={{ height: '100%' }}>
       <Row>
         <Col span={10}>
-          <h3>{localeRus.choiceAtribute}</h3>
+          <h3>{locale.choiceAttribute}</h3>
           <SearchableList
             defaultSelectedKey={filterTypes[0].key}
             dataSource={filterTypes}
@@ -226,7 +214,7 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
         </Col>
         <Col span={4} />
         <Col span={10}>
-          <h3>{localeRus.choiceValue}</h3>
+          <h3>{locale.choiceValue}</h3>
           {allProperties.properties[selectedFilterType] && (
             <Filter
               filterData={filter}
@@ -244,11 +232,11 @@ const CreateFilter: FunctionComponent<CreateFilterProps> = ({
         </Col>
       </Row>
       <Row style={{ marginTop: '1em' }}>
-        <Typography.Text strong> {localeRus.resultFilter}: </Typography.Text>
+        <Typography.Text strong> {locale.resultFilter}: </Typography.Text>
       </Row>
       <Row>
         <Typography.Text>{parseFilter()}</Typography.Text>
       </Row>
-    </>
+    </div>
   );
 };

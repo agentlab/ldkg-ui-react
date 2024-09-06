@@ -38,6 +38,10 @@ export const FormMstRepository = types
         }
         return undefined;
       },
+      getLocaleId() {
+        const localeId = self.locale.get('locale');
+        return localeId || 'en_US';
+      },
       getLocaleJs(iri: string) {
         if (!iri) return undefined;
         return self.locale.get(iri);

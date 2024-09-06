@@ -8,20 +8,13 @@
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
 import dayjs, { Dayjs } from 'dayjs';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { DatePicker, Select, Radio, InputNumber } from 'antd';
 import { RadioChangeEvent } from 'antd/es/radio';
 
 import { ValueOfFilter } from '../type';
-
-const localeRus = {
-  daysAgo: 'Дней назад',
-  monthsAgo: 'Месяцев назад',
-  yearsAgo: 'Лет назад',
-  today: 'Сегодня',
-  yesterday: 'Вчера',
-  date: 'Дата',
-};
+import { MstContext } from '../../../MstContext';
+import { QueryLocale, QueryIRI } from '../Query';
 
 interface BodyOfDateTimeFilterProps {
   handleChange: (value: any) => void;
@@ -30,8 +23,9 @@ interface BodyOfDateTimeFilterProps {
 }
 
 export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ handleChange, defaultValues, type }) => {
-  const timeValue = [localeRus.daysAgo, localeRus.monthsAgo, localeRus.yearsAgo];
-
+  const { store } = useContext(MstContext);
+  const locale: QueryLocale = store.getLocaleJs(QueryIRI);
+  const timeValue = [locale.daysAgo, locale.monthsAgo, locale.yearsAgo];
   const [checkedOption, setCheckedOption] = useState<number | null>(null);
   const [firstValueInThreeVariant, setFirstValueInThreeVariant] = useState<string | null>(null);
   const [secondValueInThreeVariant, setSecondValueInThreeVariant] = useState<string>(timeValue[0]);
@@ -64,10 +58,10 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
     setCheckedOption(value);
     if (value === 1) {
       const today = `${dayjs().format('YYYY-MM-DD')}T00:00:00`;
-      handleChange({ value: [today], valueName: [localeRus.today] });
+      handleChange({ value: [today], valueName: [locale.today] });
     } else if (value === 2) {
       const yesterday = `${dayjs().subtract(1, 'days').format('YYYY-MM-DD')}T00:00:00`;
-      handleChange({ value: [yesterday], valueName: [localeRus.yesterday] });
+      handleChange({ value: [yesterday], valueName: [locale.yesterday] });
     } else if (value === 3) {
       if (firstValueInThreeVariant && secondValueInThreeVariant) {
         let timeOption: dayjs.ManipulateType = 'days';
@@ -122,10 +116,10 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
       <div style={{ height: '300px', overflow: 'auto' }}>
         <Radio.Group onChange={onChangeRatioButton} defaultValue={defaultValues.value[0] ? 4 : null}>
           <Radio style={radioStyle} value={1}>
-            {localeRus.today}
+            {locale.today}
           </Radio>
           <Radio style={radioStyle} value={2}>
-            {localeRus.yesterday}
+            {locale.yesterday}
           </Radio>
           <Radio style={radioStyle} value={3}>
             <InputNumber
@@ -154,7 +148,7 @@ export const BodyOfDateTimeFilter: React.FC<BodyOfDateTimeFilterProps> = ({ hand
             </Select>
           </Radio>
           <Radio style={radioStyle} value={4}>
-            {localeRus.date}:
+            {locale.date}:
             {checkedOption === 4 || defaultValues.value[0] ? (
               <DatePicker
                 showTime

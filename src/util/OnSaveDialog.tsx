@@ -7,10 +7,19 @@
  *
  * SPDX-License-Identifier: GPL-3.0-only
  ********************************************************************************/
-import React from 'react';
+import React, { useContext } from 'react';
 import { Modal } from 'antd';
 
 import { withStoreToSaveDialogProps } from '../util/ContextToProps';
+import { MstContext } from '../MstContext';
+
+export const SaveReqDialogIRI = 'aldkg:SaveReqDialog';
+export interface SaveReqDialogLocale {
+  btnCancel: string;
+  btnOK: string;
+  unsavedDescr: string;
+  unsavedTitle: string;
+}
 
 interface SaveReqDialogProps {
   visible: boolean;
@@ -23,15 +32,17 @@ export const SaveReqDialog: React.FC<SaveReqDialogProps> = ({
   onOk = () => {},
   onCancel = () => {},
 }: SaveReqDialogProps) => {
+  const { store } = useContext(MstContext);
+  const locale: SaveReqDialogLocale = store.getLocaleJs(SaveReqDialogIRI);
   return (
     <Modal
-      title='Несохраненные изменения'
+      title={locale.unsavedTitle}
       visible={visible}
       onOk={onOk}
       onCancel={onCancel}
-      cancelText='Отмена'
-      okText='Ок'>
-      <p>Имеются несохраненные изменения! Нажав на кнопку Ок вы сбросите все изменения</p>
+      cancelText={locale.btnCancel}
+      okText={locale.btnOK}>
+      <p>{locale.unsavedDescr}</p>
     </Modal>
   );
 };
