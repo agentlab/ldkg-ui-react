@@ -14,9 +14,10 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import * as remotedev from 'remotedev';
-import { factory, CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
+import { factory, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
+  actions,
   antdCells,
   antdControlRenderers,
   antdDataControlRenderers,
@@ -28,8 +29,9 @@ import {
   tableRenderers,
   viewDescrCollConstr,
   viewKindCollConstr,
-  actions,
 } from '../src';
+
+import { noCollsFormModelState } from './TestData';
 
 export default {
   title: 'Several Controls/TwoTablesBig',
@@ -39,7 +41,7 @@ export default {
       'http://localhost:8181/rdf4j-server',
       'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
     );
-    const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, args.additionalColls);
+    const rootStore = createUiModelFromState('mktp-fed', client, noCollsFormModelState, args.additionalColls);
     const store: any = asReduxStore(rootStore);
     connectReduxDevtools(remotedev, rootStore);
     return (
@@ -52,8 +54,6 @@ export default {
       </div>
     );
   },
-  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
-  parameters: { docs: { source: { type: 'code' } } },
 } as Meta<typeof Form>;
 
 type Story = StoryObj<any>; // StoryObj<typeof Form>;

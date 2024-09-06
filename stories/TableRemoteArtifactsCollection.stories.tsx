@@ -14,7 +14,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import * as remotedev from 'remotedev';
-import { factory, CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
+import { factory, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 import {
   antdCells,
   antdControlRenderers,
@@ -23,19 +23,20 @@ import {
   Form,
   MstContextProvider,
   RendererRegistryEntry,
+  tableRenderers,
   viewKindCollConstr,
   viewDescrCollConstr,
 } from '../src';
 
-import { tableRenderers } from '../src';
+import { noCollsFormModelState } from './TestData';
 
 export default {
-  title: 'Table/Remote Artifacts Collection',
+  title: 'Several Controls/Table Remote Artifacts Collection',
   component: Form,
   render: (args: any) => {
     const antdRenderers: RendererRegistryEntry[] = [...antdControlRenderers, ...antdLayoutRenderers, ...tableRenderers];
     const client = new SparqlClientImpl('http://localhost:8181/rdf4j-server');
-    const rootStore = createUiModelFromState('reqs2', client, rootModelInitialState, additionalColls);
+    const rootStore = createUiModelFromState('reqs2', client, noCollsFormModelState, additionalColls);
     const store: any = asReduxStore(rootStore);
     connectReduxDevtools(remotedev, rootStore);
     return (

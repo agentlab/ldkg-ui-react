@@ -14,20 +14,23 @@ import { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
 import { asReduxStore, connectReduxDevtools } from 'mst-middlewares';
 import * as remotedev from 'remotedev';
-import { factory, CollState, rootModelInitialState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
+import { factory, CollState, SparqlClientImpl } from '@agentlab/sparql-jsld-client';
 
 import {
   antdCells,
   antdControlRenderers,
   antdLayoutRenderers,
   antdDataControlRenderers,
+  createUiModelFromState,
   Form,
   MstContextProvider,
   RendererRegistryEntry,
   tableRenderers,
+  viewKindCollConstr,
+  viewDescrCollConstr,
 } from '../src';
-import { viewKindCollConstr, viewDescrCollConstr } from '../src/models/ViewCollConstrs';
-import { createUiModelFromState } from '../src/models/MstViewDescr';
+
+import { noCollsFormModelState } from './TestData';
 
 export default {
   title: 'Several Controls/FormColumns and Table',
@@ -43,7 +46,7 @@ export default {
       'http://localhost:8181/rdf4j-server',
       'http://localhost:8181/rdf4j-server/repositories/mktp-schema/namespaces',
     );
-    const rootStore = createUiModelFromState('mktp-fed', client, rootModelInitialState, additionalColls);
+    const rootStore = createUiModelFromState('mktp-fed', client, noCollsFormModelState, additionalColls);
     const store: any = asReduxStore(rootStore);
     connectReduxDevtools(remotedev, rootStore);
     return (
@@ -56,8 +59,6 @@ export default {
       </div>
     );
   },
-  // Due to Storybook bug https://github.com/storybookjs/storybook/issues/12747
-  parameters: { docs: { source: { type: 'code' } } },
 } as Meta<typeof Form>;
 
 type Story = StoryObj<any>; // StoryObj<typeof Form>;
